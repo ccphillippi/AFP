@@ -1,7 +1,7 @@
 '''
 Created on Feb 7, 2014
 
-@author: curly
+@author: Christopher Phillippi
 '''
 from os.path import abspath
 
