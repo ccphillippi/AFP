@@ -1,7 +1,8 @@
 '''
 Created on Feb 7, 2014
 
-@author: curly
+@author: Christopher Phillippi
+@summary: High level API to retrieve cleaned files
 '''
 
 import os
