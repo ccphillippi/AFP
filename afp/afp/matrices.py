@@ -1,13 +1,13 @@
 '''
 Created on Feb 7, 2014
 
-@author: curly
+@author: Christopher Phillippi
 '''
 
 from collections import Counter
 from itertools import izip
 from scipy import sparse
-import filers
+import cleaner
 import afp
 
 def countBy( wordCounter, articles ):
@@ -34,6 +34,6 @@ class WordCounter( object ):
 #    return tfIdf( wordCounts( files, keywords ) )
 
 if __name__ == "__main__":
-    articles = filers.retrieve.getCleanArticles( filers.settings.CLEAN_STORE )
+    articles = cleaner.retrieve.getCleanArticles( cleaner.settings.CLEAN_STORE )
     afp.keywords = afp.keywords.getAliasToKeywordMap( afp.settings.KEYWORDS_FILEPATH )
     # tfidf = NormalizeBy( TfIdf() )( CountBy( WordCounter( keywords ) )( articles ) )

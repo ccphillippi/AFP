@@ -1,7 +1,8 @@
 '''
 Created on Jan 31, 2014
 
-@author: curly
+@author: Christopher Phillippi
+@summary: Constants and settings for cleaner
 '''
 from re import compile
 from multiprocessing import cpu_count
