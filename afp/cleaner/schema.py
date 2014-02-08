@@ -5,8 +5,8 @@ Created on Feb 7, 2014
 @summary: Stores schema configurations, both for unclean and clean schemas
 '''
 
-from cleaner import settings
-import cleaner
+import cleaner.filers as filers
+import cleaner.settings as settings
 
 #======================================
 # Clean Schema
@@ -28,14 +28,14 @@ def getSchema( sourceDirectory ):
     
     MUST Register schema here!
     """
-    if( sourceDirectory == settings.LEXISNEXIS_FILETAG ): return cleaner.schema.LexisNexisSchema()
+    if( sourceDirectory == settings.LEXISNEXIS_FILETAG ): return LexisNexisSchema()
     raise Exception( "Filer for source <%s> is not registered in getSchema( source )." % ( sourceDirectory ) )
 
 class LexisNexisSchema( object ):
     '''
     API to normalize IO from uncleaned data to cleaned data
     '''
-    class LexisNexisArticleFiler( cleaner.filers.ArticleFilerBase ):
+    class LexisNexisArticleFiler( filers.ArticleFilerBase ):
         '''
         API to store a LexisNexis Article according to afp.settings
         '''
