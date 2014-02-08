@@ -19,7 +19,7 @@ def getFilePath( source, paper, month, day, year ):
 
 
 #======================================
-# Dirty Schema
+# Dirty Schemas
 #======================================
 def getSchema( sourceDirectory ):
     """
