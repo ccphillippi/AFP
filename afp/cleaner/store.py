@@ -5,10 +5,10 @@ Created on Feb 7, 2014
 @summary: High level API that stores uncleaned data into cleaned store
 '''
 
-from cleaner import settings
-from cleaner import filers
-from cleaner import schema
-from cleaner import helpers
+import cleaner.helpers as helpers
+import cleaner.settings as settings
+import cleaner.filers as filers
+import cleaner.schema as schema
 import multiprocessing as mp
 import os
 
