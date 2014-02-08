@@ -5,7 +5,8 @@ Created on Jan 31, 2014
 '''
 
 from itertools import chain
-import afp
+from string import capwords
+import afp.settings as settings
 
 def formatAlias( alias ):
     return alias.lower()
@@ -14,34 +15,37 @@ def formatTicker( ticker ):
     return ticker.upper()
 
 def formatName( name ):
-    return name.title()
+    return capwords( name.title() )
+
+def getKeywordToIndexMap( filename ):
+    fields = getKeywordToFieldsMap( filename ).itervalues()
+    def aliasToIndexPairs():
+        def getAliases( field ):
+            keywords = [ field[ "Name" ], field[ "Ticker" ] ] + field[ "Others" ]
+            return ( formatAlias( alias ) for alias in keywords if alias != "" )
+        return ( ( alias, field[ "Index" ] ) 
+                 for field in fields 
+                 for alias in getAliases( field ) )
+    return dict( aliasToIndexPairs() )
+    
+def getIndexToFieldsMap( filename ):
+    return dict( ( ( field[ "Index" ], field ) 
+                   for field in getKeywordToFieldsMap( filename ).itervalues() ) )    
     
 def getAliasToKeywordMap( filename ):
-    def getAllKeywordPairs( f ):
+    def getAllKeywordPairs( rows ):
         def aliasToKeywordPairs( row ):
             def getAliases( aliasArray ):
                 return [ formatAlias( alias ) for alias in aliasArray if alias != "" ]
             aliases = getAliases( row.split( ',' ) )
             keyword = aliases[ 0 ]
             return ( ( alias, keyword ) for alias in aliases )
-        return chain.from_iterable( ( aliasToKeywordPairs( row ) 
-                                      for i, row in enumerate( f ) 
+        return chain.from_iterable( ( aliasToKeywordPairs( row.strip() ) 
+                                      for i, row in enumerate( rows ) 
                                       if i != 0 ) )
-    with open( filename, 'r' ) as f:
-        return dict( getAllKeywordPairs( f ) )
-    return dict()
-
-def getKeywordToIndexMap( filename ):
-    def aliasToIndexPairs( row ):
-            def getAliases( aliasArray ):
-                return [ formatAlias( alias ) for alias in aliasArray if alias != "" ]
-            aliases = getAliases( row.split( ',' ) )
-            keyword = aliases[ 0 ]
-            return ( ( alias, keyword ) for alias in aliases )
-    keywordsToFieldsMap = getKeywordToFieldsMap( filename )
-    return dict( ( ( alias, i )
-                   for fields in keywordsToFieldsMap 
-                   for alias, i in aliasToIndexPairs( fields ) ) )
+    with open( filename, 'r' ) as keywordsCsv:
+        keywordPairs = getAllKeywordPairs( keywordsCsv.readlines() )
+    return dict( keywordPairs )
 
 def getKeywordToFieldsMap( filename ):
     def getAllKeywordToFieldsPairs( f ):
@@ -54,13 +58,11 @@ def getKeywordToFieldsMap( filename ):
             return ( formatAlias( columns[ 0 ] ), fields )
         return ( getKeywordToFieldsPair( i - 1, row ) for i, row, in enumerate( f ) if i != 0 ) 
     with open( filename, 'r' ) as f:
-        return dict( getAllKeywordToFieldsPairs( f ) )
-    return dict()
+        pairs = getAllKeywordToFieldsPairs( f.readlines() )
+    return dict( pairs )
     
-for alias, keyword in  getAliasToKeywordMap( afp.settings.KEYWORDS_FILEPATH ).iteritems():
-    print "%s->%s" % ( alias, keyword )
+# for alias, keyword in  getAliasToKeywordMap( settings.KEYWORDS_FILEPATH ).iteritems():
+#    print "%s->%s" % ( alias, keyword )
 
-for keyword, fields in getKeywordToFieldsMap( afp.settings.KEYWORDS_FILEPATH ).iteritems():
-    print keyword, ": "
-    for field, value in fields.iteritems():
-        print "\t%6s: %s" % ( field, value )
+for key, value in getKeywordToIndexMap( settings.KEYWORDS_FILEPATH ).iteritems():
+    print key, ": ", value
