@@ -6,8 +6,7 @@ Created on Jan 31, 2014
 such as saving, cleaning, retrieving files. 
 '''
 
-from cleaner import schema
-from cleaner import helpers
+import cleaner.helpers as helpers
              
 class BatchFiler( object ):
     '''
@@ -41,6 +40,7 @@ class ArticleFilerBase( object ):
             return self._removeFromTitle.sub( "", title.strip() ).replace( " ", "_" ) + ".txt"
         
     def write( self, article ):
+        from cleaner import schema
         def getArticleOnly():
             sections = article.split( self._sectionDelimiter )
             lengths = [ len( section ) for section in sections ]
