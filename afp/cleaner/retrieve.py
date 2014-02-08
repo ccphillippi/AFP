@@ -5,8 +5,8 @@ Created on Feb 7, 2014
 @summary: High level API to retrieve cleaned files
 '''
 
-import os
 from cleaner import settings
+import os
 
 def getCleanArticles( cleanStore ):
     """
