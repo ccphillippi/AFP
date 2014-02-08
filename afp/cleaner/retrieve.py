@@ -5,7 +5,7 @@ Created on Feb 7, 2014
 @summary: High level API to retrieve cleaned files
 '''
 
-from cleaner import settings
+import cleaner.settings as settings
 import os
 
 def getCleanArticles( cleanStore ):
@@ -13,21 +13,21 @@ def getCleanArticles( cleanStore ):
     Returns iterable of all cleaned articles
     """
     def getArticle( f ):
-        with open( f, 'r' ) as article:
-            return article
-        raise Exception( "Article <%s> does not exist!" % ( f ) )
+        with open( f, 'r' ) as opened:
+            article = opened.read()
+        return article
     return ( getArticle( f ) for f in getCleanFileList( cleanStore ) )
 
 def getCleanFileList( cleanStore ):
     """
     Returns interable of all cleaned files
     """    
-    directory = [ os.path.join( cleanStore, f ) for f in os.listdir( cleanStore ) ]
+    directory = ( os.path.join( cleanStore, f ) for f in os.listdir( cleanStore ) )
     for f in directory:
         if os.path.isfile( f ):
             yield f
         else:
-            for subFile in getCleanArticles( f ):
+            for subFile in getCleanFileList( f ):
                 yield subFile
 
 
