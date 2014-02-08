@@ -6,11 +6,10 @@ Created on Jan 31, 2014
 '''
 from re import compile
 from multiprocessing import cpu_count
-import os
 
 
 CLEAN_STORE = "C:\\AFPcorpus" #avoids being saved on dropbox for now
-UNCLEAN_STORE = os.path.abspath( "unclean" )
+UNCLEAN_STORE = "C:\\AFPunclean"
 
 MAX_WORKERS = cpu_count()
 
