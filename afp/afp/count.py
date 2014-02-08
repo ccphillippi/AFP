@@ -25,6 +25,6 @@ class WordCounter( WordCounterBase ):
         
     def getCounts( self, article ):
         keywords = ( self.keywordsToIndices[ keyword ]  
-                     for keyword in article 
+                     for keyword in article.lower() 
                      if keyword in self.keywordsToIndices )
         return Counter( keywords ).iteritems()
