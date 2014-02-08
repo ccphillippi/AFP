@@ -23,7 +23,7 @@ class BatchFiler( object ):
         with open( filename, 'r' ) as f:
             articleFiler = self._sourceSchema.getArticleFiler()
             articles = f.read().split( self._sourceSchema.getArticleDelimiter() )
-            return [ articleFiler.toFileSystem( article ) for article in articles ]
+            return [ articleFiler.write( article ) for article in articles ]
         raise Exception( "Unable to open file for read: <%s>." % filename )
                 
 class ArticleFilerBase( object ):
@@ -40,7 +40,7 @@ class ArticleFilerBase( object ):
     def getFileName( self, title ):
             return self._removeFromTitle.sub( "", title.strip() ).replace( " ", "_" ) + ".txt"
         
-    def toFileSystem( self, article ):
+    def write( self, article ):
         def getArticleOnly():
             sections = article.split( self._sectionDelimiter )
             lengths = [ len( section ) for section in sections ]
