@@ -32,11 +32,11 @@ class BatchFiler( object ):
 class ArticleFilerBase( object ):
     '''Base API to store an article according to regex members. Use this as a base for custom schema. See :class:`cleaner.schema.LexisNexisSchema` as an example.
     
-    :member paperDateTitleRegex: Regex retrieving ( paper, date, title ), compiled with :func:`re.compile`
-    :member dateRegex: Regex retrieving ( month, day, year ), compiled with :func:`re.compile`
-    :member removeFromTitleRegex: Regex class of any letter to be removed from the article title, compiled with :func:`re.compile`
-    :member removeFromArticleRegex: Regex retrieving newlines in sentences, compiled with :func:`re.compile`
-    :member schemaName: Name of schema to use, should be the same as one registered in :func:`cleaner.schema.getSchema`
+    :member paperDateTitleRegex: Regex retrieving ( paper, date, title ), compiled with :py:func:`re.compile`
+    :member dateRegex: Regex retrieving ( month, day, year ), compiled with :py:func:`re.compile`
+    :member removeFromTitleRegex: Regex class of any letter to be removed from the article title, compiled with :py:func:`re.compile`
+    :member removeFromArticleRegex: Regex retrieving newlines in sentences, compiled with :py:func:`re.compile`
+    :member schemaName: Name of schema to use, should be the same as one registered in :py:func:`cleaner.schema.getSchema`
     :member sectionDelimiter: String to use as delimiter between sections of the article.
     '''
     paperDateTitleRegex = None

@@ -16,7 +16,7 @@ import os
 def cleanSources( uncleanStore, numWorkers = settings.MAX_WORKERS ):
     """Cleans all files in unclean directory, using numWorkers processors.
     
-    :param numWorkers: Number of processors to allocate. Defaults to :func:`multiprocessing.cpu_count`
+    :param numWorkers: Number of processors to allocate. Defaults to :py:func:`multiprocessing.cpu_count`
     
     Call this function directly to clean data. For example:
     

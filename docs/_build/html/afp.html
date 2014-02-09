@@ -59,12 +59,25 @@
 </div>
 <div class="section" id="module-afp.count">
 <span id="afp-count-module"></span><h2>afp.count module<a class="headerlink" href="#module-afp.count" title="Permalink to this headline">¶</a></h2>
-<p>Created on Feb 8, 2014</p>
-<p>&#64;author: Christopher Phillippi</p>
+<span class="target" id="module-count"></span><p>This module contains the functors which count the keywords in a set of articles, producing a matrix</p>
 <dl class="class">
 <dt id="afp.count.WordCounter">
 <em class="property">class </em><tt class="descclassname">afp.count.</tt><tt class="descname">WordCounter</tt><big>(</big><em>keywordsToIndices</em><big>)</big><a class="reference internal" href="_modules/afp/count.html#WordCounter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.count.WordCounter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#afp.count.WordCounterBase" title="afp.count.WordCounterBase"><tt class="xref py py-class docutils literal"><span class="pre">afp.count.WordCounterBase</span></tt></a></p>
+<p>Functor that counts all keywords in keywordsToIndices map in an article.</p>
+<p>Returns: Sparse matrix of counts with articles on rows and words on columns from scipy.sparse.csr_matrix</p>
+<p>Example usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">articles</span> <span class="o">=</span> <span class="n">retrieve</span><span class="o">.</span><span class="n">getCleanArticles</span><span class="p">(</span> <span class="n">cleanersettings</span><span class="o">.</span><span class="n">CLEAN_STORE</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywordsToIndices</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">getKeywordToIndexMap</span><span class="p">(</span> <span class="n">settings</span><span class="o">.</span><span class="n">KEYWORDS_FILEPATH</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">countMatrix</span> <span class="o">=</span> <span class="n">count</span><span class="o">.</span><span class="n">WordCounter</span><span class="p">(</span> <span class="n">keywordsToIndices</span> <span class="p">)(</span> <span class="n">articles</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">countMatrix</span>
+<span class="go">(0, 7)     3</span>
+<span class="go">(0, 35)    2</span>
+<span class="go">(0, 48)    1</span>
+<span class="go">(1, 7)     2</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="afp.count.WordCounter.getCounts">
 <tt class="descname">getCounts</tt><big>(</big><em>article</em><big>)</big><a class="reference internal" href="_modules/afp/count.html#WordCounter.getCounts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.count.WordCounter.getCounts" title="Permalink to this definition">¶</a></dt>
@@ -72,7 +85,7 @@
 
 <dl class="attribute">
 <dt id="afp.count.WordCounter.normalize">
-<tt class="descname">normalize</tt><em class="property"> = &lt;module 'afp.normalize' from 'C:\Users\curly\git\AFP\afp\afp\normalize.pyc'&gt;</em><a class="headerlink" href="#afp.count.WordCounter.normalize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">normalize</tt><em class="property"> = &lt;module 'afp.normalize' from 'C:\Users\curly\git\AFP\afp\afp\normalize.py'&gt;</em><a class="headerlink" href="#afp.count.WordCounter.normalize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -81,76 +94,177 @@
 <dt id="afp.count.WordCounterBase">
 <em class="property">class </em><tt class="descclassname">afp.count.</tt><tt class="descname">WordCounterBase</tt><a class="reference internal" href="_modules/afp/count.html#WordCounterBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.count.WordCounterBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Base class for WordCounter Functors</p>
+<p>Extending Requires method: <strong>getCounts()</strong></p>
 <dl class="method">
 <dt id="afp.count.WordCounterBase.getCounts">
 <tt class="descname">getCounts</tt><big>(</big><em>article</em><big>)</big><a class="reference internal" href="_modules/afp/count.html#WordCounterBase.getCounts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.count.WordCounterBase.getCounts" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Required to be a WordCounter, must be implemented in extending class.</p>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-afp.keywords">
 <span id="afp-keywords-module"></span><h2>afp.keywords module<a class="headerlink" href="#module-afp.keywords" title="Permalink to this headline">¶</a></h2>
-<p>Created on Jan 31, 2014</p>
-<p>&#64;author: Christopher Phillippi</p>
+<span class="target" id="module-keywords"></span><p>This module handles the keyword mappings required when counting words in articles for matrix generation</p>
 <dl class="function">
 <dt id="afp.keywords.formatAlias">
 <tt class="descclassname">afp.keywords.</tt><tt class="descname">formatAlias</tt><big>(</big><em>alias</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#formatAlias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.formatAlias" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Formats a string in <em>Alias</em> format</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">formatAlias</span><span class="p">(</span> <span class="s">&#39;A Particular Company&#39;</span> <span class="p">)</span>
+<span class="go">&#39;a particular company&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="afp.keywords.formatName">
 <tt class="descclassname">afp.keywords.</tt><tt class="descname">formatName</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#formatName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.formatName" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Formats a string in <em>Name</em> format</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">formatName</span><span class="p">(</span> <span class="s">r&#39;someone&#39;</span><span class="n">s</span> <span class="n">financial</span> <span class="n">GROUP</span><span class="s">&#39; )</span>
+<span class="go">&#39;Someone&#39;s Financial Group&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="afp.keywords.formatTicker">
 <tt class="descclassname">afp.keywords.</tt><tt class="descname">formatTicker</tt><big>(</big><em>ticker</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#formatTicker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.formatTicker" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Formats a string in <em>Ticker</em> format</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">formatTicker</span><span class="p">(</span> <span class="s">&#39;boog&#39;</span> <span class="p">)</span>
+<span class="go">&#39;BOOG&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="afp.keywords.getAliasToKeywordMap">
-<tt class="descclassname">afp.keywords.</tt><tt class="descname">getAliasToKeywordMap</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#getAliasToKeywordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.getAliasToKeywordMap" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">afp.keywords.</tt><tt class="descname">getAliasToKeywordMap</tt><big>(</big><em>csvFile</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#getAliasToKeywordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.getAliasToKeywordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with aliases as keys and keywords as values given keywords <em>csvFile</em> path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>csvFile</strong> &#8211; The path of the keywords <em>.csv</em> file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="afp.keywords.getIndexToFieldsMap">
-<tt class="descclassname">afp.keywords.</tt><tt class="descname">getIndexToFieldsMap</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#getIndexToFieldsMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.getIndexToFieldsMap" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">afp.keywords.</tt><tt class="descname">getIndexToFieldsMap</tt><big>(</big><em>csvFile</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#getIndexToFieldsMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.getIndexToFieldsMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with indices as keys and fields as values given keywords <em>csvFile</em> path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>csvFile</strong> &#8211; The path of the keywords <em>.csv</em> file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="afp.keywords.getKeywordToFieldsMap">
-<tt class="descclassname">afp.keywords.</tt><tt class="descname">getKeywordToFieldsMap</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#getKeywordToFieldsMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.getKeywordToFieldsMap" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">afp.keywords.</tt><tt class="descname">getKeywordToFieldsMap</tt><big>(</big><em>csvFile</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#getKeywordToFieldsMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.getKeywordToFieldsMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with keywords as keys and fields as values given keywords <em>csvFile</em> path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>csvFile</strong> &#8211; The path of the keywords <em>.csv</em> file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="afp.keywords.getKeywordToIndexMap">
-<tt class="descclassname">afp.keywords.</tt><tt class="descname">getKeywordToIndexMap</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#getKeywordToIndexMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.getKeywordToIndexMap" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descclassname">afp.keywords.</tt><tt class="descname">getKeywordToIndexMap</tt><big>(</big><em>csvFile</em><big>)</big><a class="reference internal" href="_modules/afp/keywords.html#getKeywordToIndexMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.keywords.getKeywordToIndexMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with keywords as keys and indices at values given keywords <em>csvFile</em> path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>csvFile</strong> &#8211; The path of the keywords <em>.csv</em> file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-afp.matrices">
 <span id="afp-matrices-module"></span><h2>afp.matrices module<a class="headerlink" href="#module-afp.matrices" title="Permalink to this headline">¶</a></h2>
-<p>Created on Feb 7, 2014</p>
-<p>&#64;author: Christopher Phillippi</p>
+<span class="target" id="module-matrices"></span><p>This module contains the matrix generating functions</p>
 <dl class="function">
-<dt id="afp.matrices.buildTfIdf">
-<tt class="descclassname">afp.matrices.</tt><tt class="descname">buildTfIdf</tt><big>(</big><em>articles</em>, <em>keywordMap</em><big>)</big><a class="reference internal" href="_modules/afp/matrices.html#buildTfIdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.matrices.buildTfIdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="afp.matrices.tfIdf">
+<tt class="descclassname">afp.matrices.</tt><tt class="descname">tfIdf</tt><big>(</big><em>articles</em>, <em>keywordMap</em><big>)</big><a class="reference internal" href="_modules/afp/matrices.html#tfIdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.matrices.tfIdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dense tf-idf Matrix</p>
+<p>TODO: Find sparse matrix library that allows more sparse flexibility to avoid dense matrix return</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>articles</strong> &#8211; An iterable of article strings. See <a class="reference internal" href="cleaner.html#cleaner.retrieve.getCleanArticles" title="cleaner.retrieve.getCleanArticles"><tt class="xref py py-func docutils literal"><span class="pre">cleaner.retrieve.getCleanArticles()</span></tt></a></li>
+<li><strong>keywordMap</strong> &#8211; A mapping of keywords to their matrix column indices. See <a class="reference internal" href="#afp.keywords.getKeywordToIndexMap" title="afp.keywords.getKeywordToIndexMap"><tt class="xref py py-func docutils literal"><span class="pre">afp.keywords.getKeywordToIndexMap()</span></tt></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-afp.normalize">
 <span id="afp-normalize-module"></span><h2>afp.normalize module<a class="headerlink" href="#module-afp.normalize" title="Permalink to this headline">¶</a></h2>
-<p>Created on Feb 8, 2014</p>
-<p>&#64;author: Christopher Phillippi</p>
+<span class="target" id="module-normalize"></span><p>This module contains the functors which normalize all types of inputs, from matrices to articles, to an expected format</p>
 <dl class="class">
 <dt id="afp.normalize.Article">
 <em class="property">class </em><tt class="descclassname">afp.normalize.</tt><tt class="descname">Article</tt><a class="reference internal" href="_modules/afp/normalize.html#Article"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.normalize.Article" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#afp.normalize.NormalizerBase" title="afp.normalize.NormalizerBase"><tt class="xref py py-class docutils literal"><span class="pre">afp.normalize.NormalizerBase</span></tt></a></p>
+<p>Functor normalizing articles to be searched for keywords</p>
+<p>Replaces the following:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="20%" />
+<col width="29%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">From</th>
+<th class="head">To</th>
+<th class="head">Example</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>&#8216;&#8217;s&#8217;</td>
+<td>&#8216;&#8217;</td>
+<td>boogle&#8217;s</td>
+<td>boogle</td>
+</tr>
+<tr class="row-odd"><td>&#8216;n&#8217;t&#8217;</td>
+<td>&#8216; not&#8217;</td>
+<td>didn&#8217;t</td>
+<td>did not</td>
+</tr>
+<tr class="row-even"><td>&#8216;/&#8217;</td>
+<td>&#8216; or &#8216;</td>
+<td>addle/boogle</td>
+<td>addle or boogle</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="afp.normalize.Article.normalize">
 <tt class="descname">normalize</tt><big>(</big><em>article</em><big>)</big><a class="reference internal" href="_modules/afp/normalize.html#Article.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.normalize.Article.normalize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Normalizes article to be outputed in iterable of words where each word has 
+been replaced according to member: <em>wordReplacements</em>. Also forces all-lowercase.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="afp.normalize.Article.wordReplacements">
@@ -163,6 +277,8 @@
 <dt id="afp.normalize.NormalizerBase">
 <em class="property">class </em><tt class="descclassname">afp.normalize.</tt><tt class="descname">NormalizerBase</tt><a class="reference internal" href="_modules/afp/normalize.html#NormalizerBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.normalize.NormalizerBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Base class for WordCounter Functors</p>
+<p>Extending Requires method: <strong>normalize()</strong></p>
 <dl class="method">
 <dt id="afp.normalize.NormalizerBase.normalize">
 <tt class="descname">normalize</tt><big>(</big><em>matrix</em><big>)</big><a class="reference internal" href="_modules/afp/normalize.html#NormalizerBase.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.normalize.NormalizerBase.normalize" title="Permalink to this definition">¶</a></dt>
@@ -174,18 +290,27 @@
 <dt id="afp.normalize.TfIdf">
 <em class="property">class </em><tt class="descclassname">afp.normalize.</tt><tt class="descname">TfIdf</tt><a class="reference internal" href="_modules/afp/normalize.html#TfIdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.normalize.TfIdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#afp.normalize.NormalizerBase" title="afp.normalize.NormalizerBase"><tt class="xref py py-class docutils literal"><span class="pre">afp.normalize.NormalizerBase</span></tt></a></p>
+<p>Functor normalizing count matrices to tf-idf matrices</p>
 <dl class="method">
 <dt id="afp.normalize.TfIdf.normalize">
 <tt class="descname">normalize</tt><big>(</big><em>counts</em><big>)</big><a class="reference internal" href="_modules/afp/normalize.html#TfIdf.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.normalize.TfIdf.normalize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Normalizes count matrix into tf-idf matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>counts</strong> &#8211; Counts of words in each article. Elements <em>may</em> be negative. Sign is passed-through.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-afp.settings">
 <span id="afp-settings-module"></span><h2>afp.settings module<a class="headerlink" href="#module-afp.settings" title="Permalink to this headline">¶</a></h2>
-<p>Created on Feb 7, 2014</p>
-<p>&#64;author: Christopher Phillippi</p>
+<span class="target" id="module-cleaner.settings"></span><p>This module contains the constants and settings for the afp package</p>
 </div>
 <div class="section" id="module-afp">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-afp" title="Permalink to this headline">¶</a></h2>

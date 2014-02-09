@@ -48,9 +48,11 @@
             
   <h1>Source code for afp.count</h1><div class="highlight"><pre>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Created on Feb 8, 2014</span>
+<span class="sd">.. module:: count</span>
 
-<span class="sd">@author: Christopher Phillippi</span>
+<span class="sd">This module contains the functors which count the keywords in a set of articles, producing a matrix</span>
+
+<span class="sd">.. moduleauthor:: Christopher Phillippi &lt;c_phillippi@mfe.berkeley.edu&gt;</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
@@ -58,6 +60,10 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">izip</span>
 
 <div class="viewcode-block" id="WordCounterBase"><a class="viewcode-back" href="../../afp.html#afp.count.WordCounterBase">[docs]</a><span class="k">class</span> <span class="nc">WordCounterBase</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for WordCounter Functors</span>
+<span class="sd">    </span>
+<span class="sd">    Extending Requires method: **getCounts()**</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">articles</span> <span class="p">):</span>
         <span class="n">counts</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">izip</span><span class="p">(</span> <span class="o">*</span><span class="p">[</span> <span class="p">(</span> <span class="n">count</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">)</span> 
                                             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">article</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">articles</span> <span class="p">)</span>
@@ -65,10 +71,29 @@
         <span class="k">return</span> <span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span> <span class="p">(</span> <span class="n">counts</span><span class="p">,</span> <span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
     
 <div class="viewcode-block" id="WordCounterBase.getCounts"><a class="viewcode-back" href="../../afp.html#afp.count.WordCounterBase.getCounts">[docs]</a>    <span class="k">def</span> <span class="nf">getCounts</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">article</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Required to be a WordCounter, must be implemented in extending class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="bp">NotImplemented</span>
 
 </div></div>
 <div class="viewcode-block" id="WordCounter"><a class="viewcode-back" href="../../afp.html#afp.count.WordCounter">[docs]</a><span class="k">class</span> <span class="nc">WordCounter</span><span class="p">(</span> <span class="n">WordCounterBase</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Functor that counts all keywords in keywordsToIndices map in an article.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns: Sparse matrix of counts with articles on rows and words on columns from scipy.sparse.csr_matrix</span>
+<span class="sd">    </span>
+<span class="sd">    Example usage:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; articles = retrieve.getCleanArticles( cleanersettings.CLEAN_STORE )</span>
+<span class="sd">    &gt;&gt;&gt; keywordsToIndices = keywords.getKeywordToIndexMap( settings.KEYWORDS_FILEPATH )</span>
+<span class="sd">    &gt;&gt;&gt; countMatrix = count.WordCounter( keywordsToIndices )( articles )</span>
+<span class="sd">    &gt;&gt;&gt; countMatrix</span>
+<span class="sd">    (0, 7)     3</span>
+<span class="sd">    (0, 35)    2</span>
+<span class="sd">    (0, 48)    1</span>
+<span class="sd">    (1, 7)     2</span>
+<span class="sd">    ...</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">afp.normalize</span> <span class="kn">as</span> <span class="nn">normalize</span>
     <span class="n">_articleNormalizer</span> <span class="o">=</span> <span class="n">normalize</span><span class="o">.</span><span class="n">Article</span><span class="p">()</span>
     
@@ -80,7 +105,8 @@
             <span class="k">return</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywordsToIndices</span><span class="p">[</span> <span class="n">keyword</span> <span class="p">]</span>
                      <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_articleNormalizer</span><span class="p">(</span> <span class="n">article</span> <span class="p">)</span>
                      <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywordsToIndices</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">Counter</span><span class="p">(</span> <span class="n">getKeywords</span><span class="p">()</span> <span class="p">)</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">Counter</span><span class="p">(</span> <span class="n">getKeywords</span><span class="p">()</span> <span class="p">)</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+    </div></div>
 </pre></div>
 
           </div>

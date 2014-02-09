@@ -1,7 +1,9 @@
 '''
-Created on Feb 7, 2014
+.. module:: cleaner.settings
 
-@author: Christopher Phillippi
+This module contains the constants and settings for the afp package
+
+.. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 
 KEYWORDS_FILEPATH = 'C:\\AFPkeywords\\keywords.csv'

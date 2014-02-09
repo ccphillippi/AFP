@@ -1,13 +1,19 @@
 '''
-Created on Feb 8, 2014
+.. module:: normalize
 
-@author: Christopher Phillippi
+This module contains the functors which normalize all types of inputs, from matrices to articles, to an expected format
+
+.. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 
 import numpy as np
 from itertools import chain
 
 class NormalizerBase( object ):
+    """Base class for WordCounter Functors
+    
+    Extending Requires method: **normalize()**
+    """
     def __call__( self, raw ):
         return self.normalize( raw )
     
@@ -16,7 +22,13 @@ class NormalizerBase( object ):
         
 
 class TfIdf( NormalizerBase ):
+    """Functor normalizing count matrices to tf-idf matrices
+    """
     def normalize( self, counts ):
+        """Normalizes count matrix into tf-idf matrix
+        
+        :param counts: Counts of words in each article. Elements *may* be negative. Sign is passed-through.
+        """
         n = counts.shape[ 0 ]
         absCounts = np.abs( counts )
         def tf():
@@ -29,13 +41,29 @@ class TfIdf( NormalizerBase ):
         return tf().multiply( idf() )
     
 class Article( NormalizerBase ):
-    wordReplacements = [ 
-                         ( '\'s', "" ),
-                         ( 'n\'t', " not" ),
-                         ( "/", " or " ),
+    """Functor normalizing articles to be searched for keywords
+    
+    Replaces the following: 
+    
+    ======  ========  ============  =============== 
+    From    To        Example       Result     
+    ======  ========  ============  ===============
+    ''s'    ''        boogle's      boogle    
+    'n\'t'   ' not'    didn't        did not     
+    '/'     ' or '    addle/boogle  addle or boogle 
+    ======  ========  ============  ===============
+    
+    """
+    wordReplacements = [  # FROM, TO
+                         ( '\'s', '' ),
+                         ( 'n\'t', ' not' ),
+                         ( '/', ' or ' ),
                        ]
         
     def normalize( self, article ):
+        """Normalizes article to be outputed in iterable of words where each word has 
+        been replaced according to member: *wordReplacements*. Also forces all-lowercase.
+        """
         def getPossibleKeywords( line ):
             def normalizeKeyword( word ):
                 def replaceFromTo( interWord, fromTo ):
@@ -46,5 +74,4 @@ class Article( NormalizerBase ):
         return chain.from_iterable( ( getPossibleKeywords( line ) 
                                       for line in article.lower().split( "\n" ) ) )
         
-        
-        
+    
