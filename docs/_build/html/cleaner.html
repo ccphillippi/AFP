@@ -67,12 +67,28 @@
 <dt id="cleaner.filers.ArticleFilerBase">
 <em class="property">class </em><tt class="descclassname">cleaner.filers.</tt><tt class="descname">ArticleFilerBase</tt><a class="reference internal" href="_modules/cleaner/filers.html#ArticleFilerBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.filers.ArticleFilerBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Base API to store an article according to regex members</p>
+<p>Base API to store an article according to regex members. Use this as a base for custom schema. See :class:&#8217;cleaner.schema.LexisNexisSchema&#8217; as an example.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Members:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name" colspan="2">Member paperDateTitleRegex:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Regex retrieving ( paper, date, title ), compiled with :func:&#8217;re.compile&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Member dateRegex:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">Regex retrieving ( month, day, year ), compiled with :func:&#8217;re.compile&#8217;</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Member removeFromTitleRegex:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Regex class of any letter to be removed from the article title, compiled with :func:&#8217;re.compile&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Member removeFromArticleRegex:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">Regex retrieving newlines in sentences, compiled with :func:&#8217;re.compile&#8217;</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Member schemaName:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Name of schema to use, should be the same as one registered in :func:&#8217;cleaner.schema.getSchema&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Member sectionDelimiter:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">String to use as delimiter between sections of the article.</td>
 </tr>
 </tbody>
 </table>
@@ -101,18 +117,18 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="cleaner.filers.ArticleFilerBase.removeFromArticle">
-<tt class="descname">removeFromArticle</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.removeFromArticle" title="Permalink to this definition">¶</a></dt>
+<dt id="cleaner.filers.ArticleFilerBase.removeFromArticleRegex">
+<tt class="descname">removeFromArticleRegex</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="cleaner.filers.ArticleFilerBase.removeFromTitle">
-<tt class="descname">removeFromTitle</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.removeFromTitle" title="Permalink to this definition">¶</a></dt>
+<dt id="cleaner.filers.ArticleFilerBase.removeFromTitleRegex">
+<tt class="descname">removeFromTitleRegex</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="cleaner.filers.ArticleFilerBase.schema">
-<tt class="descname">schema</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.schema" title="Permalink to this definition">¶</a></dt>
+<dt id="cleaner.filers.ArticleFilerBase.schemaName">
+<tt class="descname">schemaName</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.schemaName" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -135,7 +151,7 @@
 <dl class="method">
 <dt id="cleaner.filers.BatchFiler.write">
 <tt class="descname">write</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/cleaner/filers.html#BatchFiler.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.filers.BatchFiler.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a downloaded batch file to the cleaned folder given schema&#8217;s article filer</p>
+<dd><p>Writes a downloaded batch file to the cleaned folder given schemaName&#8217;s article filer</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -225,27 +241,27 @@
 <p>API to store a LexisNexis Article according to afp.settings</p>
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex">
-<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0338C968&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03344590&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex">
-<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0354C998&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x033D11F8&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticle">
-<tt class="descname">removeFromArticle</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03511F20&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticle" title="Permalink to this definition">¶</a></dt>
+<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex">
+<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03397E60&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitle">
-<tt class="descname">removeFromTitle</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x033F15C0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitle" title="Permalink to this definition">¶</a></dt>
+<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex">
+<tt class="descname">removeFromTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03278520&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.schema">
-<tt class="descname">schema</tt><em class="property"> = 'LexisNexis'</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.schema" title="Permalink to this definition">¶</a></dt>
+<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.schemaName">
+<tt class="descname">schemaName</tt><em class="property"> = 'LexisNexis'</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.schemaName" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">

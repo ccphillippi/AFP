@@ -14,12 +14,12 @@ class BatchFiler( object ):
     '''
     def __init__( self, schema ):
         """
-        :param schema: Schema object from :mod:'cleaner.schema'
+        :param schemaName: Schema object from :mod:'cleaner.schemaName'
         """
         self._sourceSchema = schema
         
     def write( self, filename ):
-        '''Writes a downloaded batch file to the cleaned folder given schema's article filer
+        '''Writes a downloaded batch file to the cleaned folder given schemaName's article filer
         
         :param filename: Filename of batch to read from.
         '''
@@ -30,23 +30,28 @@ class BatchFiler( object ):
         raise Exception( "Unable to open file for read: <%s>." % filename )
                 
 class ArticleFilerBase( object ):
-    '''Base API to store an article according to regex members
+    '''Base API to store an article according to regex members. Use this as a base for custom schema. See :class:'cleaner.schema.LexisNexisSchema' as an example.
     
-    :members:
+    :member paperDateTitleRegex: Regex retrieving ( paper, date, title ), compiled with :func:'re.compile'
+    :member dateRegex: Regex retrieving ( month, day, year ), compiled with :func:'re.compile'
+    :member removeFromTitleRegex: Regex class of any letter to be removed from the article title, compiled with :func:'re.compile'
+    :member removeFromArticleRegex: Regex retrieving newlines in sentences, compiled with :func:'re.compile'
+    :member schemaName: Name of schema to use, should be the same as one registered in :func:'cleaner.schema.getSchema'
+    :member sectionDelimiter: String to use as delimiter between sections of the article.
     '''
     paperDateTitleRegex = None
     dateRegex = None
-    removeFromTitle = None
-    schema = None
+    removeFromTitleRegex = None
+    removeFromArticleRegex = None
+    schemaName = None
     sectionDelimiter = None
-    removeFromArticle = None
     
     def getFileName( self, title ):
         """Processes filename for article to be stored
         
         :param title: Article title to be incorporated in filename.
         """
-        return self.removeFromTitle.sub( "", title.strip() ).replace( " ", "_" ) + ".txt"
+        return self.removeFromTitleRegex.sub( "", title.strip() ).replace( " ", "_" ) + ".txt"
         
     def write( self, article ):
         from cleaner import schema
@@ -61,9 +66,9 @@ class ArticleFilerBase( object ):
         except:
             return FilerResult( False, article = article )
         articleOnly = getArticleOnly()
-        articleReplaced = self.removeFromArticle.sub( lambda match : match.group().replace( "\n", " " ), articleOnly )
+        articleReplaced = self.removeFromArticleRegex.sub( lambda match : match.group().replace( "\n", " " ), articleOnly )
         month, day, year = self.dateRegex.search( date ).groups()
-        filepath = schema.getFilePath( self.schema, paper.strip(), month, day, year )
+        filepath = schema.getFilePath( self.schemaName, paper.strip(), month, day, year )
         helpers.ensurePath( filepath )
         filename = self.getFileName( title )
         with open( filepath + "\\" + filename, 'w' ) as toFile:

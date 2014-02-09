@@ -41,10 +41,10 @@ class LexisNexisSchema( object ):
         '''
         paperDateTitleRegex = settings.LEXISNEXIS_REGEX_PAPER_DATE_TITLE
         dateRegex = settings.LEXISNEXIS_REGEX_DATE
-        removeFromTitle = settings.LEXISNEXIS_REGEX_EXCLUDE_FROM_TITLE
-        schema = settings.LEXISNEXIS_FILETAG
+        removeFromTitleRegex = settings.LEXISNEXIS_REGEX_EXCLUDE_FROM_TITLE
+        schemaName = settings.LEXISNEXIS_FILETAG
         sectionDelimiter = settings.LEXISNEXIS_SECTION_DELIMTER
-        removeFromArticle = settings.LEXISNEXIS_REMOVE_FROM_ARTICLE
+        removeFromArticleRegex = settings.LEXISNEXIS_REMOVE_FROM_ARTICLE
     
     def getArticleDelimiter( self ):
         return settings.LEXISNEXIS_ARTICLE_DELIMITER
