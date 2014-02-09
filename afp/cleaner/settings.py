@@ -6,10 +6,13 @@ Created on Jan 31, 2014
 '''
 from re import compile
 from multiprocessing import cpu_count
+from os.path import join
 
 
 CLEAN_STORE = "C:\\AFPcorpus" #avoids being saved on dropbox for now
 UNCLEAN_STORE = "C:\\AFPunclean"
+CLEAN_BATCH_TAG = "cleaned"
+CLEAN_BATCH_STORE = join( UNCLEAN_STORE, CLEAN_BATCH_TAG )
 
 MAX_WORKERS = cpu_count()
 
