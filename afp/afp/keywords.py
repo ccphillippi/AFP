@@ -31,7 +31,7 @@ def formatTicker( ticker ):
 def formatName( name ):
     """Formats a string in *Name* format
     
-    >>> formatName( r'someone\'s financial GROUP' )
+    >>> formatName( r"someone's financial GROUP" )
     'Someone's Financial Group'
     
     """
