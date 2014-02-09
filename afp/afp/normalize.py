@@ -1,7 +1,8 @@
 '''
 .. module:: normalize
 
-This module contains the functors which normalize all types of inputs, from matrices to articles, to an expected format
+This module contains the functors which normalize all types of inputs, 
+from matrices to articles, to an expected format.
 
 .. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
@@ -10,7 +11,7 @@ import numpy as np
 from itertools import chain
 
 class NormalizerBase( object ):
-    """Base class for WordCounter Functors
+    """Base class for Normalizing Functors
     
     Extending Requires method: **normalize()**
     """
