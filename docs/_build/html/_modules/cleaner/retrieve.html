@@ -60,6 +60,7 @@
 
 <div class="viewcode-block" id="getCleanArticles"><a class="viewcode-back" href="../../cleaner.html#cleaner.retrieve.getCleanArticles">[docs]</a><span class="k">def</span> <span class="nf">getCleanArticles</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns iterable of all cleaned articles</span>
+<span class="sd">    </span>
 <span class="sd">    :param cleanStore: Absolute path to clean store</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">getArticle</span><span class="p">(</span> <span class="n">f</span> <span class="p">):</span>
@@ -70,6 +71,7 @@
 </div>
 <div class="viewcode-block" id="getCleanFileList"><a class="viewcode-back" href="../../cleaner.html#cleaner.retrieve.getCleanFileList">[docs]</a><span class="k">def</span> <span class="nf">getCleanFileList</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns interable of all cleaned files</span>
+<span class="sd">    </span>
 <span class="sd">    :param cleanStore: Absolute path to clean store</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
     <span class="n">directory</span> <span class="o">=</span> <span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">cleanStore</span><span class="p">,</span> <span class="n">f</span> <span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">)</span> <span class="p">)</span>

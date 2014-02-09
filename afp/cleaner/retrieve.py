@@ -11,6 +11,7 @@ import os
 
 def getCleanArticles( cleanStore ):
     """Returns iterable of all cleaned articles
+    
     :param cleanStore: Absolute path to clean store
     """
     def getArticle( f ):
@@ -21,6 +22,7 @@ def getCleanArticles( cleanStore ):
 
 def getCleanFileList( cleanStore ):
     """Returns interable of all cleaned files
+    
     :param cleanStore: Absolute path to clean store
     """    
     directory = ( os.path.join( cleanStore, f ) for f in os.listdir( cleanStore ) )
