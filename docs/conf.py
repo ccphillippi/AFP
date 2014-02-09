@@ -19,6 +19,7 @@ import os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
+sys.path.append('C:\\Users\\curly\\git\\AFP\\afp')
 
 # -- General configuration ------------------------------------------------
 
@@ -59,7 +60,7 @@ copyright = u'2014, Christopher Phillippi'
 # built documents.
 #
 # The short X.Y version.
-version = '0.01'
+version = '0'
 # The full version, including alpha/beta/rc tags.
 release = '.1'
 

@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>cleaner.filers &mdash; AFP .1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="AFP .1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">AFP .1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for cleaner.filers</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Created on Jan 31, 2014</span>
+
+<span class="sd">@author: Christopher Phillippi</span>
+<span class="sd">@summary: This module contains the lower level API that handles the file system, </span>
+<span class="sd">such as saving, cleaning, retrieving files. </span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">cleaner.helpers</span> <span class="kn">as</span> <span class="nn">helpers</span>
+             
+<div class="viewcode-block" id="BatchFiler"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.BatchFiler">[docs]</a><span class="k">class</span> <span class="nc">BatchFiler</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    API to retrieve data from a given download batch</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">schema</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sourceSchema</span> <span class="o">=</span> <span class="n">schema</span>
+        
+<div class="viewcode-block" id="BatchFiler.write"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.BatchFiler.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">filename</span> <span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Writes a downloaded batch file to the cleaned folder given schema&#39;s article filer</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">filename</span><span class="p">,</span> <span class="s">&#39;r&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">articleFiler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sourceSchema</span><span class="o">.</span><span class="n">getArticleFiler</span><span class="p">()</span>
+            <span class="n">articles</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sourceSchema</span><span class="o">.</span><span class="n">getArticleDelimiter</span><span class="p">()</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span> <span class="n">articleFiler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="n">article</span> <span class="p">)</span> <span class="k">for</span> <span class="n">article</span> <span class="ow">in</span> <span class="n">articles</span> <span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span> <span class="s">&quot;Unable to open file for read: &lt;</span><span class="si">%s</span><span class="s">&gt;.&quot;</span> <span class="o">%</span> <span class="n">filename</span> <span class="p">)</span>
+                </div></div>
+<div class="viewcode-block" id="ArticleFilerBase"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.ArticleFilerBase">[docs]</a><span class="k">class</span> <span class="nc">ArticleFilerBase</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Base API to store an article according to regex members</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">_paperDateTitleRegex</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_dateRegex</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_removeFromTitle</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_schema</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_sectionDelimiter</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_removeFromArticle</span> <span class="o">=</span> <span class="bp">None</span>
+    
+<div class="viewcode-block" id="ArticleFilerBase.getFileName"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.ArticleFilerBase.getFileName">[docs]</a>    <span class="k">def</span> <span class="nf">getFileName</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">title</span> <span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_removeFromTitle</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="s">&quot;_&quot;</span> <span class="p">)</span> <span class="o">+</span> <span class="s">&quot;.txt&quot;</span>
+        </div>
+<div class="viewcode-block" id="ArticleFilerBase.write"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.ArticleFilerBase.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">article</span> <span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">cleaner</span> <span class="kn">import</span> <span class="n">schema</span>
+        <span class="k">def</span> <span class="nf">getArticleOnly</span><span class="p">():</span>
+            <span class="n">sections</span> <span class="o">=</span> <span class="n">article</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sectionDelimiter</span> <span class="p">)</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">len</span><span class="p">(</span> <span class="n">section</span> <span class="p">)</span> <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span> <span class="p">]</span>
+            <span class="n">sectionByLength</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">lengths</span><span class="p">,</span> <span class="n">sections</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="n">sectionByLength</span><span class="p">[</span> <span class="nb">max</span><span class="p">(</span> <span class="n">lengths</span> <span class="p">)</span> <span class="p">]</span>  <span class="c"># assume article has maximum length</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">paper</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paperDateTitleRegex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span> <span class="n">article</span> <span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">FilerResult</span><span class="p">(</span> <span class="bp">False</span><span class="p">,</span> <span class="n">article</span> <span class="o">=</span> <span class="n">article</span> <span class="p">)</span>
+        <span class="n">articleOnly</span> <span class="o">=</span> <span class="n">getArticleOnly</span><span class="p">()</span>
+        <span class="n">articleReplaced</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_removeFromArticle</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">match</span> <span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="s">&quot; &quot;</span> <span class="p">),</span> <span class="n">articleOnly</span> <span class="p">)</span>
+        <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dateRegex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span> <span class="n">date</span> <span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">getFilePath</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">_schema</span><span class="p">,</span> <span class="n">paper</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">year</span> <span class="p">)</span>
+        <span class="n">helpers</span><span class="o">.</span><span class="n">ensurePath</span><span class="p">(</span> <span class="n">filepath</span> <span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getFileName</span><span class="p">(</span> <span class="n">title</span> <span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">filepath</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">toFile</span><span class="p">:</span>
+            <span class="n">toFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="n">article</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="n">articleOnly</span><span class="p">,</span> <span class="n">articleReplaced</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="n">FilerResult</span><span class="p">(</span> <span class="n">added</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">=</span> <span class="n">filename</span><span class="p">,</span> <span class="n">filePath</span> <span class="o">=</span> <span class="n">filepath</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">FilerResult</span><span class="p">()</span>
+    </div></div>
+<div class="viewcode-block" id="FilerResult"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.FilerResult">[docs]</a><span class="k">class</span> <span class="nc">FilerResult</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Result of an attempted article filing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">added</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">article</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">filePath</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">added</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">article</span> <span class="o">=</span> <span class="n">article</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="n">fileName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filePath</span> <span class="o">=</span> <span class="n">filePath</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">added</span><span class="p">:</span> <span class="k">return</span> <span class="s">&quot;&lt;</span><span class="si">%s</span><span class="s">&gt; in &lt;</span><span class="si">%s</span><span class="s">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePath</span> <span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">added</span> <span class="ow">is</span> <span class="bp">False</span> <span class="p">):</span> <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">article</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="s">&quot;Unknown: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">article</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span>        
+                  
+    
+        
+        
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">AFP .1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Christopher Phillippi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>
