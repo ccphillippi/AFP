@@ -4,16 +4,21 @@ Created on Feb 7, 2014
 @author: Christopher Phillippi
 '''
 
-import cleaner
-import afp
-from afp import count
-from afp import normalize
+import cleaner.retrieve as retrieve
+import cleaner.settings as cleanersetttings
+import afp.keywords as keywords
+import afp.settings as settings
+import afp.count as count
+import afp.normalize as normalize
+import numpy as np
+
 
    
-def buildTfIdf( articles, keywords ):
-    return normalize.TfIdf( count.WordCounter( keywords )( articles ) )
+def buildTfIdf( articles, keywordMap ):
+    counts = count.WordCounter( keywordMap )( articles )
+    return normalize.TfIdf()( counts )
 
 if __name__ == "__main__":
-    articles = cleaner.retrieve.getCleanArticles( cleaner.settings.CLEAN_STORE )
-    keywords = afp.keywords.getAliasToKeywordMap( afp.settings.KEYWORDS_FILEPATH )
-    tfidf = buildTfIdf( articles, keywords )
+    articles = retrieve.getCleanArticles( cleanersetttings.CLEAN_STORE )
+    keywordMap = keywords.getKeywordToIndexMap( settings.KEYWORDS_FILEPATH )
+    print np.cov( buildTfIdf( articles, keywordMap ))

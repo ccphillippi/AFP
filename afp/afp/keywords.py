@@ -63,6 +63,6 @@ def getKeywordToFieldsMap( filename ):
     
 # for alias, keyword in  getAliasToKeywordMap( settings.KEYWORDS_FILEPATH ).iteritems():
 #    print "%s->%s" % ( alias, keyword )
-
-for key, value in getKeywordToIndexMap( settings.KEYWORDS_FILEPATH ).iteritems():
-    print key, ": ", value
+if __name__ == "__main__":
+    for key, value in getKeywordToIndexMap( settings.KEYWORDS_FILEPATH ).iteritems():
+        print key, ": ", value
