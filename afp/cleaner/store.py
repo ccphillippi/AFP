@@ -1,8 +1,9 @@
 '''
-Created on Feb 7, 2014
+.. module:: store
 
-@author: Christopher Phillippi
-@summary: High level API that stores uncleaned data into cleaned store
+High level API that stores uncleaned data into cleaned store
+
+.. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 
 import cleaner.helpers as helpers
@@ -13,9 +14,15 @@ import multiprocessing as mp
 import os
 
 def cleanSources( uncleanStore, numWorkers = settings.MAX_WORKERS ):
-    """
-    Cleans all files in unclean directory, using numWorkers processors
-    Call this function directly to clean data
+    """Cleans all files in unclean directory, using numWorkers processors.
+    
+    :param numWorkers: Number of processors to allocate. Defaults to :func:`multiprocessing.cpu_count`
+    
+    Call this function directly to clean data. For example:
+    
+    >>> cleanSources( settings.UNCLEAN_STORE )
+    Cleaning data in <C:\AFPunclean> with <8> workers.
+    
     """
     pool = mp.Pool( numWorkers )
     print "Cleaning data in <%s> with <%d> workers." % ( uncleanStore, numWorkers )

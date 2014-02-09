@@ -1,8 +1,9 @@
 '''
-Created on Jan 31, 2014
+.. module:: settings
 
-@author: Christopher Phillippi
-@summary: Constants and settings for cleaner
+Constants and settings for cleaner. Compiled regexes reside here.
+
+.. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 from re import compile
 from multiprocessing import cpu_count

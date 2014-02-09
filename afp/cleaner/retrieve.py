@@ -1,16 +1,17 @@
 '''
-Created on Feb 7, 2014
+.. module:: retrieve
 
-@author: Christopher Phillippi
-@summary: High level API to retrieve cleaned files
+High level API to retrieve cleaned files
+
+.. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 
 import cleaner.settings as settings
 import os
 
 def getCleanArticles( cleanStore ):
-    """
-    Returns iterable of all cleaned articles
+    """Returns iterable of all cleaned articles
+    :param cleanStore: Absolute path to clean store
     """
     def getArticle( f ):
         with open( f, 'r' ) as opened:
@@ -19,8 +20,8 @@ def getCleanArticles( cleanStore ):
     return ( getArticle( f ) for f in getCleanFileList( cleanStore ) )
 
 def getCleanFileList( cleanStore ):
-    """
-    Returns interable of all cleaned files
+    """Returns interable of all cleaned files
+    :param cleanStore: Absolute path to clean store
     """    
     directory = ( os.path.join( cleanStore, f ) for f in os.listdir( cleanStore ) )
     for f in directory:

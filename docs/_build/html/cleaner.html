@@ -55,37 +55,30 @@
 </div>
 <div class="section" id="module-cleaner.filers">
 <span id="cleaner-filers-module"></span><h2>cleaner.filers module<a class="headerlink" href="#module-cleaner.filers" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-filers"></span><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">synopsis:</th><td class="field-body">This module contains the lower level API that handles the storing to the filesystem</td>
-</tr>
-</tbody>
-</table>
+<span class="target" id="module-filers"></span><p>This module contains the lower level API that handles the storing to the filesystem</p>
 <dl class="class">
 <dt id="cleaner.filers.ArticleFilerBase">
 <em class="property">class </em><tt class="descclassname">cleaner.filers.</tt><tt class="descname">ArticleFilerBase</tt><a class="reference internal" href="_modules/cleaner/filers.html#ArticleFilerBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.filers.ArticleFilerBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Base API to store an article according to regex members. Use this as a base for custom schema. See :class:&#8217;cleaner.schema.LexisNexisSchema&#8217; as an example.</p>
+<p>Base API to store an article according to regex members. Use this as a base for custom schema. See <a class="reference internal" href="#cleaner.schema.LexisNexisSchema" title="cleaner.schema.LexisNexisSchema"><tt class="xref py py-class docutils literal"><span class="pre">cleaner.schema.LexisNexisSchema</span></tt></a> as an example.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Member paperDateTitleRegex:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Regex retrieving ( paper, date, title ), compiled with :func:&#8217;re.compile&#8217;</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Regex retrieving ( paper, date, title ), compiled with <tt class="xref py py-func docutils literal"><span class="pre">re.compile()</span></tt></td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Member dateRegex:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">Regex retrieving ( month, day, year ), compiled with :func:&#8217;re.compile&#8217;</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">Regex retrieving ( month, day, year ), compiled with <tt class="xref py py-func docutils literal"><span class="pre">re.compile()</span></tt></td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">Member removeFromTitleRegex:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Regex class of any letter to be removed from the article title, compiled with :func:&#8217;re.compile&#8217;</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Regex class of any letter to be removed from the article title, compiled with <tt class="xref py py-func docutils literal"><span class="pre">re.compile()</span></tt></td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Member removeFromArticleRegex:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">Regex retrieving newlines in sentences, compiled with :func:&#8217;re.compile&#8217;</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">Regex retrieving newlines in sentences, compiled with <tt class="xref py py-func docutils literal"><span class="pre">re.compile()</span></tt></td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">Member schemaName:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Name of schema to use, should be the same as one registered in :func:&#8217;cleaner.schema.getSchema&#8217;</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Name of schema to use, should be the same as one registered in <a class="reference internal" href="#cleaner.schema.getSchema" title="cleaner.schema.getSchema"><tt class="xref py py-func docutils literal"><span class="pre">cleaner.schema.getSchema()</span></tt></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Member sectionDelimiter:</th></tr>
 <tr class="field-even field"><td>&nbsp;</td><td class="field-body">String to use as delimiter between sections of the article.</td>
@@ -177,22 +170,12 @@
 </ul>
 </dd>
 </dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Members:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>
 <div class="section" id="module-cleaner.helpers">
 <span id="cleaner-helpers-module"></span><h2>cleaner.helpers module<a class="headerlink" href="#module-cleaner.helpers" title="Permalink to this headline">¶</a></h2>
-<p>Created on Feb 7, 2014</p>
-<p>&#64;author: Christopher Phillippi
-&#64;summary: Helper functions for cleaner</p>
+<span class="target" id="module-helpers"></span><p>Helper functions for cleaner</p>
 <dl class="function">
 <dt id="cleaner.helpers.ensurePath">
 <tt class="descclassname">cleaner.helpers.</tt><tt class="descname">ensurePath</tt><big>(</big><em>filepath</em><big>)</big><a class="reference internal" href="_modules/cleaner/helpers.html#ensurePath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.helpers.ensurePath" title="Permalink to this definition">¶</a></dt>
@@ -201,34 +184,32 @@
 
 <dl class="function">
 <dt id="cleaner.helpers.flatten">
-<tt class="descclassname">cleaner.helpers.</tt><tt class="descname">flatten</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="_modules/cleaner/helpers.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.helpers.flatten" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">cleaner.helpers.</tt><tt class="descname">flatten</tt><big>(</big><em>deepIterable</em><big>)</big><a class="reference internal" href="_modules/cleaner/helpers.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.helpers.flatten" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flatten iterables of iterables of ... to list with depth of 1</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-cleaner.retrieve">
 <span id="cleaner-retrieve-module"></span><h2>cleaner.retrieve module<a class="headerlink" href="#module-cleaner.retrieve" title="Permalink to this headline">¶</a></h2>
-<p>Created on Feb 7, 2014</p>
-<p>&#64;author: Christopher Phillippi
-&#64;summary: High level API to retrieve cleaned files</p>
+<span class="target" id="module-retrieve"></span><p>High level API to retrieve cleaned files</p>
 <dl class="function">
 <dt id="cleaner.retrieve.getCleanArticles">
 <tt class="descclassname">cleaner.retrieve.</tt><tt class="descname">getCleanArticles</tt><big>(</big><em>cleanStore</em><big>)</big><a class="reference internal" href="_modules/cleaner/retrieve.html#getCleanArticles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.retrieve.getCleanArticles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns iterable of all cleaned articles</p>
+<dd><p>Returns iterable of all cleaned articles
+:param cleanStore: Absolute path to clean store</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="cleaner.retrieve.getCleanFileList">
 <tt class="descclassname">cleaner.retrieve.</tt><tt class="descname">getCleanFileList</tt><big>(</big><em>cleanStore</em><big>)</big><a class="reference internal" href="_modules/cleaner/retrieve.html#getCleanFileList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.retrieve.getCleanFileList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns interable of all cleaned files</p>
+<dd><p>Returns interable of all cleaned files
+:param cleanStore: Absolute path to clean store</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-cleaner.schema">
 <span id="cleaner-schema-module"></span><h2>cleaner.schema module<a class="headerlink" href="#module-cleaner.schema" title="Permalink to this headline">¶</a></h2>
-<p>Created on Feb 7, 2014</p>
-<p>&#64;author: Christopher Phillippi
-&#64;summary: Stores schema configurations, both for unclean and clean schemas</p>
+<span class="target" id="module-schema"></span><p>Stores schema configurations, both for unclean and clean schemas</p>
 <dl class="class">
 <dt id="cleaner.schema.LexisNexisSchema">
 <em class="property">class </em><tt class="descclassname">cleaner.schema.</tt><tt class="descname">LexisNexisSchema</tt><a class="reference internal" href="_modules/cleaner/schema.html#LexisNexisSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.schema.LexisNexisSchema" title="Permalink to this definition">¶</a></dt>
@@ -241,22 +222,22 @@
 <p>API to store a LexisNexis Article according to afp.settings</p>
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex">
-<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03344590&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03177FB8&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex">
-<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x033D11F8&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0318BC20&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex">
-<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03397E60&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03305E60&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex">
-<tt class="descname">removeFromTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03278520&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeFromTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x031DE7A0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -292,28 +273,40 @@
 <dl class="function">
 <dt id="cleaner.schema.getSchema">
 <tt class="descclassname">cleaner.schema.</tt><tt class="descname">getSchema</tt><big>(</big><em>sourceDirectory</em><big>)</big><a class="reference internal" href="_modules/cleaner/schema.html#getSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.schema.getSchema" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a sourceDirectory, returns the registered schema
-for example: LexisNexis -&gt; LexisNexis Schema Object</p>
+<dd><p>Given a sourceDirectory, returns the registered schema.</p>
 <p>MUST Register schema here!</p>
+<p>Example Usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">getSchema</span><span class="p">(</span> <span class="s">&#39;LexisNexis&#39;</span> <span class="p">)</span>
+<span class="go">&lt;__main__.LexisNexisSchema object at 0x022816F0&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
 <div class="section" id="module-cleaner.settings">
 <span id="cleaner-settings-module"></span><h2>cleaner.settings module<a class="headerlink" href="#module-cleaner.settings" title="Permalink to this headline">¶</a></h2>
-<p>Created on Jan 31, 2014</p>
-<p>&#64;author: Christopher Phillippi
-&#64;summary: Constants and settings for cleaner</p>
+<span class="target" id="module-settings"></span><p>Constants and settings for cleaner. Compiled regexes reside here.</p>
 </div>
 <div class="section" id="module-cleaner.store">
 <span id="cleaner-store-module"></span><h2>cleaner.store module<a class="headerlink" href="#module-cleaner.store" title="Permalink to this headline">¶</a></h2>
-<p>Created on Feb 7, 2014</p>
-<p>&#64;author: Christopher Phillippi
-&#64;summary: High level API that stores uncleaned data into cleaned store</p>
+<span class="target" id="module-store"></span><p>High level API that stores uncleaned data into cleaned store</p>
 <dl class="function">
 <dt id="cleaner.store.cleanSources">
 <tt class="descclassname">cleaner.store.</tt><tt class="descname">cleanSources</tt><big>(</big><em>uncleanStore</em>, <em>numWorkers=8</em><big>)</big><a class="reference internal" href="_modules/cleaner/store.html#cleanSources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.store.cleanSources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cleans all files in unclean directory, using numWorkers processors
-Call this function directly to clean data</p>
+<dd><p>Cleans all files in unclean directory, using numWorkers processors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>numWorkers</strong> &#8211; Number of processors to allocate. Defaults to <tt class="xref py py-func docutils literal"><span class="pre">multiprocessing.cpu_count()</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Call this function directly to clean data. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cleanSources</span><span class="p">(</span> <span class="n">settings</span><span class="o">.</span><span class="n">UNCLEAN_STORE</span> <span class="p">)</span>
+<span class="go">Cleaning data in &lt;C:\AFPunclean&gt; with &lt;8&gt; workers.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>

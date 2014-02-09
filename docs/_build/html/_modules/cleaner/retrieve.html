@@ -48,18 +48,19 @@
             
   <h1>Source code for cleaner.retrieve</h1><div class="highlight"><pre>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Created on Feb 7, 2014</span>
+<span class="sd">.. module:: retrieve</span>
 
-<span class="sd">@author: Christopher Phillippi</span>
-<span class="sd">@summary: High level API to retrieve cleaned files</span>
+<span class="sd">High level API to retrieve cleaned files</span>
+
+<span class="sd">.. moduleauthor:: Christopher Phillippi &lt;c_phillippi@mfe.berkeley.edu&gt;</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="kn">import</span> <span class="nn">cleaner.settings</span> <span class="kn">as</span> <span class="nn">settings</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <div class="viewcode-block" id="getCleanArticles"><a class="viewcode-back" href="../../cleaner.html#cleaner.retrieve.getCleanArticles">[docs]</a><span class="k">def</span> <span class="nf">getCleanArticles</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns iterable of all cleaned articles</span>
+    <span class="sd">&quot;&quot;&quot;Returns iterable of all cleaned articles</span>
+<span class="sd">    :param cleanStore: Absolute path to clean store</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">getArticle</span><span class="p">(</span> <span class="n">f</span> <span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">f</span><span class="p">,</span> <span class="s">&#39;r&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">opened</span><span class="p">:</span>
@@ -68,8 +69,8 @@
     <span class="k">return</span> <span class="p">(</span> <span class="n">getArticle</span><span class="p">(</span> <span class="n">f</span> <span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">getCleanFileList</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">)</span> <span class="p">)</span>
 </div>
 <div class="viewcode-block" id="getCleanFileList"><a class="viewcode-back" href="../../cleaner.html#cleaner.retrieve.getCleanFileList">[docs]</a><span class="k">def</span> <span class="nf">getCleanFileList</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns interable of all cleaned files</span>
+    <span class="sd">&quot;&quot;&quot;Returns interable of all cleaned files</span>
+<span class="sd">    :param cleanStore: Absolute path to clean store</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
     <span class="n">directory</span> <span class="o">=</span> <span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">cleanStore</span><span class="p">,</span> <span class="n">f</span> <span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">)</span> <span class="p">)</span>
     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">directory</span><span class="p">:</span>

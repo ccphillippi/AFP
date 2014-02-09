@@ -1,8 +1,9 @@
 '''
-Created on Feb 7, 2014
+.. module:: schema
 
-@author: Christopher Phillippi
-@summary: Stores schema configurations, both for unclean and clean schemas
+Stores schema configurations, both for unclean and clean schemas
+
+.. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 
 import cleaner.filers as filers
@@ -12,8 +13,7 @@ import cleaner.settings as settings
 # Clean Schema
 #======================================
 def getFilePath( source, paper, month, day, year ):
-    """
-    Configures cleaned file system schema
+    """Configures cleaned file system schema
     """
     return "\\".join( [ settings.CLEAN_STORE, source, year, month, day, paper ] )
 
@@ -22,22 +22,25 @@ def getFilePath( source, paper, month, day, year ):
 # Dirty Schemas
 #======================================
 def getSchema( sourceDirectory ):
-    """
-    Given a sourceDirectory, returns the registered schema
-    for example: LexisNexis -> LexisNexis Schema Object
+    """Given a sourceDirectory, returns the registered schema.
     
     MUST Register schema here!
+    
+    Example Usage:
+    
+    >>> getSchema( \'LexisNexis\' )
+    <__main__.LexisNexisSchema object at 0x022816F0>
+    
+    
     """
     if( sourceDirectory == settings.LEXISNEXIS_FILETAG ): return LexisNexisSchema()
     raise Exception( "Filer for source <%s> is not registered in getSchema( source )." % ( sourceDirectory ) )
 
 class LexisNexisSchema( object ):
-    '''
-    API to normalize IO from uncleaned data to cleaned data
+    '''API to normalize IO from uncleaned data to cleaned data
     '''
     class LexisNexisArticleFiler( filers.ArticleFilerBase ):
-        '''
-        API to store a LexisNexis Article according to afp.settings
+        '''API to store a LexisNexis Article according to afp.settings
         '''
         paperDateTitleRegex = settings.LEXISNEXIS_REGEX_PAPER_DATE_TITLE
         dateRegex = settings.LEXISNEXIS_REGEX_DATE
@@ -51,3 +54,4 @@ class LexisNexisSchema( object ):
     
     def getArticleFiler( self ):
         return self.LexisNexisArticleFiler()
+

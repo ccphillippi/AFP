@@ -1,8 +1,9 @@
 '''
-Created on Feb 7, 2014
+.. module:: helpers
 
-@author: Christopher Phillippi
-@summary: Helper functions for cleaner
+Helper functions for cleaner
+
+.. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 
 import os
@@ -19,13 +20,13 @@ def ensurePath( filepath ):
         else: raise
 
 
-def flatten( x ):
+def flatten( deepIterable ):
     """
     Flatten iterables of iterables of ... to list with depth of 1
     """
-    if isinstance( x, str ):
-        return [ x ];
+    if isinstance( deepIterable, str ):
+        return [ deepIterable ];
     try:
-        return [ a for i in x for a in flatten( i ) ]
+        return [ a for i in deepIterable for a in flatten( i ) ]
     except:
-        return [ x ]
+        return [ deepIterable ]

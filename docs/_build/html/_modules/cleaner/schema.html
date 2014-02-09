@@ -48,10 +48,11 @@
             
   <h1>Source code for cleaner.schema</h1><div class="highlight"><pre>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Created on Feb 7, 2014</span>
+<span class="sd">.. module:: schema</span>
 
-<span class="sd">@author: Christopher Phillippi</span>
-<span class="sd">@summary: Stores schema configurations, both for unclean and clean schemas</span>
+<span class="sd">Stores schema configurations, both for unclean and clean schemas</span>
+
+<span class="sd">.. moduleauthor:: Christopher Phillippi &lt;c_phillippi@mfe.berkeley.edu&gt;</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="kn">import</span> <span class="nn">cleaner.filers</span> <span class="kn">as</span> <span class="nn">filers</span>
@@ -61,8 +62,7 @@
 <span class="c"># Clean Schema</span>
 <span class="c">#======================================</span>
 <div class="viewcode-block" id="getFilePath"><a class="viewcode-back" href="../../cleaner.html#cleaner.schema.getFilePath">[docs]</a><span class="k">def</span> <span class="nf">getFilePath</span><span class="p">(</span> <span class="n">source</span><span class="p">,</span> <span class="n">paper</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">year</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Configures cleaned file system schema</span>
+    <span class="sd">&quot;&quot;&quot;Configures cleaned file system schema</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="p">[</span> <span class="n">settings</span><span class="o">.</span><span class="n">CLEAN_STORE</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">paper</span> <span class="p">]</span> <span class="p">)</span>
 
@@ -71,22 +71,25 @@
 <span class="c"># Dirty Schemas</span>
 <span class="c">#======================================</span></div>
 <div class="viewcode-block" id="getSchema"><a class="viewcode-back" href="../../cleaner.html#cleaner.schema.getSchema">[docs]</a><span class="k">def</span> <span class="nf">getSchema</span><span class="p">(</span> <span class="n">sourceDirectory</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Given a sourceDirectory, returns the registered schema</span>
-<span class="sd">    for example: LexisNexis -&gt; LexisNexis Schema Object</span>
+    <span class="sd">&quot;&quot;&quot;Given a sourceDirectory, returns the registered schema.</span>
 <span class="sd">    </span>
 <span class="sd">    MUST Register schema here!</span>
+<span class="sd">    </span>
+<span class="sd">    Example Usage:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; getSchema( \&#39;LexisNexis\&#39; )</span>
+<span class="sd">    &lt;__main__.LexisNexisSchema object at 0x022816F0&gt;</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span><span class="p">(</span> <span class="n">sourceDirectory</span> <span class="o">==</span> <span class="n">settings</span><span class="o">.</span><span class="n">LEXISNEXIS_FILETAG</span> <span class="p">):</span> <span class="k">return</span> <span class="n">LexisNexisSchema</span><span class="p">()</span>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span> <span class="s">&quot;Filer for source &lt;</span><span class="si">%s</span><span class="s">&gt; is not registered in getSchema( source ).&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">sourceDirectory</span> <span class="p">)</span> <span class="p">)</span>
 </div>
 <div class="viewcode-block" id="LexisNexisSchema"><a class="viewcode-back" href="../../cleaner.html#cleaner.schema.LexisNexisSchema">[docs]</a><span class="k">class</span> <span class="nc">LexisNexisSchema</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    API to normalize IO from uncleaned data to cleaned data</span>
+    <span class="sd">&#39;&#39;&#39;API to normalize IO from uncleaned data to cleaned data</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 <div class="viewcode-block" id="LexisNexisSchema.LexisNexisArticleFiler"><a class="viewcode-back" href="../../cleaner.html#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler">[docs]</a>    <span class="k">class</span> <span class="nc">LexisNexisArticleFiler</span><span class="p">(</span> <span class="n">filers</span><span class="o">.</span><span class="n">ArticleFilerBase</span> <span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        API to store a LexisNexis Article according to afp.settings</span>
+        <span class="sd">&#39;&#39;&#39;API to store a LexisNexis Article according to afp.settings</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">paperDateTitleRegex</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">LEXISNEXIS_REGEX_PAPER_DATE_TITLE</span>
         <span class="n">dateRegex</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">LEXISNEXIS_REGEX_DATE</span>
@@ -99,8 +102,8 @@
         <span class="k">return</span> <span class="n">settings</span><span class="o">.</span><span class="n">LEXISNEXIS_ARTICLE_DELIMITER</span>
     </div>
 <div class="viewcode-block" id="LexisNexisSchema.getArticleFiler"><a class="viewcode-back" href="../../cleaner.html#cleaner.schema.LexisNexisSchema.getArticleFiler">[docs]</a>    <span class="k">def</span> <span class="nf">getArticleFiler</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">LexisNexisArticleFiler</span><span class="p">()</span></div></div>
-</pre></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">LexisNexisArticleFiler</span><span class="p">()</span>
+</pre></div></div></div>
 
           </div>
         </div>

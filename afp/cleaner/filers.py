@@ -1,7 +1,7 @@
 '''
 .. module:: filers
 
-:synopsis: This module contains the lower level API that handles the storing to the filesystem
+This module contains the lower level API that handles the storing to the filesystem
 
 .. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
    
@@ -14,7 +14,7 @@ class BatchFiler( object ):
     '''
     def __init__( self, schema ):
         """
-        :param schemaName: Schema object from :mod:'cleaner.schemaName'
+        :param schemaName: Schema object from :mod:`cleaner.schemaName`
         """
         self._sourceSchema = schema
         
@@ -30,13 +30,13 @@ class BatchFiler( object ):
         raise Exception( "Unable to open file for read: <%s>." % filename )
                 
 class ArticleFilerBase( object ):
-    '''Base API to store an article according to regex members. Use this as a base for custom schema. See :class:'cleaner.schema.LexisNexisSchema' as an example.
+    '''Base API to store an article according to regex members. Use this as a base for custom schema. See :class:`cleaner.schema.LexisNexisSchema` as an example.
     
-    :member paperDateTitleRegex: Regex retrieving ( paper, date, title ), compiled with :func:'re.compile'
-    :member dateRegex: Regex retrieving ( month, day, year ), compiled with :func:'re.compile'
-    :member removeFromTitleRegex: Regex class of any letter to be removed from the article title, compiled with :func:'re.compile'
-    :member removeFromArticleRegex: Regex retrieving newlines in sentences, compiled with :func:'re.compile'
-    :member schemaName: Name of schema to use, should be the same as one registered in :func:'cleaner.schema.getSchema'
+    :member paperDateTitleRegex: Regex retrieving ( paper, date, title ), compiled with :func:`re.compile`
+    :member dateRegex: Regex retrieving ( month, day, year ), compiled with :func:`re.compile`
+    :member removeFromTitleRegex: Regex class of any letter to be removed from the article title, compiled with :func:`re.compile`
+    :member removeFromArticleRegex: Regex retrieving newlines in sentences, compiled with :func:`re.compile`
+    :member schemaName: Name of schema to use, should be the same as one registered in :func:`cleaner.schema.getSchema`
     :member sectionDelimiter: String to use as delimiter between sections of the article.
     '''
     paperDateTitleRegex = None
@@ -82,8 +82,6 @@ class FilerResult( object ):
     Prints as:
         - file and filepath if successful
         - the article if failed to store
-        
-    :members:
     """
     def __init__( self, added = None, article = None, fileName = None, filePath = None ):
         self.added = added

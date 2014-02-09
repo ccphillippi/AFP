@@ -48,10 +48,11 @@
             
   <h1>Source code for cleaner.store</h1><div class="highlight"><pre>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Created on Feb 7, 2014</span>
+<span class="sd">.. module:: store</span>
 
-<span class="sd">@author: Christopher Phillippi</span>
-<span class="sd">@summary: High level API that stores uncleaned data into cleaned store</span>
+<span class="sd">High level API that stores uncleaned data into cleaned store</span>
+
+<span class="sd">.. moduleauthor:: Christopher Phillippi &lt;c_phillippi@mfe.berkeley.edu&gt;</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="kn">import</span> <span class="nn">cleaner.helpers</span> <span class="kn">as</span> <span class="nn">helpers</span>
@@ -62,9 +63,15 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <div class="viewcode-block" id="cleanSources"><a class="viewcode-back" href="../../cleaner.html#cleaner.store.cleanSources">[docs]</a><span class="k">def</span> <span class="nf">cleanSources</span><span class="p">(</span> <span class="n">uncleanStore</span><span class="p">,</span> <span class="n">numWorkers</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MAX_WORKERS</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Cleans all files in unclean directory, using numWorkers processors</span>
-<span class="sd">    Call this function directly to clean data</span>
+    <span class="sd">&quot;&quot;&quot;Cleans all files in unclean directory, using numWorkers processors.</span>
+<span class="sd">    </span>
+<span class="sd">    :param numWorkers: Number of processors to allocate. Defaults to :func:`multiprocessing.cpu_count`</span>
+<span class="sd">    </span>
+<span class="sd">    Call this function directly to clean data. For example:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; cleanSources( settings.UNCLEAN_STORE )</span>
+<span class="sd">    Cleaning data in &lt;C:\AFPunclean&gt; with &lt;8&gt; workers.</span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pool</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span> <span class="n">numWorkers</span> <span class="p">)</span>
     <span class="k">print</span> <span class="s">&quot;Cleaning data in &lt;</span><span class="si">%s</span><span class="s">&gt; with &lt;</span><span class="si">%d</span><span class="s">&gt; workers.&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">uncleanStore</span><span class="p">,</span> <span class="n">numWorkers</span> <span class="p">)</span>
