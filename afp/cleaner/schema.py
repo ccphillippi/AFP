@@ -39,12 +39,12 @@ class LexisNexisSchema( object ):
         '''
         API to store a LexisNexis Article according to afp.settings
         '''
-        _paperDateTitleRegex = settings.LEXISNEXIS_REGEX_PAPER_DATE_TITLE
-        _dateRegex = settings.LEXISNEXIS_REGEX_DATE
-        _removeFromTitle = settings.LEXISNEXIS_REGEX_EXCLUDE_FROM_TITLE
-        _schema = settings.LEXISNEXIS_FILETAG
-        _sectionDelimiter = settings.LEXISNEXIS_SECTION_DELIMTER
-        _removeFromArticle = settings.LEXISNEXIS_REMOVE_FROM_ARTICLE
+        paperDateTitleRegex = settings.LEXISNEXIS_REGEX_PAPER_DATE_TITLE
+        dateRegex = settings.LEXISNEXIS_REGEX_DATE
+        removeFromTitle = settings.LEXISNEXIS_REGEX_EXCLUDE_FROM_TITLE
+        schema = settings.LEXISNEXIS_FILETAG
+        sectionDelimiter = settings.LEXISNEXIS_SECTION_DELIMTER
+        removeFromArticle = settings.LEXISNEXIS_REMOVE_FROM_ARTICLE
     
     def getArticleDelimiter( self ):
         return settings.LEXISNEXIS_ARTICLE_DELIMITER

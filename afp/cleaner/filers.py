@@ -34,36 +34,36 @@ class ArticleFilerBase( object ):
     
     :members:
     '''
-    _paperDateTitleRegex = None
-    _dateRegex = None
-    _removeFromTitle = None
-    _schema = None
-    _sectionDelimiter = None
-    _removeFromArticle = None
+    paperDateTitleRegex = None
+    dateRegex = None
+    removeFromTitle = None
+    schema = None
+    sectionDelimiter = None
+    removeFromArticle = None
     
     def getFileName( self, title ):
         """Processes filename for article to be stored
         
         :param title: Article title to be incorporated in filename.
         """
-        return self._removeFromTitle.sub( "", title.strip() ).replace( " ", "_" ) + ".txt"
+        return self.removeFromTitle.sub( "", title.strip() ).replace( " ", "_" ) + ".txt"
         
     def write( self, article ):
         from cleaner import schema
         def getArticleOnly():
-            sections = article.split( self._sectionDelimiter )
+            sections = article.split( self.sectionDelimiter )
             lengths = [ len( section ) for section in sections ]
             sectionByLength = dict( zip( lengths, sections ) )
             return sectionByLength[ max( lengths ) ]  # assume article has maximum length
         
         try:
-            paper, date, title = self._paperDateTitleRegex.search( article ).groups()
+            paper, date, title = self.paperDateTitleRegex.search( article ).groups()
         except:
             return FilerResult( False, article = article )
         articleOnly = getArticleOnly()
-        articleReplaced = self._removeFromArticle.sub( lambda match : match.group().replace( "\n", " " ), articleOnly )
-        month, day, year = self._dateRegex.search( date ).groups()
-        filepath = schema.getFilePath( self._schema, paper.strip(), month, day, year )
+        articleReplaced = self.removeFromArticle.sub( lambda match : match.group().replace( "\n", " " ), articleOnly )
+        month, day, year = self.dateRegex.search( date ).groups()
+        filepath = schema.getFilePath( self.schema, paper.strip(), month, day, year )
         helpers.ensurePath( filepath )
         filename = self.getFileName( title )
         with open( filepath + "\\" + filename, 'w' ) as toFile:
@@ -75,8 +75,9 @@ class FilerResult( object ):
     """Result of an attempted article filing
     
     Prints as:
-    * file and filepath if successful
-    * the article if failed to store
+        - file and filepath if successful
+        - the article if failed to store
+        
     :members:
     """
     def __init__( self, added = None, article = None, fileName = None, filePath = None ):

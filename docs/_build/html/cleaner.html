@@ -76,6 +76,11 @@
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="cleaner.filers.ArticleFilerBase.dateRegex">
+<tt class="descname">dateRegex</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.dateRegex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="cleaner.filers.ArticleFilerBase.getFileName">
 <tt class="descname">getFileName</tt><big>(</big><em>title</em><big>)</big><a class="reference internal" href="_modules/cleaner/filers.html#ArticleFilerBase.getFileName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.getFileName" title="Permalink to this definition">¶</a></dt>
@@ -89,6 +94,31 @@
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.filers.ArticleFilerBase.paperDateTitleRegex">
+<tt class="descname">paperDateTitleRegex</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.filers.ArticleFilerBase.removeFromArticle">
+<tt class="descname">removeFromArticle</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.removeFromArticle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.filers.ArticleFilerBase.removeFromTitle">
+<tt class="descname">removeFromTitle</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.removeFromTitle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.filers.ArticleFilerBase.schema">
+<tt class="descname">schema</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.filers.ArticleFilerBase.sectionDelimiter">
+<tt class="descname">sectionDelimiter</tt><em class="property"> = None</em><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.sectionDelimiter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="cleaner.filers.ArticleFilerBase.write">
@@ -123,10 +153,22 @@
 <em class="property">class </em><tt class="descclassname">cleaner.filers.</tt><tt class="descname">FilerResult</tt><big>(</big><em>added=None</em>, <em>article=None</em>, <em>fileName=None</em>, <em>filePath=None</em><big>)</big><a class="reference internal" href="_modules/cleaner/filers.html#FilerResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.filers.FilerResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Result of an attempted article filing</p>
-<p>Prints as:
-* file and filepath if successful
-* the article if failed to store
-:members:</p>
+<dl class="docutils">
+<dt>Prints as:</dt>
+<dd><ul class="first last simple">
+<li>file and filepath if successful</li>
+<li>the article if failed to store</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Members:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -181,6 +223,36 @@
 <em class="property">class </em><tt class="descname">LexisNexisArticleFiler</tt><a class="reference internal" href="_modules/cleaner/schema.html#LexisNexisSchema.LexisNexisArticleFiler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cleaner.filers.ArticleFilerBase" title="cleaner.filers.ArticleFilerBase"><tt class="xref py py-class docutils literal"><span class="pre">cleaner.filers.ArticleFilerBase</span></tt></a></p>
 <p>API to store a LexisNexis Article according to afp.settings</p>
+<dl class="attribute">
+<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex">
+<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0338C968&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex">
+<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0354C998&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticle">
+<tt class="descname">removeFromArticle</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03511F20&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitle">
+<tt class="descname">removeFromTitle</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x033F15C0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.schema">
+<tt class="descname">schema</tt><em class="property"> = 'LexisNexis'</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.sectionDelimiter">
+<tt class="descname">sectionDelimiter</tt><em class="property"> = '\n\n\n'</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.sectionDelimiter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="method">
