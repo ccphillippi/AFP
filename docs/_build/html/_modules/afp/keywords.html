@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>afp.keywords &mdash; afp 1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="afp 1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">afp 1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for afp.keywords</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Created on Jan 31, 2014</span>
+
+<span class="sd">@author: Christopher Phillippi</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">capwords</span>
+<span class="kn">import</span> <span class="nn">afp.settings</span> <span class="kn">as</span> <span class="nn">settings</span>
+
+<div class="viewcode-block" id="formatAlias"><a class="viewcode-back" href="../../afp.html#afp.keywords.formatAlias">[docs]</a><span class="k">def</span> <span class="nf">formatAlias</span><span class="p">(</span> <span class="n">alias</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="n">alias</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="formatTicker"><a class="viewcode-back" href="../../afp.html#afp.keywords.formatTicker">[docs]</a><span class="k">def</span> <span class="nf">formatTicker</span><span class="p">(</span> <span class="n">ticker</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="n">ticker</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="formatName"><a class="viewcode-back" href="../../afp.html#afp.keywords.formatName">[docs]</a><span class="k">def</span> <span class="nf">formatName</span><span class="p">(</span> <span class="n">name</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="n">capwords</span><span class="p">(</span> <span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="getKeywordToIndexMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getKeywordToIndexMap">[docs]</a><span class="k">def</span> <span class="nf">getKeywordToIndexMap</span><span class="p">(</span> <span class="n">filename</span> <span class="p">):</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="n">getKeywordToFieldsMap</span><span class="p">(</span> <span class="n">filename</span> <span class="p">)</span><span class="o">.</span><span class="n">itervalues</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">aliasToIndexPairs</span><span class="p">():</span>
+        <span class="k">def</span> <span class="nf">getAliases</span><span class="p">(</span> <span class="n">field</span> <span class="p">):</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span> <span class="n">field</span><span class="p">[</span> <span class="s">&quot;Name&quot;</span> <span class="p">],</span> <span class="n">field</span><span class="p">[</span> <span class="s">&quot;Ticker&quot;</span> <span class="p">]</span> <span class="p">]</span> <span class="o">+</span> <span class="n">field</span><span class="p">[</span> <span class="s">&quot;Others&quot;</span> <span class="p">]</span>
+            <span class="k">return</span> <span class="p">(</span> <span class="n">formatAlias</span><span class="p">(</span> <span class="n">alias</span> <span class="p">)</span> <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">if</span> <span class="n">alias</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span> <span class="p">(</span> <span class="n">alias</span><span class="p">,</span> <span class="n">field</span><span class="p">[</span> <span class="s">&quot;Index&quot;</span> <span class="p">]</span> <span class="p">)</span> 
+                 <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> 
+                 <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">getAliases</span><span class="p">(</span> <span class="n">field</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">aliasToIndexPairs</span><span class="p">()</span> <span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="getIndexToFieldsMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getIndexToFieldsMap">[docs]</a><span class="k">def</span> <span class="nf">getIndexToFieldsMap</span><span class="p">(</span> <span class="n">filename</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="p">(</span> <span class="p">(</span> <span class="n">field</span><span class="p">[</span> <span class="s">&quot;Index&quot;</span> <span class="p">],</span> <span class="n">field</span> <span class="p">)</span> 
+                   <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">getKeywordToFieldsMap</span><span class="p">(</span> <span class="n">filename</span> <span class="p">)</span><span class="o">.</span><span class="n">itervalues</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span>    
+    </div>
+<div class="viewcode-block" id="getAliasToKeywordMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getAliasToKeywordMap">[docs]</a><span class="k">def</span> <span class="nf">getAliasToKeywordMap</span><span class="p">(</span> <span class="n">filename</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getAllKeywordPairs</span><span class="p">(</span> <span class="n">rows</span> <span class="p">):</span>
+        <span class="k">def</span> <span class="nf">aliasToKeywordPairs</span><span class="p">(</span> <span class="n">row</span> <span class="p">):</span>
+            <span class="k">def</span> <span class="nf">getAliases</span><span class="p">(</span> <span class="n">aliasArray</span> <span class="p">):</span>
+                <span class="k">return</span> <span class="p">[</span> <span class="n">formatAlias</span><span class="p">(</span> <span class="n">alias</span> <span class="p">)</span> <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">aliasArray</span> <span class="k">if</span> <span class="n">alias</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span> <span class="p">]</span>
+            <span class="n">aliases</span> <span class="o">=</span> <span class="n">getAliases</span><span class="p">(</span> <span class="n">row</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&#39;,&#39;</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="n">keyword</span> <span class="o">=</span> <span class="n">aliases</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="k">return</span> <span class="p">(</span> <span class="p">(</span> <span class="n">alias</span><span class="p">,</span> <span class="n">keyword</span> <span class="p">)</span> <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">aliases</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span> <span class="p">(</span> <span class="n">aliasToKeywordPairs</span><span class="p">(</span> <span class="n">row</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span> 
+                                      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">rows</span> <span class="p">)</span> 
+                                      <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">filename</span><span class="p">,</span> <span class="s">&#39;r&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">keywordsCsv</span><span class="p">:</span>
+        <span class="n">keywordPairs</span> <span class="o">=</span> <span class="n">getAllKeywordPairs</span><span class="p">(</span> <span class="n">keywordsCsv</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">keywordPairs</span> <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="getKeywordToFieldsMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getKeywordToFieldsMap">[docs]</a><span class="k">def</span> <span class="nf">getKeywordToFieldsMap</span><span class="p">(</span> <span class="n">filename</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getAllKeywordToFieldsPairs</span><span class="p">(</span> <span class="n">f</span> <span class="p">):</span>
+        <span class="k">def</span> <span class="nf">getKeywordToFieldsPair</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="p">):</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&#39;,&#39;</span> <span class="p">)</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&quot;Index&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+                       <span class="s">&quot;Name&quot;</span> <span class="p">:</span> <span class="n">formatName</span><span class="p">(</span> <span class="n">columns</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">),</span>
+                       <span class="s">&quot;Ticker&quot;</span> <span class="p">:</span> <span class="n">formatTicker</span><span class="p">(</span> <span class="n">columns</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">),</span>
+                       <span class="s">&quot;Others&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="n">formatAlias</span><span class="p">(</span> <span class="n">column</span> <span class="p">)</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">[</span> <span class="mi">2</span><span class="p">:</span> <span class="p">]</span> <span class="k">if</span> <span class="n">column</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span> <span class="p">]</span> <span class="p">}</span>
+            <span class="k">return</span> <span class="p">(</span> <span class="n">formatAlias</span><span class="p">(</span> <span class="n">columns</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">),</span> <span class="n">fields</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span> <span class="n">getKeywordToFieldsPair</span><span class="p">(</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">row</span> <span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">f</span> <span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span> 
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">filename</span><span class="p">,</span> <span class="s">&#39;r&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="n">getAllKeywordToFieldsPairs</span><span class="p">(</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">pairs</span> <span class="p">)</span>
+    
+<span class="c"># for alias, keyword in  getAliasToKeywordMap( settings.KEYWORDS_FILEPATH ).iteritems():</span>
+<span class="c">#    print &quot;%s-&gt;%s&quot; % ( alias, keyword )</span></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">getKeywordToIndexMap</span><span class="p">(</span> <span class="n">settings</span><span class="o">.</span><span class="n">KEYWORDS_FILEPATH</span> <span class="p">)</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">print</span> <span class="n">key</span><span class="p">,</span> <span class="s">&quot;: &quot;</span><span class="p">,</span> <span class="n">value</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">afp 1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Christopher.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>
