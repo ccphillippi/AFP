@@ -1,7 +1,7 @@
 '''
-Created on Jan 31, 2014
 .. module:: filers
-   :synopsis: This module contains the lower level API that handles the storing to the filesystem
+
+:synopsis: This module contains the lower level API that handles the storing to the filesystem
 
 .. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
    
@@ -10,8 +10,7 @@ Created on Jan 31, 2014
 import cleaner.helpers as helpers
              
 class BatchFiler( object ):
-    '''
-    API to retrieve data from a given download batch
+    '''API to retrieve data from a given download batch
     '''
     def __init__( self, schema ):
         """
@@ -20,8 +19,8 @@ class BatchFiler( object ):
         self._sourceSchema = schema
         
     def write( self, filename ):
-        '''
-        Writes a downloaded batch file to the cleaned folder given schema's article filer
+        '''Writes a downloaded batch file to the cleaned folder given schema's article filer
+        
         :param filename: Filename of batch to read from.
         '''
         with open( filename, 'r' ) as f:
@@ -31,8 +30,8 @@ class BatchFiler( object ):
         raise Exception( "Unable to open file for read: <%s>." % filename )
                 
 class ArticleFilerBase( object ):
-    '''
-    Base API to store an article according to regex members
+    '''Base API to store an article according to regex members
+    
     :members:
     '''
     _paperDateTitleRegex = None
@@ -43,8 +42,8 @@ class ArticleFilerBase( object ):
     _removeFromArticle = None
     
     def getFileName( self, title ):
-        """
-        Processes filename for article to be stored
+        """Processes filename for article to be stored
+        
         :param title: Article title to be incorporated in filename.
         """
         return self._removeFromTitle.sub( "", title.strip() ).replace( " ", "_" ) + ".txt"
@@ -73,8 +72,7 @@ class ArticleFilerBase( object ):
         return FilerResult()
     
 class FilerResult( object ):
-    """
-    Result of an attempted article filing
+    """Result of an attempted article filing
     
     Prints as:
     * file and filepath if successful

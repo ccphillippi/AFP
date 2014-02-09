@@ -48,25 +48,29 @@
             
   <h1>Source code for cleaner.filers</h1><div class="highlight"><pre>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Created on Jan 31, 2014</span>
+<span class="sd">.. module:: filers</span>
 
-<span class="sd">@author: Christopher Phillippi</span>
-<span class="sd">@summary: This module contains the lower level API that handles the file system, </span>
-<span class="sd">such as saving, cleaning, retrieving files. </span>
+<span class="sd">:synopsis: This module contains the lower level API that handles the storing to the filesystem</span>
+
+<span class="sd">.. moduleauthor:: Christopher Phillippi &lt;c_phillippi@mfe.berkeley.edu&gt;</span>
+<span class="sd">   </span>
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="kn">import</span> <span class="nn">cleaner.helpers</span> <span class="kn">as</span> <span class="nn">helpers</span>
              
 <div class="viewcode-block" id="BatchFiler"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.BatchFiler">[docs]</a><span class="k">class</span> <span class="nc">BatchFiler</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    API to retrieve data from a given download batch</span>
+    <span class="sd">&#39;&#39;&#39;API to retrieve data from a given download batch</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">schema</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param schema: Schema object from :mod:&#39;cleaner.schema&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sourceSchema</span> <span class="o">=</span> <span class="n">schema</span>
         
 <div class="viewcode-block" id="BatchFiler.write"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.BatchFiler.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">filename</span> <span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Writes a downloaded batch file to the cleaned folder given schema&#39;s article filer</span>
+        <span class="sd">&#39;&#39;&#39;Writes a downloaded batch file to the cleaned folder given schema&#39;s article filer</span>
+<span class="sd">        </span>
+<span class="sd">        :param filename: Filename of batch to read from.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">filename</span><span class="p">,</span> <span class="s">&#39;r&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">articleFiler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sourceSchema</span><span class="o">.</span><span class="n">getArticleFiler</span><span class="p">()</span>
@@ -75,8 +79,9 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span> <span class="s">&quot;Unable to open file for read: &lt;</span><span class="si">%s</span><span class="s">&gt;.&quot;</span> <span class="o">%</span> <span class="n">filename</span> <span class="p">)</span>
                 </div></div>
 <div class="viewcode-block" id="ArticleFilerBase"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.ArticleFilerBase">[docs]</a><span class="k">class</span> <span class="nc">ArticleFilerBase</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Base API to store an article according to regex members</span>
+    <span class="sd">&#39;&#39;&#39;Base API to store an article according to regex members</span>
+<span class="sd">    </span>
+<span class="sd">    :members:</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">_paperDateTitleRegex</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">_dateRegex</span> <span class="o">=</span> <span class="bp">None</span>
@@ -86,7 +91,11 @@
     <span class="n">_removeFromArticle</span> <span class="o">=</span> <span class="bp">None</span>
     
 <div class="viewcode-block" id="ArticleFilerBase.getFileName"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.ArticleFilerBase.getFileName">[docs]</a>    <span class="k">def</span> <span class="nf">getFileName</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">title</span> <span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_removeFromTitle</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="s">&quot;_&quot;</span> <span class="p">)</span> <span class="o">+</span> <span class="s">&quot;.txt&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Processes filename for article to be stored</span>
+<span class="sd">        </span>
+<span class="sd">        :param title: Article title to be incorporated in filename.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_removeFromTitle</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="s">&quot;_&quot;</span> <span class="p">)</span> <span class="o">+</span> <span class="s">&quot;.txt&quot;</span>
         </div>
 <div class="viewcode-block" id="ArticleFilerBase.write"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.ArticleFilerBase.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">article</span> <span class="p">):</span>
         <span class="kn">from</span> <span class="nn">cleaner</span> <span class="kn">import</span> <span class="n">schema</span>
@@ -112,8 +121,12 @@
         <span class="k">return</span> <span class="n">FilerResult</span><span class="p">()</span>
     </div></div>
 <div class="viewcode-block" id="FilerResult"><a class="viewcode-back" href="../../cleaner.html#cleaner.filers.FilerResult">[docs]</a><span class="k">class</span> <span class="nc">FilerResult</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Result of an attempted article filing</span>
+    <span class="sd">&quot;&quot;&quot;Result of an attempted article filing</span>
+<span class="sd">    </span>
+<span class="sd">    Prints as:</span>
+<span class="sd">    * file and filepath if successful</span>
+<span class="sd">    * the article if failed to store</span>
+<span class="sd">    :members:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">added</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">article</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">fileName</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">filePath</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">added</span>
@@ -168,7 +181,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Christopher.
+        &copy; Copyright 2014, Christopher Phillippi.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
     </div>
   </body>

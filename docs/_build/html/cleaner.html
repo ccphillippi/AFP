@@ -55,19 +55,40 @@
 </div>
 <div class="section" id="module-cleaner.filers">
 <span id="cleaner-filers-module"></span><h2>cleaner.filers module<a class="headerlink" href="#module-cleaner.filers" title="Permalink to this headline">¶</a></h2>
-<p>Created on Jan 31, 2014</p>
-<p>&#64;author: Christopher Phillippi
-&#64;summary: This module contains the lower level API that handles the file system, 
-such as saving, cleaning, retrieving files.</p>
+<span class="target" id="module-filers"></span><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">synopsis:</th><td class="field-body">This module contains the lower level API that handles the storing to the filesystem</td>
+</tr>
+</tbody>
+</table>
 <dl class="class">
 <dt id="cleaner.filers.ArticleFilerBase">
 <em class="property">class </em><tt class="descclassname">cleaner.filers.</tt><tt class="descname">ArticleFilerBase</tt><a class="reference internal" href="_modules/cleaner/filers.html#ArticleFilerBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.filers.ArticleFilerBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Base API to store an article according to regex members</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Members:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="cleaner.filers.ArticleFilerBase.getFileName">
 <tt class="descname">getFileName</tt><big>(</big><em>title</em><big>)</big><a class="reference internal" href="_modules/cleaner/filers.html#ArticleFilerBase.getFileName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.filers.ArticleFilerBase.getFileName" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Processes filename for article to be stored</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>title</strong> &#8211; Article title to be incorporated in filename.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="cleaner.filers.ArticleFilerBase.write">
@@ -85,6 +106,14 @@ such as saving, cleaning, retrieving files.</p>
 <dt id="cleaner.filers.BatchFiler.write">
 <tt class="descname">write</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/cleaner/filers.html#BatchFiler.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.filers.BatchFiler.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a downloaded batch file to the cleaned folder given schema&#8217;s article filer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> &#8211; Filename of batch to read from.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -94,6 +123,10 @@ such as saving, cleaning, retrieving files.</p>
 <em class="property">class </em><tt class="descclassname">cleaner.filers.</tt><tt class="descname">FilerResult</tt><big>(</big><em>added=None</em>, <em>article=None</em>, <em>fileName=None</em>, <em>filePath=None</em><big>)</big><a class="reference internal" href="_modules/cleaner/filers.html#FilerResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.filers.FilerResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Result of an attempted article filing</p>
+<p>Prints as:
+* file and filepath if successful
+* the article if failed to store
+:members:</p>
 </dd></dl>
 
 </div>
@@ -263,7 +296,7 @@ Call this function directly to clean data</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Christopher.
+        &copy; Copyright 2014, Christopher Phillippi.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
     </div>
   </body>
