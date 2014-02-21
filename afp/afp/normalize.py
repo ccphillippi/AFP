@@ -8,6 +8,7 @@ from matrices to articles, to an expected format.
 '''
 
 import numpy as np
+# import nltk
 from itertools import chain
 
 class NormalizerBase( object ):
@@ -75,4 +76,24 @@ class Article( NormalizerBase ):
         return chain.from_iterable( ( getPossibleKeywords( line ) 
                                       for line in article.lower().split( "\n" ) ) )
         
-    
+        #=======================================================================
+        # def extractKeywords( sent ):
+        #     def concatNamedEntities( sentTree ):
+        #         try:
+        #             tag = sentTree.node
+        #         except AttributeError:
+        #             word = sentTree[ 0 ]
+        #             return word
+        #         else:
+        #             if( tag == 'NE' ):
+        #                 return " ".join( ( name for name, tag in sentTree ) )
+        #             return ( concatNamedEntities( subTree ) for subTree in sentTree )
+        #     tokenized = nltk.word_tokenize( sent )
+        #     tagged = nltk.pos_tag( tokenized )
+        #     chunked  = nltk.ne_chunk( tagged, binary=True )
+        #     return concatNamedEntities( chunked )
+        # return [ keyword.strip().lower() 
+        #          for sent in nltk.sent_tokenize( article )
+        #          for keyword in extractKeywords( sent ) ] 
+        #=======================================================================
+        

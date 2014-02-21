@@ -96,9 +96,14 @@ def getKeywordToFieldsMap( csvFile ):
     with open( csvFile, 'r' ) as f:
         pairs = getAllKeywordToFieldsPairs( f.readlines() )
     return dict( pairs )
+
+def getTickerList( csvFile ):
+    indexToFieldMap = getIndexToFieldsMap( csvFile )
+    return [ indexToFieldMap[ index ][ 'Ticker' ] for index in sorted( indexToFieldMap.keys() ) ]
+    
     
 # for alias, keyword in  getAliasToKeywordMap( settings.KEYWORDS_FILEPATH ).iteritems():
 #    print "%s->%s" % ( alias, keyword )
 if __name__ == "__main__":
-    for key, value in getKeywordToIndexMap( settings.KEYWORDS_FILEPATH ).iteritems():
-        print key, ": ", value
+    for value in getTickerList( settings.KEYWORDS_FILEPATH ):
+        print value

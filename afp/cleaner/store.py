@@ -48,3 +48,4 @@ def _cleanFile( args ):
 
 if __name__ == '__main__':
     cleanSources( settings.UNCLEAN_STORE )
+    
