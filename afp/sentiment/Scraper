@@ -1,0 +1,8 @@
+import re
+import mechanize
+br = mechanize.Browser()
+br.open("http://www.lexisnexis.com/hottopics/lnacademic/form_news_all.asp")
+br.select_form(name="searchForm")
+forms = [f for f in br.forms()]
+forms[0].controls[0]="google"
+

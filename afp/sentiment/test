@@ -1,0 +1,5 @@
+import nltk
+f=open('1.txt')
+TXT=f.readlines()
+
+#print TXT[:50]
