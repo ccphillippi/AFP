@@ -10,8 +10,10 @@ import cleaner.helpers as helpers
 import cleaner.settings as settings
 import cleaner.filers as filers
 import cleaner.schema as schema
+import csv
 import multiprocessing as mp
 import os
+import ystockquote
 
 def cleanSources( uncleanStore, numWorkers = settings.MAX_WORKERS ):
     """Cleans all files in unclean directory, using numWorkers processors.
@@ -40,6 +42,49 @@ def cleanSources( uncleanStore, numWorkers = settings.MAX_WORKERS ):
     notAdded = [ result for result in results if not result.added ]
     return { "Added" : added, "Unable To Add" : notAdded }
 
+def storeAdjustedClose( tickerList, fromDate, toDate, empiricalStore = 'C:\AFPempiricalstore', filename = 'adjustedClose.csv' ):
+    """Stores a *.csv* file of the adjusted closes of the ticker list by ordered date in *empiricalStore*
+    
+    :param tickerList: List of tickers to be stored in csv from left to right
+    :param fromDate: Start date to get historical closes from
+    :type fromDate: :py:class:`datetime.date`
+    :param toDate: End date to get historical closes from
+    :type toDate: :py:class:`datetime.date`
+    :param empiricalStore: The folder to store the *.csv* file
+    :param filename: The file name of the .csv file
+    
+    For example:
+    
+    >>> storeAdjustedClose( [ 'GOOG', 'AAPL' ], datetime.date( 2012, 1, 10 ), datetime.date( 2012, 1, 30 ) )
+    {'GOOG': {'2012-01-13': '624.99', '2012-01-12': '629.64', '2012-01-11': '625.96', ...
+    
+    """
+    def getPath():
+        path = os.path.abspath( empiricalStore )
+        helpers.ensurePath( path )
+        return os.path.join( path, filename )
+    def adjustedCloseFor( ticker ):
+        csvFile = ystockquote.get_historical_prices( ticker, str( fromDate ), str( toDate ) )
+        return dict( ( ( date, row[ 'Adj Close' ] ) 
+                       for i, ( date, row ) in enumerate( csvFile.iteritems() )
+                       if i != 0 ) )
+    adjustedCloses = [ adjustedCloseFor( ticker )  for ticker in tickerList ]
+    minDate = max( [ min( adjClose.keys() ) for adjClose in adjustedCloses ] )
+    maxDate = min( [ max( adjClose.keys() ) for adjClose in adjustedCloses ] )
+    dates = [ date for date in sorted( adjustedCloses[ 0 ].keys() ) 
+              if date >= minDate and date <= maxDate ]
+    adjCloseByDate = dict( ( ( date, [ adjustedCloses[ i ][ date ] 
+                                      for i in range( len( tickerList ) ) ] ) 
+                             for date in dates ) )
+    
+    with open( getPath(), 'wb' ) as csvFile:
+        csvWriter = csv.writer( csvFile )
+        header = [ 'Date' ] + tickerList;
+        csvWriter.writerow( header )
+        for date, closes in sorted( adjCloseByDate.iteritems() ):
+            csvWriter.writerow( [ date ] + closes )
+    
+    return dict( zip( tickerList, adjustedCloses ) )
 # Multithreading library requires this be a function rather than method or inner function
 # Unpickleable otherwise
 def _cleanFile( args ):
