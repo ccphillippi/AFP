@@ -227,9 +227,30 @@ Create a path if it doesn&#8217;t not currently exist, else does nothing</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="cleaner.retrieve.getEmpiricalDataFrame">
+<tt class="descclassname">cleaner.retrieve.</tt><tt class="descname">getEmpiricalDataFrame</tt><big>(</big><em>tickerList</em>, <em>fromDate</em>, <em>toDate</em>, <em>empiricalStore='C:\\Users\\curly\\AFPdb\\Empirical'</em>, <em>filename='adjustedClose.csv'</em><big>)</big><a class="reference internal" href="_modules/cleaner/retrieve.html#getEmpiricalDataFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.retrieve.getEmpiricalDataFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <tt class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></tt> according to selected stocks and dates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>tickerList</strong> &#8211; A list of the tickers to be added into the table</li>
+<li><strong>fromDate</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.date</span></tt>) &#8211; Time from which to begin the table</li>
+<li><strong>toDate</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.date</span></tt>) &#8211; TIme from which to end the table</li>
+<li><strong>empiricalStore</strong> &#8211; The location of the Empirical file store</li>
+<li><strong>filename</strong> &#8211; The name of the file within the Empirical file store</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="cleaner.retrieve.getEmpiricalTable">
 <tt class="descclassname">cleaner.retrieve.</tt><tt class="descname">getEmpiricalTable</tt><big>(</big><em>tickerList</em>, <em>fromDate</em>, <em>toDate</em>, <em>empiricalStore='C:\\Users\\curly\\AFPdb\\Empirical'</em>, <em>filename='adjustedClose.csv'</em><big>)</big><a class="reference internal" href="_modules/cleaner/retrieve.html#getEmpiricalTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.retrieve.getEmpiricalTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a table in structure of structure format ( Date By Ticker )</p>
+<dd><p>Returns a table in structure of structure format ( Ticker By Date )</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -263,22 +284,22 @@ Create a path if it doesn&#8217;t not currently exist, else does nothing</p>
 <p>API to store a LexisNexis Article according to afp.settings</p>
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex">
-<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x02F52AD0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x02F6DE00&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex">
-<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x033EAF50&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x031DD200&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex">
-<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x033B5DA0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03302E00&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex">
-<tt class="descname">removeFromTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03290840&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeFromTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x031FC840&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">

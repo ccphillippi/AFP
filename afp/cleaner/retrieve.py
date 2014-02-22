@@ -9,6 +9,7 @@ High level API to retrieve cleaned files
 import cleaner.settings as settings
 import csv
 import os
+import pandas as pd
 
 def getCleanArticles( cleanStore ):
     """Returns iterable of all cleaned articles
@@ -39,7 +40,7 @@ def getEmpiricalTable( tickerList,
                        toDate, 
                        empiricalStore = settings.EMPIRICAL_STORE, 
                        filename = settings.ADJUSTED_CLOSE_FILENAME ):
-    """Returns a table in structure of structure format ( Date By Ticker )
+    """Returns a table in structure of structure format ( Ticker By Date )
     
     :param tickerList: A list of the tickers to be added into the table
     :param fromDate: Time from which to begin the table
@@ -50,21 +51,46 @@ def getEmpiricalTable( tickerList,
     :param filename: The name of the file within the Empirical file store
     
     """
-    def getPath():
-        path = os.path.abspath( empiricalStore )
-        return os.path.join( path, filename )
     begin = str( fromDate )
     end = str( toDate )
-    with open( getPath(), 'r' ) as csvFile:
+    with open( _getPath( empiricalStore, filename ), 'r' ) as csvFile:
         csvReader = csv.DictReader( csvFile )
         empiricalTable = dict( ( row[ 'Date' ],
                                  dict( ( ( ticker, row[ ticker ] ) 
                                          for ticker in tickerList ) ) )
                                for row in csvReader
                                if row[ 'Date' ] >= begin and row[ 'Date' ] <= end )
+        
     return empiricalTable
             
-        
+def getEmpiricalDataFrame( tickerList, 
+                           fromDate, 
+                           toDate, 
+                           empiricalStore = settings.EMPIRICAL_STORE, 
+                           filename = settings.ADJUSTED_CLOSE_FILENAME ):
+    """Returns a :py:class:`pandas.DataFrame` according to selected stocks and dates
+    
+    :param tickerList: A list of the tickers to be added into the table
+    :param fromDate: Time from which to begin the table
+    :type fromDate: :py:class:`datetime.date`
+    :param toDate: TIme from which to end the table
+    :type toDate: :py:class:`datetime.date`
+    :param empiricalStore: The location of the Empirical file store
+    :param filename: The name of the file within the Empirical file store
+    
+    """ 
+    df = pd.read_csv( _getPath( empiricalStore, filename ), index_col = 0, parse_dates = True )
+    tickers = set( tickerList )
+    extraColumns = [ column for column in df.columns if column not in tickers ]
+    df.drop( extraColumns, 1 )
+    start = df.index.searchsorted( fromDate )
+    end = df.index.searchsorted( toDate )
+    return df[ start:end ]
+    
+def _getPath( empiricalStore, filename ):
+    path = os.path.abspath( empiricalStore )
+    return os.path.join( path, filename )
+    
     
 if __name__ == "__main__":
     files = getCleanFileList( settings.CLEAN_STORE )
