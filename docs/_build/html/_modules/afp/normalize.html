@@ -57,6 +57,7 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c"># import nltk</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 
 <div class="viewcode-block" id="NormalizerBase"><a class="viewcode-back" href="../../afp.html#afp.normalize.NormalizerBase">[docs]</a><span class="k">class</span> <span class="nc">NormalizerBase</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
@@ -124,7 +125,27 @@
         <span class="k">return</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span> <span class="p">(</span> <span class="n">getPossibleKeywords</span><span class="p">(</span> <span class="n">line</span> <span class="p">)</span> 
                                       <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">article</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
         
-    </div></div>
+        <span class="c">#=======================================================================</span>
+        <span class="c"># def extractKeywords( sent ):</span>
+        <span class="c">#     def concatNamedEntities( sentTree ):</span>
+        <span class="c">#         try:</span>
+        <span class="c">#             tag = sentTree.node</span>
+        <span class="c">#         except AttributeError:</span>
+        <span class="c">#             word = sentTree[ 0 ]</span>
+        <span class="c">#             return word</span>
+        <span class="c">#         else:</span>
+        <span class="c">#             if( tag == &#39;NE&#39; ):</span>
+        <span class="c">#                 return &quot; &quot;.join( ( name for name, tag in sentTree ) )</span>
+        <span class="c">#             return ( concatNamedEntities( subTree ) for subTree in sentTree )</span>
+        <span class="c">#     tokenized = nltk.word_tokenize( sent )</span>
+        <span class="c">#     tagged = nltk.pos_tag( tokenized )</span>
+        <span class="c">#     chunked  = nltk.ne_chunk( tagged, binary=True )</span>
+        <span class="c">#     return concatNamedEntities( chunked )</span>
+        <span class="c"># return [ keyword.strip().lower() </span>
+        <span class="c">#          for sent in nltk.sent_tokenize( article )</span>
+        <span class="c">#          for keyword in extractKeywords( sent ) ] </span>
+        <span class="c">#=======================================================================</span>
+        </div></div>
 </pre></div>
 
           </div>
