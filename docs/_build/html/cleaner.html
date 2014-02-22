@@ -236,22 +236,22 @@
 <p>API to store a LexisNexis Article according to afp.settings</p>
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex">
-<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0301C3F8&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0300D428&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex">
-<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0326C030&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0325C030&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex">
-<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03427CE0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03417CE0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex">
-<tt class="descname">removeFromTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0329F840&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeFromTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03290840&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -324,7 +324,7 @@
 </tbody>
 </table>
 <p>For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">storeAdjustedClose</span><span class="p">(</span> <span class="p">[</span> <span class="s">&#39;GOOG&#39;</span><span class="p">,</span> <span class="s">&#39;AAPL&#39;</span> <span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span> <span class="p">),</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span> <span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">adjustedClose</span><span class="p">(</span> <span class="p">[</span> <span class="s">&#39;GOOG&#39;</span><span class="p">,</span> <span class="s">&#39;AAPL&#39;</span> <span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span> <span class="p">),</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span> <span class="p">)</span>
 <span class="go">{&#39;GOOG&#39;: {&#39;2012-01-13&#39;: &#39;624.99&#39;, &#39;2012-01-12&#39;: &#39;629.64&#39;, &#39;2012-01-11&#39;: &#39;625.96&#39;, ...</span>
 </pre></div>
 </div>

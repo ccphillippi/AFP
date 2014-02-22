@@ -55,7 +55,7 @@ def adjustedClose( tickerList, fromDate, toDate, empiricalStore = 'C:\AFPempiric
     
     For example:
     
-    >>> storeAdjustedClose( [ 'GOOG', 'AAPL' ], datetime.date( 2012, 1, 10 ), datetime.date( 2012, 1, 30 ) )
+    >>> adjustedClose( [ 'GOOG', 'AAPL' ], datetime.date( 2012, 1, 10 ), datetime.date( 2012, 1, 30 ) )
     {'GOOG': {'2012-01-13': '624.99', '2012-01-12': '629.64', '2012-01-11': '625.96', ...
     
     """
