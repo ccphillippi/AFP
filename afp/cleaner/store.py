@@ -42,7 +42,7 @@ def cleanSources( uncleanStore, numWorkers = settings.MAX_WORKERS ):
     notAdded = [ result for result in results if not result.added ]
     return { "Added" : added, "Unable To Add" : notAdded }
 
-def storeAdjustedClose( tickerList, fromDate, toDate, empiricalStore = 'C:\AFPempiricalstore', filename = 'adjustedClose.csv' ):
+def adjustedClose( tickerList, fromDate, toDate, empiricalStore = 'C:\AFPempiricalstore', filename = 'adjustedClose.csv' ):
     """Stores a *.csv* file of the adjusted closes of the ticker list by ordered date in *empiricalStore*
     
     :param tickerList: List of tickers to be stored in csv from left to right

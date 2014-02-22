@@ -236,22 +236,22 @@
 <p>API to store a LexisNexis Article according to afp.settings</p>
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex">
-<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0314EE20&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0301C3F8&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex">
-<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0336EEB0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0326C030&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex">
-<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x034CECE0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03427CE0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex">
-<tt class="descname">removeFromTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0339C840&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeFromTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0329F840&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -305,27 +305,8 @@
 <span id="cleaner-store-module"></span><h2>cleaner.store module<a class="headerlink" href="#module-cleaner.store" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-store"></span><p>High level API that stores uncleaned data into cleaned store</p>
 <dl class="function">
-<dt id="cleaner.store.cleanSources">
-<tt class="descclassname">cleaner.store.</tt><tt class="descname">cleanSources</tt><big>(</big><em>uncleanStore</em>, <em>numWorkers=8</em><big>)</big><a class="reference internal" href="_modules/cleaner/store.html#cleanSources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.store.cleanSources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cleans all files in unclean directory, using numWorkers processors.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>numWorkers</strong> &#8211; Number of processors to allocate. Defaults to <tt class="xref py py-func docutils literal"><span class="pre">multiprocessing.cpu_count()</span></tt></td>
-</tr>
-</tbody>
-</table>
-<p>Call this function directly to clean data. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cleanSources</span><span class="p">(</span> <span class="n">settings</span><span class="o">.</span><span class="n">UNCLEAN_STORE</span> <span class="p">)</span>
-<span class="go">Cleaning data in &lt;C:\AFPunclean&gt; with &lt;8&gt; workers.</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="cleaner.store.storeAdjustedClose">
-<tt class="descclassname">cleaner.store.</tt><tt class="descname">storeAdjustedClose</tt><big>(</big><em>tickerList</em>, <em>fromDate</em>, <em>toDate</em>, <em>empiricalStore='C:\\AFPempiricalstore'</em>, <em>filename='adjustedClose.csv'</em><big>)</big><a class="reference internal" href="_modules/cleaner/store.html#storeAdjustedClose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.store.storeAdjustedClose" title="Permalink to this definition">¶</a></dt>
+<dt id="cleaner.store.adjustedClose">
+<tt class="descclassname">cleaner.store.</tt><tt class="descname">adjustedClose</tt><big>(</big><em>tickerList</em>, <em>fromDate</em>, <em>toDate</em>, <em>empiricalStore='C:\\AFPempiricalstore'</em>, <em>filename='adjustedClose.csv'</em><big>)</big><a class="reference internal" href="_modules/cleaner/store.html#adjustedClose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.store.adjustedClose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores a <em>.csv</em> file of the adjusted closes of the ticker list by ordered date in <em>empiricalStore</em></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -345,6 +326,25 @@
 <p>For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">storeAdjustedClose</span><span class="p">(</span> <span class="p">[</span> <span class="s">&#39;GOOG&#39;</span><span class="p">,</span> <span class="s">&#39;AAPL&#39;</span> <span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span> <span class="p">),</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span> <span class="p">)</span>
 <span class="go">{&#39;GOOG&#39;: {&#39;2012-01-13&#39;: &#39;624.99&#39;, &#39;2012-01-12&#39;: &#39;629.64&#39;, &#39;2012-01-11&#39;: &#39;625.96&#39;, ...</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="cleaner.store.cleanSources">
+<tt class="descclassname">cleaner.store.</tt><tt class="descname">cleanSources</tt><big>(</big><em>uncleanStore</em>, <em>numWorkers=8</em><big>)</big><a class="reference internal" href="_modules/cleaner/store.html#cleanSources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.store.cleanSources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cleans all files in unclean directory, using numWorkers processors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>numWorkers</strong> &#8211; Number of processors to allocate. Defaults to <tt class="xref py py-func docutils literal"><span class="pre">multiprocessing.cpu_count()</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Call this function directly to clean data. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cleanSources</span><span class="p">(</span> <span class="n">settings</span><span class="o">.</span><span class="n">UNCLEAN_STORE</span> <span class="p">)</span>
+<span class="go">Cleaning data in &lt;C:\AFPunclean&gt; with &lt;8&gt; workers.</span>
 </pre></div>
 </div>
 </dd></dl>
