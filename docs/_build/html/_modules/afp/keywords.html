@@ -86,7 +86,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">capwords</span><span class="p">(</span> <span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="p">)</span>
 </div>
-<div class="viewcode-block" id="getKeywordToIndexMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getKeywordToIndexMap">[docs]</a><span class="k">def</span> <span class="nf">getKeywordToIndexMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="p">):</span>
+<div class="viewcode-block" id="getKeywordToIndexMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getKeywordToIndexMap">[docs]</a><span class="k">def</span> <span class="nf">getKeywordToIndexMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">KEYWORDS_FILEPATH</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a dictionary with keywords as keys and indices at values given keywords *csvFile* path</span>
 <span class="sd">    </span>
 <span class="sd">    :param csvFile: The path of the keywords *.csv* file</span>
@@ -101,7 +101,7 @@
                  <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">getAliases</span><span class="p">(</span> <span class="n">field</span> <span class="p">)</span> <span class="p">)</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">aliasToIndexPairs</span><span class="p">()</span> <span class="p">)</span>
     </div>
-<div class="viewcode-block" id="getIndexToFieldsMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getIndexToFieldsMap">[docs]</a><span class="k">def</span> <span class="nf">getIndexToFieldsMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="p">):</span>
+<div class="viewcode-block" id="getIndexToFieldsMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getIndexToFieldsMap">[docs]</a><span class="k">def</span> <span class="nf">getIndexToFieldsMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">KEYWORDS_FILEPATH</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a dictionary with indices as keys and fields as values given keywords *csvFile* path</span>
 <span class="sd">    </span>
 <span class="sd">    :param csvFile: The path of the keywords *.csv* file</span>
@@ -109,7 +109,7 @@
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="p">(</span> <span class="p">(</span> <span class="n">field</span><span class="p">[</span> <span class="s">&quot;Index&quot;</span> <span class="p">],</span> <span class="n">field</span> <span class="p">)</span> 
                    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">getKeywordToFieldsMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="p">)</span><span class="o">.</span><span class="n">itervalues</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span>    
     </div>
-<div class="viewcode-block" id="getAliasToKeywordMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getAliasToKeywordMap">[docs]</a><span class="k">def</span> <span class="nf">getAliasToKeywordMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="p">):</span>
+<div class="viewcode-block" id="getAliasToKeywordMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getAliasToKeywordMap">[docs]</a><span class="k">def</span> <span class="nf">getAliasToKeywordMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">KEYWORDS_FILEPATH</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a dictionary with aliases as keys and keywords as values given keywords *csvFile* path</span>
 <span class="sd">    </span>
 <span class="sd">    :param csvFile: The path of the keywords *.csv* file</span>
@@ -128,7 +128,7 @@
         <span class="n">keywordPairs</span> <span class="o">=</span> <span class="n">getAllKeywordPairs</span><span class="p">(</span> <span class="n">keywordsCsv</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="p">)</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">keywordPairs</span> <span class="p">)</span>
 </div>
-<div class="viewcode-block" id="getKeywordToFieldsMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getKeywordToFieldsMap">[docs]</a><span class="k">def</span> <span class="nf">getKeywordToFieldsMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="p">):</span>
+<div class="viewcode-block" id="getKeywordToFieldsMap"><a class="viewcode-back" href="../../afp.html#afp.keywords.getKeywordToFieldsMap">[docs]</a><span class="k">def</span> <span class="nf">getKeywordToFieldsMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">KEYWORDS_FILEPATH</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a dictionary with keywords as keys and fields as values given keywords *csvFile* path</span>
 <span class="sd">    </span>
 <span class="sd">    :param csvFile: The path of the keywords *.csv* file</span>
@@ -146,7 +146,7 @@
         <span class="n">pairs</span> <span class="o">=</span> <span class="n">getAllKeywordToFieldsPairs</span><span class="p">(</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="p">)</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">pairs</span> <span class="p">)</span>
 </div>
-<div class="viewcode-block" id="getTickerList"><a class="viewcode-back" href="../../afp.html#afp.keywords.getTickerList">[docs]</a><span class="k">def</span> <span class="nf">getTickerList</span><span class="p">(</span> <span class="n">csvFile</span> <span class="p">):</span>
+<div class="viewcode-block" id="getTickerList"><a class="viewcode-back" href="../../afp.html#afp.keywords.getTickerList">[docs]</a><span class="k">def</span> <span class="nf">getTickerList</span><span class="p">(</span> <span class="n">csvFile</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">KEYWORDS_FILEPATH</span> <span class="p">):</span>
     <span class="n">indexToFieldMap</span> <span class="o">=</span> <span class="n">getIndexToFieldsMap</span><span class="p">(</span> <span class="n">csvFile</span> <span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span> <span class="n">indexToFieldMap</span><span class="p">[</span> <span class="n">index</span> <span class="p">][</span> <span class="s">&#39;Ticker&#39;</span> <span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">indexToFieldMap</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">]</span>
     

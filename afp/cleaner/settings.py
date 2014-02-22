@@ -8,10 +8,15 @@ Constants and settings for cleaner. Compiled regexes reside here.
 from re import compile
 from multiprocessing import cpu_count
 from os.path import join
+from os.path import expanduser
 
+MASTER_DIR = join( expanduser( '~' ), 'AFPdb' )
+CLEAN_STORE = join( MASTER_DIR, "Corpus" )  # avoids being saved on dropbox for now
+UNCLEAN_STORE = join( MASTER_DIR, "Unclean" )
+EMPIRICAL_STORE = join( MASTER_DIR, 'Empirical' )
 
-CLEAN_STORE = "C:\\AFPcorpus" #avoids being saved on dropbox for now
-UNCLEAN_STORE = "C:\\AFPunclean"
+ADJUSTED_CLOSE_FILENAME = 'adjustedClose.csv'
+
 CLEAN_BATCH_TAG = "cleaned"
 CLEAN_BATCH_STORE = join( UNCLEAN_STORE, CLEAN_BATCH_TAG )
 

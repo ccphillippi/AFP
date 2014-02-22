@@ -42,7 +42,11 @@ def cleanSources( uncleanStore, numWorkers = settings.MAX_WORKERS ):
     notAdded = [ result for result in results if not result.added ]
     return { "Added" : added, "Unable To Add" : notAdded }
 
-def adjustedClose( tickerList, fromDate, toDate, empiricalStore = 'C:\AFPempiricalstore', filename = 'adjustedClose.csv' ):
+def adjustedClose( tickerList,
+                   fromDate,
+                   toDate,
+                   empiricalStore = settings.EMPIRICAL_STORE,
+                   filename = settings.ADJUSTED_CLOSE_FILENAME ):
     """Stores a *.csv* file of the adjusted closes of the ticker list by ordered date in *empiricalStore*
     
     :param tickerList: List of tickers to be stored in csv from left to right
@@ -51,11 +55,11 @@ def adjustedClose( tickerList, fromDate, toDate, empiricalStore = 'C:\AFPempiric
     :param toDate: End date to get historical closes from
     :type toDate: :py:class:`datetime.date`
     :param empiricalStore: The folder to store the *.csv* file
-    :param filename: The file name of the .csv file
+    :param filename: The file name of the *.csv* file
     
     For example:
     
-    >>> adjustedClose( [ 'GOOG', 'AAPL' ], datetime.date( 2012, 1, 10 ), datetime.date( 2012, 1, 30 ) )
+    >>> store.adjustedClose( [ 'GOOG', 'AAPL' ], datetime.date( 2012, 1, 10 ), datetime.date( 2012, 1, 30 ) )
     {'GOOG': {'2012-01-13': '624.99', '2012-01-12': '629.64', '2012-01-11': '625.96', ...
     
     """
@@ -64,6 +68,7 @@ def adjustedClose( tickerList, fromDate, toDate, empiricalStore = 'C:\AFPempiric
         helpers.ensurePath( path )
         return os.path.join( path, filename )
     def adjustedCloseFor( ticker ):
+        print 'Retrieving for: ', ticker
         csvFile = ystockquote.get_historical_prices( ticker, str( fromDate ), str( toDate ) )
         return dict( ( ( date, row[ 'Adj Close' ] ) 
                        for i, ( date, row ) in enumerate( csvFile.iteritems() )
@@ -73,8 +78,9 @@ def adjustedClose( tickerList, fromDate, toDate, empiricalStore = 'C:\AFPempiric
     maxDate = min( [ max( adjClose.keys() ) for adjClose in adjustedCloses ] )
     dates = [ date for date in sorted( adjustedCloses[ 0 ].keys() ) 
               if date >= minDate and date <= maxDate ]
-    adjCloseByDate = dict( ( ( date, [ adjustedCloses[ i ][ date ] 
-                                      for i in range( len( tickerList ) ) ] ) 
+    adjCloseByDate = dict( ( ( date,
+                               map( lambda close: helpers.tryexcept( lambda: close[ date ], 'NA' ),
+                                    adjustedCloses ) )  
                              for date in dates ) )
     
     with open( getPath(), 'wb' ) as csvFile:
@@ -85,6 +91,7 @@ def adjustedClose( tickerList, fromDate, toDate, empiricalStore = 'C:\AFPempiric
             csvWriter.writerow( [ date ] + closes )
     
     return dict( zip( tickerList, adjustedCloses ) )
+
 # Multithreading library requires this be a function rather than method or inner function
 # Unpickleable otherwise
 def _cleanFile( args ):

@@ -179,7 +179,8 @@
 <dl class="function">
 <dt id="cleaner.helpers.ensurePath">
 <tt class="descclassname">cleaner.helpers.</tt><tt class="descname">ensurePath</tt><big>(</big><em>filepath</em><big>)</big><a class="reference internal" href="_modules/cleaner/helpers.html#ensurePath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.helpers.ensurePath" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a path if it doesn&#8217;t not currently exist, else does nothing</p>
+<dd><p>ype
+Create a path if it doesn&#8217;t not currently exist, else does nothing</p>
 </dd></dl>
 
 <dl class="function">
@@ -187,6 +188,11 @@
 <tt class="descclassname">cleaner.helpers.</tt><tt class="descname">flatten</tt><big>(</big><em>deepIterable</em><big>)</big><a class="reference internal" href="_modules/cleaner/helpers.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.helpers.flatten" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flatten iterables of iterables of ... to list with depth of 1</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="cleaner.helpers.tryexcept">
+<tt class="descclassname">cleaner.helpers.</tt><tt class="descname">tryexcept</tt><big>(</big><em>value</em>, <em>replaceWith</em><big>)</big><a class="reference internal" href="_modules/cleaner/helpers.html#tryexcept"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.helpers.tryexcept" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-cleaner.retrieve">
@@ -220,6 +226,27 @@
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="cleaner.retrieve.getEmpiricalTable">
+<tt class="descclassname">cleaner.retrieve.</tt><tt class="descname">getEmpiricalTable</tt><big>(</big><em>tickerList</em>, <em>fromDate</em>, <em>toDate</em>, <em>empiricalStore='C:\\Users\\curly\\AFPdb\\Empirical'</em>, <em>filename='adjustedClose.csv'</em><big>)</big><a class="reference internal" href="_modules/cleaner/retrieve.html#getEmpiricalTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.retrieve.getEmpiricalTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a table in structure of structure format ( Date By Ticker )</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>tickerList</strong> &#8211; A list of the tickers to be added into the table</li>
+<li><strong>fromDate</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.date</span></tt>) &#8211; Time from which to begin the table</li>
+<li><strong>toDate</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.date</span></tt>) &#8211; TIme from which to end the table</li>
+<li><strong>empiricalStore</strong> &#8211; The location of the Empirical file store</li>
+<li><strong>filename</strong> &#8211; The name of the file within the Empirical file store</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-cleaner.schema">
 <span id="cleaner-schema-module"></span><h2>cleaner.schema module<a class="headerlink" href="#module-cleaner.schema" title="Permalink to this headline">¶</a></h2>
@@ -236,17 +263,17 @@
 <p>API to store a LexisNexis Article according to afp.settings</p>
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex">
-<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0300D428&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dateRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x02F52AD0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.dateRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex">
-<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x0325C030&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">paperDateTitleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x033EAF50&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.paperDateTitleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex">
-<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x03417CE0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeFromArticleRegex</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x033B5DA0&gt;</em><a class="headerlink" href="#cleaner.schema.LexisNexisSchema.LexisNexisArticleFiler.removeFromArticleRegex" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -306,7 +333,7 @@
 <span class="target" id="module-store"></span><p>High level API that stores uncleaned data into cleaned store</p>
 <dl class="function">
 <dt id="cleaner.store.adjustedClose">
-<tt class="descclassname">cleaner.store.</tt><tt class="descname">adjustedClose</tt><big>(</big><em>tickerList</em>, <em>fromDate</em>, <em>toDate</em>, <em>empiricalStore='C:\\AFPempiricalstore'</em>, <em>filename='adjustedClose.csv'</em><big>)</big><a class="reference internal" href="_modules/cleaner/store.html#adjustedClose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.store.adjustedClose" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">cleaner.store.</tt><tt class="descname">adjustedClose</tt><big>(</big><em>tickerList</em>, <em>fromDate</em>, <em>toDate</em>, <em>empiricalStore='C:\\Users\\curly\\AFPdb\\Empirical'</em>, <em>filename='adjustedClose.csv'</em><big>)</big><a class="reference internal" href="_modules/cleaner/store.html#adjustedClose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cleaner.store.adjustedClose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores a <em>.csv</em> file of the adjusted closes of the ticker list by ordered date in <em>empiricalStore</em></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -317,14 +344,14 @@
 <li><strong>fromDate</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.date</span></tt>) &#8211; Start date to get historical closes from</li>
 <li><strong>toDate</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.date</span></tt>) &#8211; End date to get historical closes from</li>
 <li><strong>empiricalStore</strong> &#8211; The folder to store the <em>.csv</em> file</li>
-<li><strong>filename</strong> &#8211; The file name of the .csv file</li>
+<li><strong>filename</strong> &#8211; The file name of the <em>.csv</em> file</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
 <p>For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">adjustedClose</span><span class="p">(</span> <span class="p">[</span> <span class="s">&#39;GOOG&#39;</span><span class="p">,</span> <span class="s">&#39;AAPL&#39;</span> <span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span> <span class="p">),</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span> <span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">store</span><span class="o">.</span><span class="n">adjustedClose</span><span class="p">(</span> <span class="p">[</span> <span class="s">&#39;GOOG&#39;</span><span class="p">,</span> <span class="s">&#39;AAPL&#39;</span> <span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span> <span class="p">),</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span> <span class="p">)</span>
 <span class="go">{&#39;GOOG&#39;: {&#39;2012-01-13&#39;: &#39;624.99&#39;, &#39;2012-01-12&#39;: &#39;629.64&#39;, &#39;2012-01-11&#39;: &#39;625.96&#39;, ...</span>
 </pre></div>
 </div>

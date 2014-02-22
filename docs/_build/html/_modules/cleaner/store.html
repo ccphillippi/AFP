@@ -91,7 +91,11 @@
     <span class="n">notAdded</span> <span class="o">=</span> <span class="p">[</span> <span class="n">result</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">added</span> <span class="p">]</span>
     <span class="k">return</span> <span class="p">{</span> <span class="s">&quot;Added&quot;</span> <span class="p">:</span> <span class="n">added</span><span class="p">,</span> <span class="s">&quot;Unable To Add&quot;</span> <span class="p">:</span> <span class="n">notAdded</span> <span class="p">}</span>
 </div>
-<div class="viewcode-block" id="adjustedClose"><a class="viewcode-back" href="../../cleaner.html#cleaner.store.adjustedClose">[docs]</a><span class="k">def</span> <span class="nf">adjustedClose</span><span class="p">(</span> <span class="n">tickerList</span><span class="p">,</span> <span class="n">fromDate</span><span class="p">,</span> <span class="n">toDate</span><span class="p">,</span> <span class="n">empiricalStore</span> <span class="o">=</span> <span class="s">&#39;C:\AFPempiricalstore&#39;</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;adjustedClose.csv&#39;</span> <span class="p">):</span>
+<div class="viewcode-block" id="adjustedClose"><a class="viewcode-back" href="../../cleaner.html#cleaner.store.adjustedClose">[docs]</a><span class="k">def</span> <span class="nf">adjustedClose</span><span class="p">(</span> <span class="n">tickerList</span><span class="p">,</span>
+                   <span class="n">fromDate</span><span class="p">,</span>
+                   <span class="n">toDate</span><span class="p">,</span>
+                   <span class="n">empiricalStore</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">EMPIRICAL_STORE</span><span class="p">,</span>
+                   <span class="n">filename</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">ADJUSTED_CLOSE_FILENAME</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Stores a *.csv* file of the adjusted closes of the ticker list by ordered date in *empiricalStore*</span>
 <span class="sd">    </span>
 <span class="sd">    :param tickerList: List of tickers to be stored in csv from left to right</span>
@@ -100,11 +104,11 @@
 <span class="sd">    :param toDate: End date to get historical closes from</span>
 <span class="sd">    :type toDate: :py:class:`datetime.date`</span>
 <span class="sd">    :param empiricalStore: The folder to store the *.csv* file</span>
-<span class="sd">    :param filename: The file name of the .csv file</span>
+<span class="sd">    :param filename: The file name of the *.csv* file</span>
 <span class="sd">    </span>
 <span class="sd">    For example:</span>
 <span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; adjustedClose( [ &#39;GOOG&#39;, &#39;AAPL&#39; ], datetime.date( 2012, 1, 10 ), datetime.date( 2012, 1, 30 ) )</span>
+<span class="sd">    &gt;&gt;&gt; store.adjustedClose( [ &#39;GOOG&#39;, &#39;AAPL&#39; ], datetime.date( 2012, 1, 10 ), datetime.date( 2012, 1, 30 ) )</span>
 <span class="sd">    {&#39;GOOG&#39;: {&#39;2012-01-13&#39;: &#39;624.99&#39;, &#39;2012-01-12&#39;: &#39;629.64&#39;, &#39;2012-01-11&#39;: &#39;625.96&#39;, ...</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -113,6 +117,7 @@
         <span class="n">helpers</span><span class="o">.</span><span class="n">ensurePath</span><span class="p">(</span> <span class="n">path</span> <span class="p">)</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">path</span><span class="p">,</span> <span class="n">filename</span> <span class="p">)</span>
     <span class="k">def</span> <span class="nf">adjustedCloseFor</span><span class="p">(</span> <span class="n">ticker</span> <span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;Retrieving for: &#39;</span><span class="p">,</span> <span class="n">ticker</span>
         <span class="n">csvFile</span> <span class="o">=</span> <span class="n">ystockquote</span><span class="o">.</span><span class="n">get_historical_prices</span><span class="p">(</span> <span class="n">ticker</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span> <span class="n">fromDate</span> <span class="p">),</span> <span class="nb">str</span><span class="p">(</span> <span class="n">toDate</span> <span class="p">)</span> <span class="p">)</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="p">(</span> <span class="p">(</span> <span class="n">date</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span> <span class="s">&#39;Adj Close&#39;</span> <span class="p">]</span> <span class="p">)</span> 
                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span> <span class="n">date</span><span class="p">,</span> <span class="n">row</span> <span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">csvFile</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span> <span class="p">)</span>
@@ -122,8 +127,9 @@
     <span class="n">maxDate</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="p">[</span> <span class="nb">max</span><span class="p">(</span> <span class="n">adjClose</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="k">for</span> <span class="n">adjClose</span> <span class="ow">in</span> <span class="n">adjustedCloses</span> <span class="p">]</span> <span class="p">)</span>
     <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span> <span class="n">date</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">adjustedCloses</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> 
               <span class="k">if</span> <span class="n">date</span> <span class="o">&gt;=</span> <span class="n">minDate</span> <span class="ow">and</span> <span class="n">date</span> <span class="o">&lt;=</span> <span class="n">maxDate</span> <span class="p">]</span>
-    <span class="n">adjCloseByDate</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="p">(</span> <span class="p">(</span> <span class="n">date</span><span class="p">,</span> <span class="p">[</span> <span class="n">adjustedCloses</span><span class="p">[</span> <span class="n">i</span> <span class="p">][</span> <span class="n">date</span> <span class="p">]</span> 
-                                      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">tickerList</span> <span class="p">)</span> <span class="p">)</span> <span class="p">]</span> <span class="p">)</span> 
+    <span class="n">adjCloseByDate</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="p">(</span> <span class="p">(</span> <span class="n">date</span><span class="p">,</span>
+                               <span class="nb">map</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">close</span><span class="p">:</span> <span class="n">helpers</span><span class="o">.</span><span class="n">tryexcept</span><span class="p">(</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">close</span><span class="p">[</span> <span class="n">date</span> <span class="p">],</span> <span class="s">&#39;NA&#39;</span> <span class="p">),</span>
+                                    <span class="n">adjustedCloses</span> <span class="p">)</span> <span class="p">)</span>  
                              <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span> <span class="p">)</span> <span class="p">)</span>
     
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">getPath</span><span class="p">(),</span> <span class="s">&#39;wb&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">csvFile</span><span class="p">:</span>
@@ -134,6 +140,7 @@
             <span class="n">csvWriter</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span> <span class="p">[</span> <span class="n">date</span> <span class="p">]</span> <span class="o">+</span> <span class="n">closes</span> <span class="p">)</span>
     
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">tickerList</span><span class="p">,</span> <span class="n">adjustedCloses</span> <span class="p">)</span> <span class="p">)</span>
+
 <span class="c"># Multithreading library requires this be a function rather than method or inner function</span>
 <span class="c"># Unpickleable otherwise</span></div>
 <span class="k">def</span> <span class="nf">_cleanFile</span><span class="p">(</span> <span class="n">args</span> <span class="p">):</span>
