@@ -37,7 +37,7 @@ def formatName( name ):
     """
     return capwords( name.title() )
 
-def getKeywordToIndexMap( csvFile ):
+def getKeywordToIndexMap( csvFile = settings.KEYWORDS_FILEPATH ):
     """Returns a dictionary with keywords as keys and indices at values given keywords *csvFile* path
     
     :param csvFile: The path of the keywords *.csv* file
@@ -52,7 +52,7 @@ def getKeywordToIndexMap( csvFile ):
                  for alias in getAliases( field ) )
     return dict( aliasToIndexPairs() )
     
-def getIndexToFieldsMap( csvFile ):
+def getIndexToFieldsMap( csvFile = settings.KEYWORDS_FILEPATH ):
     """Returns a dictionary with indices as keys and fields as values given keywords *csvFile* path
     
     :param csvFile: The path of the keywords *.csv* file
@@ -60,7 +60,7 @@ def getIndexToFieldsMap( csvFile ):
     return dict( ( ( field[ "Index" ], field ) 
                    for field in getKeywordToFieldsMap( csvFile ).itervalues() ) )    
     
-def getAliasToKeywordMap( csvFile ):
+def getAliasToKeywordMap( csvFile = settings.KEYWORDS_FILEPATH ):
     """Returns a dictionary with aliases as keys and keywords as values given keywords *csvFile* path
     
     :param csvFile: The path of the keywords *.csv* file
@@ -79,7 +79,7 @@ def getAliasToKeywordMap( csvFile ):
         keywordPairs = getAllKeywordPairs( keywordsCsv.readlines() )
     return dict( keywordPairs )
 
-def getKeywordToFieldsMap( csvFile ):
+def getKeywordToFieldsMap( csvFile = settings.KEYWORDS_FILEPATH ):
     """Returns a dictionary with keywords as keys and fields as values given keywords *csvFile* path
     
     :param csvFile: The path of the keywords *.csv* file
@@ -97,7 +97,7 @@ def getKeywordToFieldsMap( csvFile ):
         pairs = getAllKeywordToFieldsPairs( f.readlines() )
     return dict( pairs )
 
-def getTickerList( csvFile ):
+def getTickerList( csvFile = settings.KEYWORDS_FILEPATH ):
     indexToFieldMap = getIndexToFieldsMap( csvFile )
     return [ indexToFieldMap[ index ][ 'Ticker' ] for index in sorted( indexToFieldMap.keys() ) ]
     
