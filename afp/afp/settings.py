@@ -8,5 +8,5 @@ Contains the constants and settings for the afp package.
 from os.path import join
 from os.path import expanduser
 
-MASTER_DIR = join( expanduser( '~' ), 'AFPdb' )
+MASTER_DIR = join( join( expanduser( '~' ), 'Dropbox' ) , 'AFPdb' )
 KEYWORDS_FILEPATH = join( MASTER_DIR, 'Keywords/keywords.csv' )
