@@ -14,12 +14,14 @@ import afp.linalg as linalg
 import afp.settings as settings
 import numpy as np
    
-def tfIdf( articles, keywordMap = keywords.getKeywordToIndexMap() ):
+def tfIdf( articles, keywordsFilePath = settings.KEYWORDS_FILEPATH ):
     """Returns a sparse tf-idf Matrix
     
     :param articles: An iterable of article strings. See :func:`cleaner.retrieve.getCleanArticles`
-    :param keywordMap: A mapping of keywords to their matrix column indices. See :func:`afp.keywords.getKeywordToIndexMap`
+    :param keywordsFilePath: Path to *keywords.csv*
+    :type keywordsFilePath: str
     """
+    keywordMap = keywords.getKeywordToIndexMap( keywordsFilePath );
     counts = count.WordCounter( keywordMap )( articles )
     return normalize.TfIdf()( counts )
 

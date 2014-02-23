@@ -19,6 +19,14 @@ afp.keywords module
     :members:
     :undoc-members:
     :show-inheritance:
+	
+afp.linalg module
+-------------------
+
+.. automodule:: afp.linalg
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 afp.matrices module
 -------------------

@@ -32,4 +32,5 @@ def corr( sparse, isSample = True ):
     invsd = 1.0 / np.sqrt( np.diag( covMat ) )
     return covMat * np.outer( invsd.T, invsd )
     
-    
+if __name__ == "__main__":
+    pass

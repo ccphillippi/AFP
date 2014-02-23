@@ -200,12 +200,46 @@
 <dd></dd></dl>
 
 </div>
+<div class="section" id="module-afp.linalg">
+<span id="afp-linalg-module"></span><h2>afp.linalg module<a class="headerlink" href="#module-afp.linalg" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-linalg"></span><p>This module contains the sparse matrix operations required for processing that do not reside in scipy/numpy</p>
+<dl class="function">
+<dt id="afp.linalg.corr">
+<tt class="descclassname">afp.linalg.</tt><tt class="descname">corr</tt><big>(</big><em>sparse</em>, <em>isSample=True</em><big>)</big><a class="reference internal" href="_modules/afp/linalg.html#corr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.linalg.corr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a correlation matrix for very large sparse matrices with small memory overhead. If
+speed is of upmost concern, just use <tt class="xref py py-func docutils literal"><span class="pre">numpy.corrcoef()</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sparse</strong> (<tt class="xref py py-func docutils literal"><span class="pre">scipy.sparse.csr_matrix()</span></tt> or similar sparse matrix) &#8211; Sparse matrix ( m x n )</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="afp.linalg.cov">
+<tt class="descclassname">afp.linalg.</tt><tt class="descname">cov</tt><big>(</big><em>sparse</em>, <em>isSample=True</em><big>)</big><a class="reference internal" href="_modules/afp/linalg.html#cov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.linalg.cov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a covariance matrix for very large sparse matrices with small memory overhead. If
+speed is of upmost concern, just use <tt class="xref py py-func docutils literal"><span class="pre">numpy.cov()</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sparse</strong> (<tt class="xref py py-func docutils literal"><span class="pre">scipy.sparse.csr_matrix()</span></tt> or similar sparse matrix) &#8211; Sparse matrix ( m x n )</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-afp.matrices">
 <span id="afp-matrices-module"></span><h2>afp.matrices module<a class="headerlink" href="#module-afp.matrices" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-matrices"></span><p>This module contains the matrix generating functions</p>
 <dl class="function">
 <dt id="afp.matrices.tfIdf">
-<tt class="descclassname">afp.matrices.</tt><tt class="descname">tfIdf</tt><big>(</big><em>articles</em>, <em>keywordMap={'coach': 19</em>, <em>'wynn': 76</em>, <em>'advanced micro devices': 0</em>, <em>'roadrunner': 65</em>, <em>'entergy': 26</em>, <em>'ge': 32</em>, <em>'walgreen': 70</em>, <em>'dxx.sg': 18</em>, <em>'mccormick': 43</em>, <em>'intc': 37</em>, <em>'hrs': 35</em>, <em>'wmt': 69</em>, <em>'pten': 53</em>, <em>'cxx.mu': 18</em>, <em>'clx': 18</em>, <em>'citigroup': 17</em>, <em>'gs': 33</em>, <em>'conoco': 22</em>, <em>'goog': 34</em>, <em>'dd': 24</em>, <em>'jp morgan': 40</em>, <em>'amd': 0</em>, <em>'tiffany &amp; co': 64</em>, <em>'amazon': 4</em>, <em>'time warner': 65</em>, <em>'mon': 48</em>, <em>'du': 24</em>, <em>'wynn resort': 76</em>, <em>'tif': 64</em>, <em>'msft': 47</em>, <em>'aet': 1</em>, <em>'electronic arts': 25</em>, <em>'exxon': 28</em>, <em>'dd.ba': 24</em>, <em>'intel': 37</em>, <em>'cxx.du': 18</em>, <em>'f': 30</em>, <em>'jci': 39</em>, <em>'vornado realty trust': 68</em>, <em>'orcl': 52</em>, <em>'monsanto': 48</em>, <em>'medtronic': 44</em>, <em>'wfc': 75</em>, <em>'wells fargo &amp; co': 75</em>, <em>'avon products': 9</em>, <em>'j.p.': 40</em>, <em>'iron mountain': 38</em>, <em>'starwood': 61</em>, <em>'yum!': 77</em>, <em>'google': 34</em>, <em>'exxon mobil': 28</em>, <em>'metlife': 46</em>, <em>'exelon': 27</em>, <em>'tiffany': 64</em>, <em>'ea': 25</em>, <em>'merk &amp; co': 45</em>, <em>'nvda': 51</em>, <em>'jpmorgan chase': 40</em>, <em>'arg': 2</em>, <em>'stanley': 49</em>, <em>'amzn': 4</em>, <em>'hewlett packard': 36</em>, <em>'mdt': 44</em>, <em>'american interational group': 5</em>, <em>'kmb': 41</em>, <em>'hewlett-packard': 36</em>, <em>'pep': 54</em>, <em>'airgas': 2</em>, <em>'fedex': 29</em>, <em>'clorox': 18</em>, <em>&quot;walgreen's&quot;: 70</em>, <em>'xom': 28</em>, <em>'prologis': 57</em>, <em>'disney': 71</em>, <em>'t': 8</em>, <em>'caremark': 23</em>, <em>'ba': 12</em>, <em>'wm': 72</em>, <em>'lmt': 42</em>, <em>'met': 46</em>, <em>'pld': 57</em>, <em>'pepsi': 54</em>, <em>'at&amp;t': 8</em>, <em>'lockheed': 42</em>, <em>'patterson-uti': 53</em>, <em>'etr': 26</em>, <em>'cop': 22</em>, <em>'c': 17</em>, <em>'pepsico': 54</em>, <em>'wlp': 74</em>, <em>'bank of america': 10</em>, <em>'alcoa': 3</em>, <em>'federal express': 29</em>, <em>'ups': 66</em>, <em>'harris': 35</em>, <em>'yum': 77</em>, <em>'coh': 19</em>, <em>'dis': 71</em>, <em>'ford motor': 30</em>, <em>'berkshire hathaway': 11</em>, <em>'apple': 7</em>, <em>'tgt': 63</em>, <em>'nke': 50</em>, <em>'mccormick &amp; co': 43</em>, <em>'du pont (e.i) de nemours': 24</em>, <em>'starwood hotels &amp; resorts': 61</em>, <em>'merk': 45</em>, <em>'brk': 11</em>, <em>'chevron': 16</em>, <em>'cbre': 14</em>, <em>'apc': 6</em>, <em>'verizon communications': 67</em>, <em>'brk-a': 11</em>, <em>'brk-b': 11</em>, <em>'twc': 65</em>, <em>'wellpoint': 74</em>, <em>'mkc': 43</em>, <em>'wal-mart stores': 69</em>, <em>'wag': 70</em>, <em>'sbux': 60</em>, <em>'citi': 17</em>, <em>'iphone': 7</em>, <em>'walt disney': 71</em>, <em>'conocophillips': 22</em>, <em>'wat': 73</em>, <em>'comcast': 21</em>, <em>'pfe': 55</em>, <em>'sprite': 20</em>, <em>'verizon': 67</em>, <em>'hp': 36</em>, <em>'cxx.f': 18</em>, <em>'ford': 30</em>, <em>'pnc': 56</em>, <em>'united parcel service': 66</em>, <em>'twx': 65</em>, <em>'ipad': 7</em>, <em>'irm': 38</em>, <em>'mkc-v': 43</em>, <em>'target': 63</em>, <em>'cvx': 16</em>, <em>'wal-mart': 69</em>, <em>'dd-pa': 24</em>, <em>'dd-pb': 24</em>, <em>'uti': 53</em>, <em>'cvs': 23</em>, <em>'cat': 13</em>, <em>'pfizer': 55</em>, <em>'r': 58</em>, <em>'srcl': 62</em>, <em>'ms': 49</em>, <em>'fdx': 29</em>, <em>'aig': 5</em>, <em>'gps': 31</em>, <em>'aa': 3</em>, <em>'morgan stanley': 49</em>, <em>'cvs caremark': 23</em>, <em>'jpm': 40</em>, <em>'cbg': 14</em>, <em>'aapl': 7</em>, <em>'avp': 9</em>, <em>'ryder system': 58</em>, <em>'cbs': 15</em>, <em>'cmcsk': 21</em>, <em>'kimberly-clark': 41</em>, <em>'vz': 67</em>, <em>'goldman sachs': 33</em>, <em>'coca-cola': 20</em>, <em>'cmcsa': 21</em>, <em>'chase': 40</em>, <em>'berkshire': 11</em>, <em>'nike': 50</em>, <em>'anadarko': 6</em>, <em>'hpq': 36</em>, <em>'cbre group': 14</em>, <em>'hot': 61</em>, <em>'du-pp': 24</em>, <em>'caterpillar': 13</em>, <em>'android': 34</em>, <em>'anadarko petroleum corporation': 6</em>, <em>'coke': 20</em>, <em>'patterson': 53</em>, <em>'waste management': 72</em>, <em>'vno': 68</em>, <em>'goldman': 33</em>, <em>'waters': 73</em>, <em>'nvidia': 51</em>, <em>'southern': 59</em>, <em>'wells': 75</em>, <em>'oracle': 52</em>, <em>'mac': 7</em>, <em>'walmart': 69</em>, <em>'du-b': 24</em>, <em>'general electric': 32</em>, <em>'du-a': 24</em>, <em>'gap': 31</em>, <em>'bac': 10</em>, <em>'johnson controls': 39</em>, <em>'lockheed martin': 42</em>, <em>'boeing': 12</em>, <em>'exc': 27</em>, <em>'pnc financial services': 56</em>, <em>'windows': 47</em>, <em>'ko': 20</em>, <em>'ryder': 58</em>, <em>'stericycle': 62</em>, <em>'aetna': 1</em>, <em>'so': 59</em>, <em>'mrk': 45</em>, <em>'cce': 20</em>, <em>'microsoft': 47</em>, <em>'yum! brands': 77</em>, <em>'starbucks': 60}</em><big>)</big><a class="reference internal" href="_modules/afp/matrices.html#tfIdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.matrices.tfIdf" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">afp.matrices.</tt><tt class="descname">tfIdf</tt><big>(</big><em>articles</em>, <em>keywordsFilePath='C:\\Users\\curly\\Dropbox\\AFPdb\\Keywords/keywords.csv'</em><big>)</big><a class="reference internal" href="_modules/afp/matrices.html#tfIdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#afp.matrices.tfIdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a sparse tf-idf Matrix</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -213,7 +247,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>articles</strong> &#8211; An iterable of article strings. See <a class="reference internal" href="cleaner.html#cleaner.retrieve.getCleanArticles" title="cleaner.retrieve.getCleanArticles"><tt class="xref py py-func docutils literal"><span class="pre">cleaner.retrieve.getCleanArticles()</span></tt></a></li>
-<li><strong>keywordMap</strong> &#8211; A mapping of keywords to their matrix column indices. See <a class="reference internal" href="#afp.keywords.getKeywordToIndexMap" title="afp.keywords.getKeywordToIndexMap"><tt class="xref py py-func docutils literal"><span class="pre">afp.keywords.getKeywordToIndexMap()</span></tt></a></li>
+<li><strong>keywordsFilePath</strong> (<em>str</em>) &#8211; Path to <em>keywords.csv</em></li>
 </ul>
 </td>
 </tr>
@@ -334,6 +368,7 @@ been replaced according to member: <em>wordReplacements</em>. Also forces all-lo
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-afp.count">afp.count module</a></li>
 <li><a class="reference internal" href="#module-afp.keywords">afp.keywords module</a></li>
+<li><a class="reference internal" href="#module-afp.linalg">afp.linalg module</a></li>
 <li><a class="reference internal" href="#module-afp.matrices">afp.matrices module</a></li>
 <li><a class="reference internal" href="#module-afp.normalize">afp.normalize module</a></li>
 <li><a class="reference internal" href="#module-afp.settings">afp.settings module</a></li>
