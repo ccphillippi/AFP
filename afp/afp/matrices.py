@@ -12,9 +12,7 @@ import afp.keywords as keywords
 import afp.settings as settings
 import afp.count as count
 import afp.normalize as normalize
-import numpy as np
-
-
+import afp.linalg as linalg
    
 def tfIdf( articles, keywordMap ):
     """Returns a dense tf-idf Matrix
@@ -30,4 +28,4 @@ def tfIdf( articles, keywordMap ):
 if __name__ == "__main__":
     articles = retrieve.getCleanArticles( cleanersettings.CLEAN_STORE )
     keywordMap = keywords.getKeywordToIndexMap( settings.KEYWORDS_FILEPATH )
-    print np.cov( tfIdf( articles, keywordMap ) )
+    print linalg.corr( tfIdf( articles, keywordMap ) )

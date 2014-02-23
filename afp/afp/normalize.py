@@ -8,6 +8,7 @@ from matrices to articles, to an expected format.
 '''
 
 import numpy as np
+import scipy.sparse as sparse
 # import nltk
 from itertools import chain
 
@@ -21,7 +22,6 @@ class NormalizerBase( object ):
     
     def normalize( self, matrix ):
         NotImplemented
-        
 
 class TfIdf( NormalizerBase ):
     """Functor normalizing count matrices to tf-idf matrices
@@ -39,7 +39,7 @@ class TfIdf( NormalizerBase ):
             occurred = ( absCounts > 0 ).asfptype()
             occurrences = sum( occurred, 0 ).todense() 
             occurrences[ occurrences == 0 ] = 1
-            return np.log( float( n ) / occurrences )
+            return sparse.csr_matrix( np.log( float( n ) / occurrences ) )
         return tf().multiply( idf() )
     
 class Article( NormalizerBase ):
@@ -97,3 +97,4 @@ class Article( NormalizerBase ):
         #          for keyword in extractKeywords( sent ) ] 
         #=======================================================================
         
+
