@@ -60,7 +60,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 
-<div class="viewcode-block" id="getCleanArticles"><a class="viewcode-back" href="../../cleaner.html#cleaner.retrieve.getCleanArticles">[docs]</a><span class="k">def</span> <span class="nf">getCleanArticles</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">):</span>
+<div class="viewcode-block" id="getCleanArticles"><a class="viewcode-back" href="../../cleaner.html#cleaner.retrieve.getCleanArticles">[docs]</a><span class="k">def</span> <span class="nf">getCleanArticles</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">CLEAN_STORE</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns iterable of all cleaned articles</span>
 <span class="sd">    </span>
 <span class="sd">    :param cleanStore: Absolute path to clean store</span>
@@ -71,7 +71,7 @@
         <span class="k">return</span> <span class="n">article</span>
     <span class="k">return</span> <span class="p">(</span> <span class="n">getArticle</span><span class="p">(</span> <span class="n">f</span> <span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">getCleanFileList</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">)</span> <span class="p">)</span>
 </div>
-<div class="viewcode-block" id="getCleanFileList"><a class="viewcode-back" href="../../cleaner.html#cleaner.retrieve.getCleanFileList">[docs]</a><span class="k">def</span> <span class="nf">getCleanFileList</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="p">):</span>
+<div class="viewcode-block" id="getCleanFileList"><a class="viewcode-back" href="../../cleaner.html#cleaner.retrieve.getCleanFileList">[docs]</a><span class="k">def</span> <span class="nf">getCleanFileList</span><span class="p">(</span> <span class="n">cleanStore</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">CLEAN_STORE</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns interable of all cleaned files</span>
 <span class="sd">    </span>
 <span class="sd">    :param cleanStore: Absolute path to clean store</span>

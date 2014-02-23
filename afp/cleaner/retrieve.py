@@ -11,7 +11,7 @@ import csv
 import os
 import pandas as pd
 
-def getCleanArticles( cleanStore ):
+def getCleanArticles( cleanStore = settings.CLEAN_STORE ):
     """Returns iterable of all cleaned articles
     
     :param cleanStore: Absolute path to clean store
@@ -22,7 +22,7 @@ def getCleanArticles( cleanStore ):
         return article
     return ( getArticle( f ) for f in getCleanFileList( cleanStore ) )
 
-def getCleanFileList( cleanStore ):
+def getCleanFileList( cleanStore = settings.CLEAN_STORE ):
     """Returns interable of all cleaned files
     
     :param cleanStore: Absolute path to clean store
