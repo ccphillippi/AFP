@@ -11,6 +11,8 @@ import afp.keywords as keywords
 import afp.count as count
 import afp.normalize as normalize
 import afp.linalg as linalg
+import afp.settings as settings
+import numpy as np
    
 def tfIdf( articles, keywordMap = keywords.getKeywordToIndexMap() ):
     """Returns a sparse tf-idf Matrix
@@ -22,4 +24,5 @@ def tfIdf( articles, keywordMap = keywords.getKeywordToIndexMap() ):
     return normalize.TfIdf()( counts )
 
 if __name__ == "__main__":
-    print linalg.corr( tfIdf( retrieve.getCleanArticles() ) )
+    corr = linalg.corr( tfIdf( retrieve.getCleanArticles() ) )
+    np.savetxt( settings.RESULTS_DIR + '/corr2012.csv', corr, delimiter = ',' )
