@@ -1,32 +1,54 @@
 import nltk
 from os import listdir
+import string
+import csv
 
-keyword="google"
+KeyWord=["google"]
 path="/Users/Lee/Dropbox/AFPdb/Corpus/LexisNexis/"
-year=listdir(path)
-year.remove('.DS_Store')
+Mon=["january","february","march","april","may","june","july","august","september","october","november","december"]
+dic=dict(zip(Mon,range(1,13)))
 
-year=["2012"]
+keyword_path="/Users/Lee/Dropbox/AFPdb/Keywords/keywords.csv"
+keyword_file=csv.reader(open(keyword_path),delimiter=',')
+KeyWord=[]
+for row in keyword_file:
+    KeyWord.append(filter(lambda a: a != '', row))
 
-for y in year:
-    month=listdir(path+y)
-    month.remove('.DS_Store')
-    for m in month:
-        day=listdir(path+y+"/"+m)
-        day.remove('.DS_Store')
-        for d in day:
-            Sent=[]
-            Newspaper=listdir(path+y+"/"+m+"/"+d)
-            #Newspaper.remove('.DS_Store')
-            for np in Newspaper:
-                News=listdir(path+y+"/"+m+"/"+d+"/"+np)
-                for file in News:
-                    f=open(path+y+"/"+m+"/"+d+"/"+np+"/"+file)
-                    TXT[0]=f.readlines()
-                    TXT=TXT.replace("\r", "");
-                    TXT=TXT.replace("|", ".");
-                    TXT=TXT.replace("\n", "");                    
-                    Sent=Sent+nltk.sent_tokenize(TXT)
+for keyword in KeyWord[1:]:
+    fw=open("/Users/Lee/Dropbox/AFPdb/SparseSent/"+keyword[0]+".txt","w")
+    year=listdir(path)
+    if '.DS_Store' in year: year.remove('.DS_Store')
+    for y in year:
+        month=listdir(path+y)
+        if '.DS_Store' in month: month.remove('.DS_Store')
+        for m in month:
+            day=listdir(path+y+"/"+m)
+            if '.DS_Store' in day: day.remove('.DS_Store')
+            for d in day:
+                Newspaper=listdir(path+y+"/"+m+"/"+d)
+                if '.DS_Store' in Newspaper: Newspaper.remove('.DS_Store')
+                for np in Newspaper:
+                    News=listdir(path+y+"/"+m+"/"+d+"/"+np)
+                    if '.DS_Store' in News: News.remove('.DS_Store')
+                    for file in News:
+                        fr=open(path+y+"/"+m+"/"+d+"/"+np+"/"+file)
+                        TXT=fr.readlines()
+                        fr.close()
+                        for i in xrange(0,len(TXT)):
+                            TXT[i]=TXT[i].replace("\r", "")
+                            TXT[i]=TXT[i].replace("|", ".")
+                            TXT[i]=TXT[i].replace("\n", "")
+                            temp=nltk.sent_tokenize(TXT[i])
+                            for t in temp:
+                                if any(k for k in keyword if k in t.lower()):
+                                    fw.writelines(y+"/"+str(dic[m.lower()])+"/"+d + "@" +t.lower()+"\n")
+                                                        
+    
+    fw.close()
+    print keyword[0]+" done"
+    #print keyword+" : "+str(len(Sent))
+
+                    #Sent=Sent+nltk.sent_tokenize(TXT)
 '''                    
 for i in Sent:
     Sent_Split=i.lower().split()
