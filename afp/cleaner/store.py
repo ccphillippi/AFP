@@ -15,7 +15,7 @@ import multiprocessing as mp
 import os
 import ystockquote
 
-def cleanSources( uncleanStore, numWorkers = settings.MAX_WORKERS ):
+def cleanSources( uncleanStore = settings.UNCLEAN_STORE, numWorkers = settings.MAX_WORKERS ):
     """Cleans all files in unclean directory, using numWorkers processors.
     
     :param numWorkers: Number of processors to allocate. Defaults to :py:func:`multiprocessing.cpu_count`
@@ -99,5 +99,5 @@ def _cleanFile( args ):
     return filer.write( os.path.join( cleanDir, uncleanFile ) )
 
 if __name__ == '__main__':
-    cleanSources( settings.UNCLEAN_STORE )
+    cleanSources()
     
