@@ -9,6 +9,7 @@ This module handles the keyword mappings required when counting words in article
 from itertools import chain
 from string import capwords
 import afp.settings as settings
+import csv
 
 def formatAlias( alias ):
     """Formats a string in *Alias* format
@@ -69,15 +70,16 @@ def getAliasToKeywordMap( csvFile = settings.KEYWORDS_FILEPATH ):
         def aliasToKeywordPairs( row ):
             def getAliases( aliasArray ):
                 return [ formatAlias( alias ) for alias in aliasArray if alias != "" ]
-            aliases = getAliases( row.split( ',' ) )
+            aliases = getAliases( row )
             keyword = aliases[ 0 ]
             return ( ( alias, keyword ) for alias in aliases )
-        return chain.from_iterable( ( aliasToKeywordPairs( row.strip() ) 
+        return chain.from_iterable( ( aliasToKeywordPairs( row ) 
                                       for i, row in enumerate( rows ) 
                                       if i != 0 ) )
-    with open( csvFile, 'r' ) as keywordsCsv:
-        keywordPairs = getAllKeywordPairs( keywordsCsv.readlines() )
-    return dict( keywordPairs )
+    with open( csvFile, 'rU' ) as keywordsCsv:
+        csvReader = csv.reader( keywordsCsv, dialect = 'excel' )
+        keywordPairs = dict( getAllKeywordPairs( csvReader ) )
+    return keywordPairs
 
 def getKeywordToFieldsMap( csvFile = settings.KEYWORDS_FILEPATH ):
     """Returns a dictionary with keywords as keys and fields as values given keywords *csvFile* path
@@ -86,16 +88,16 @@ def getKeywordToFieldsMap( csvFile = settings.KEYWORDS_FILEPATH ):
     """
     def getAllKeywordToFieldsPairs( f ):
         def getKeywordToFieldsPair( i, row ):
-            columns = row.strip().split( ',' )
             fields = { "Index": i,
-                       "Name" : formatName( columns[ 0 ] ),
-                       "Ticker" : formatTicker( columns[ 1 ] ),
-                       "Others" : [ formatAlias( column ) for column in columns[ 2: ] if column != "" ] }
-            return ( formatAlias( columns[ 0 ] ), fields )
+                       "Name" : formatName( row[ 0 ] ),
+                       "Ticker" : formatTicker( row[ 1 ] ),
+                       "Others" : [ formatAlias( column ) for column in row[ 2: ] if column != "" ] }
+            return ( formatAlias( row[ 0 ] ), fields )
         return ( getKeywordToFieldsPair( i - 1, row ) for i, row, in enumerate( f ) if i != 0 ) 
-    with open( csvFile, 'r' ) as f:
-        pairs = getAllKeywordToFieldsPairs( f.readlines() )
-    return dict( pairs )
+    with open( csvFile, 'rU' ) as f:
+        csvReader = csv.reader( f, dialect = 'excel' )
+        keywordMap = dict( getAllKeywordToFieldsPairs( csvReader ) )
+    return keywordMap
 
 def getTickerList( csvFile = settings.KEYWORDS_FILEPATH ):
     indexToFieldMap = getIndexToFieldsMap( csvFile )
