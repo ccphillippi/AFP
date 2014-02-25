@@ -82,10 +82,9 @@ def getEmpiricalDataFrame( tickerList,
     df = pd.read_csv( _getPath( empiricalStore, filename ), index_col = 0, parse_dates = True )
     tickers = set( tickerList )
     extraColumns = [ column for column in df.columns if column not in tickers ]
-    df.drop( extraColumns, 1 )
     start = df.index.searchsorted( fromDate )
     end = df.index.searchsorted( toDate )
-    return df[ start:end ]
+    return df[ start:end ].drop( extraColumns, 1 )
     
 def _getPath( empiricalStore, filename ):
     path = os.path.abspath( empiricalStore )
