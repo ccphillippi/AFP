@@ -6,9 +6,12 @@ High level API to retrieve cleaned files
 .. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 
+from itertools import chain
+from os import listdir
 import cleaner.settings as settings
+import cleaner.schema as schema
 import csv
-import os
+import datetime
 import os.path
 import pandas as pd
 
@@ -29,22 +32,51 @@ def getCleanArticles( cleanStore = settings.CLEAN_STORE ):
 def getDailyArticles( date, cleanStore = settings.CLEAN_STORE ):
     return getArticles( getDailyFileList( cleanStore ) )
 
-def getDailyFileList( date, cleanStore = settings.CLEAN_STORE ):
-    pass
+def getDailyFileList( date, store = settings.CLEAN_STORE, mergeWeekendsWithMonday = False ):
+    
+    fileList = getFilteredFileList( store = store,
+                                    includes = { schema.YEAR  : [ str( date.year ) ],
+                                                 schema.DAY   : [ str( date.day ) ],
+                                                 schema.MONTH : [ date.strftime( '%B' ) ],
+                                                } )
+    if ( mergeWeekendsWithMonday and date.weekday == 0 ):
+        return chain( fileList,
+                      getDailyFileList( date - datetime.timedelta( days = 1 ),
+                                        store,
+                                        mergeWeekendsWithMonday ) )
+    else:
+        return fileList
 
 def getFilteredFileList( includes = None,
                          excludes = None,
-                         cleanStore = settings.CLEAN_STORE ):
-    def getFileListAtDepth( depth ):
-        directory = ( os.path.join( cleanStore, f ) for f in os.listdir( cleanStore ) )
-        for f in directory:
-            if os.path.isfile( f ):
-                yield f
+                         store = settings.CLEAN_STORE ):
+    def getFileListAtDepth( root, depth ):
+        try:
+            storeTag = schema.STORE_ORDER[ depth ]
+        except IndexError:
+            storeTag = "other"
+        for f in os.listdir( root ):
+            path = os.path.join( root, f )
+            if os.path.isfile( path ):
+                yield path
             else:
-                for subFile in getCleanFileList( f ):
+                try:
+                    if f not in includes[ storeTag ]:
+                        continue
+                except KeyError:  # No specification for folder, assume included
+                    pass
+                except TypeError:  # includes is None
+                    pass
+                try:
+                    if f in excludes[ storeTag ]:
+                        continue
+                except KeyError:  # No specification, assume included
+                    pass
+                except TypeError:  # excludes is None
+                    pass
+                for subFile in getFileListAtDepth( path, depth + 1 ):
                     yield subFile
-    return getFileListAtDepth( 0 )
-    
+    return getFileListAtDepth( store , 0 )
     
 
 def getCleanFileList( cleanStore = settings.CLEAN_STORE ):
@@ -52,7 +84,7 @@ def getCleanFileList( cleanStore = settings.CLEAN_STORE ):
     
     :param cleanStore: Absolute path to clean store
     """    
-    directory = ( os.path.join( cleanStore, f ) for f in os.listdir( cleanStore ) )
+    directory = ( os.path.join( cleanStore, f ) for f in listdir( cleanStore ) )
     for f in directory:
         if os.path.isfile( f ):
             yield f
@@ -111,8 +143,12 @@ def getEmpiricalDataFrame( tickerList,
     end = df.index.searchsorted( toDate )
     return df[ start:end ].drop( extraColumns, 1 )
 
-def getTfIdfDataFrame( empiricalDataFrame ):
-    pass
+def getTfIdfDataFrame( dates, tickerList ):
+    def getTfIdfMatrix( dates, tickerList ):
+        raise NotImplemented
+    return pd.DataFrame( data = getTfIdfMatrix( dates, tickerList ),
+                         index = dates,
+                         columns = tickerList )
     
 def _getPath( empiricalStore, filename ):
     path = os.path.abspath( empiricalStore )
@@ -120,6 +156,6 @@ def _getPath( empiricalStore, filename ):
     
     
 if __name__ == "__main__":
-    files = getCleanFileList( settings.CLEAN_STORE )
+    files = getDailyFileList( datetime.date( 2012, 1, 30 ), mergeWeekendsWithMonday = True )
     for f in files:
         print f

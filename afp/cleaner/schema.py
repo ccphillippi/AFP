@@ -9,20 +9,28 @@ Stores schema configurations, both for unclean and clean schemas
 import cleaner.filers as filers
 import cleaner.settings as settings
 
+# Filing name constants
+SOURCE = "source"
+YEAR = "year"
+MONTH = "month"
+DAY = "day"
+PAPER = "paper"
+
+STORE_ORDER = [ SOURCE, YEAR, MONTH, DAY, PAPER ] 
+
 #======================================
 # Clean Schema
 #======================================
 def getFilePath( source, paper, month, day, year ):
     """Configures cleaned file system schema
     """
-    attributes = { settings.SOURCE : source,
-                   settings.PAPER  :  paper,
-                   settings.MONTH  :  month,
-                   settings.DAY    :    day,
-                   settings.YEAR   :   year 
+    attributes = { SOURCE : source,
+                   PAPER  :  paper,
+                   MONTH  :  month,
+                   DAY    :    day,
+                   YEAR   :   year 
                  }
-    return "\\".join( [ settings.CLEAN_STORE ] + [ attributes[ key ] 
-                                                   for key in settings.STORE_ORDER ] )
+    return "\\".join( [ settings.CLEAN_STORE ] + [ attributes[ key ]  for key in STORE_ORDER ] )
 
 
 #======================================
