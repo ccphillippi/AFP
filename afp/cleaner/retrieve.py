@@ -9,18 +9,43 @@ High level API to retrieve cleaned files
 import cleaner.settings as settings
 import csv
 import os
+import os.path
 import pandas as pd
+
+def getArticles( fileList ):
+    def getArticle( f ):
+        with open( f, 'r' ) as opened:
+            article = opened.read()
+        return article
+    return ( getArticle( f ) for f in fileList )
 
 def getCleanArticles( cleanStore = settings.CLEAN_STORE ):
     """Returns iterable of all cleaned articles
     
     :param cleanStore: Absolute path to clean store
     """
-    def getArticle( f ):
-        with open( f, 'r' ) as opened:
-            article = opened.read()
-        return article
-    return ( getArticle( f ) for f in getCleanFileList( cleanStore ) )
+    return getArticles( getCleanFileList( cleanStore ) )
+
+def getDailyArticles( date, cleanStore = settings.CLEAN_STORE ):
+    return getArticles( getDailyFileList( cleanStore ) )
+
+def getDailyFileList( date, cleanStore = settings.CLEAN_STORE ):
+    pass
+
+def getFilteredFileList( includes = None,
+                         excludes = None,
+                         cleanStore = settings.CLEAN_STORE ):
+    def getFileListAtDepth( depth ):
+        directory = ( os.path.join( cleanStore, f ) for f in os.listdir( cleanStore ) )
+        for f in directory:
+            if os.path.isfile( f ):
+                yield f
+            else:
+                for subFile in getCleanFileList( f ):
+                    yield subFile
+    return getFileListAtDepth( 0 )
+    
+    
 
 def getCleanFileList( cleanStore = settings.CLEAN_STORE ):
     """Returns interable of all cleaned files
@@ -85,6 +110,9 @@ def getEmpiricalDataFrame( tickerList,
     start = df.index.searchsorted( fromDate )
     end = df.index.searchsorted( toDate )
     return df[ start:end ].drop( extraColumns, 1 )
+
+def getTfIdfDataFrame( empiricalDataFrame ):
+    pass
     
 def _getPath( empiricalStore, filename ):
     path = os.path.abspath( empiricalStore )

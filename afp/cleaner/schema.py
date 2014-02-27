@@ -15,7 +15,14 @@ import cleaner.settings as settings
 def getFilePath( source, paper, month, day, year ):
     """Configures cleaned file system schema
     """
-    return "\\".join( [ settings.CLEAN_STORE, source, year, month, day, paper ] )
+    attributes = { settings.SOURCE : source,
+                   settings.PAPER  :  paper,
+                   settings.MONTH  :  month,
+                   settings.DAY    :    day,
+                   settings.YEAR   :   year 
+                 }
+    return "\\".join( [ settings.CLEAN_STORE ] + [ attributes[ key ] 
+                                                   for key in settings.STORE_ORDER ] )
 
 
 #======================================
