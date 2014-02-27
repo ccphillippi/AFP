@@ -58,24 +58,62 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">izip</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+<span class="kn">import</span> <span class="nn">math</span>
 
 <div class="viewcode-block" id="WordCounterBase"><a class="viewcode-back" href="../../afp.html#afp.count.WordCounterBase">[docs]</a><span class="k">class</span> <span class="nc">WordCounterBase</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for WordCounter Functors</span>
 <span class="sd">    </span>
-<span class="sd">    Extending Requires method: **getCounts()**</span>
+<span class="sd">    Extending requires method: **getCounts()**</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">articles</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a sparse ( **m** x **n** ) matrix of word counts for **m** articles and **n** assets</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">counts</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">izip</span><span class="p">(</span> <span class="o">*</span><span class="p">[</span> <span class="p">(</span> <span class="n">count</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">)</span> 
                                             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">article</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">articles</span> <span class="p">)</span>
                                             <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getCounts</span><span class="p">(</span> <span class="n">article</span> <span class="p">)</span> <span class="p">]</span> <span class="p">)</span>
         <span class="k">return</span> <span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span> <span class="p">(</span> <span class="n">counts</span><span class="p">,</span> <span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
     
 <div class="viewcode-block" id="WordCounterBase.getCounts"><a class="viewcode-back" href="../../afp.html#afp.count.WordCounterBase.getCounts">[docs]</a>    <span class="k">def</span> <span class="nf">getCounts</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">article</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Required to be a WordCounter, must be implemented in extending class.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of 2-tuples where the first element of each tuple corresponds to the asset&#39;s index</span>
+<span class="sd">        and the second element corresponds to the assets count within the article.</span>
+<span class="sd">        </span>
+<span class="sd">        :param article: An article to count a list of asset counts for</span>
+<span class="sd">        :type article: :py:class:`str`</span>
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="bp">NotImplemented</span>
-
-</div></div>
+    </div></div>
+<div class="viewcode-block" id="SentimentCounterBase"><a class="viewcode-back" href="../../afp.html#afp.count.SentimentCounterBase">[docs]</a><span class="k">class</span> <span class="nc">SentimentCounterBase</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for SentimentCounter Functors</span>
+<span class="sd">    </span>
+<span class="sd">    Extending requires method: **getCount()** which summarizes sentiment values for a given stock into a single scalar statistic</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">sentimentPairs</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reduces a list of ( index, sentiment ) pairs to a dictionary of unique indices and aggregated sentiment</span>
+<span class="sd">        </span>
+<span class="sd">        *Note: aggregated sentiment calculation depends on inheriting SentimentCounter&#39;s getCount method* </span>
+<span class="sd">        </span>
+<span class="sd">        :param sentimentPairs: ( key, value ) pairs where the key is the index of the keyword, and value is the sentiment of the keyword</span>
+<span class="sd">        :type sentimentPairs: iterable of :py:class:`tuple`</span>
+<span class="sd">        </span>
+<span class="sd">        [ ( index0, sentiment0 ), ( index1, sentiment1 ), ( index0, sentiment2 ) ] --&gt; [ ( index0, aggregateSent0 ), ( index1, aggregateSent1 ) ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">assetKey</span><span class="p">(</span> <span class="n">pair</span> <span class="p">):</span> <span class="k">return</span> <span class="n">pair</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+        <span class="k">def</span> <span class="nf">sentiments</span><span class="p">(</span> <span class="n">pairList</span> <span class="p">):</span> <span class="k">return</span> <span class="p">[</span> <span class="n">sentiment</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">sentiment</span> <span class="ow">in</span> <span class="n">pairList</span> <span class="p">]</span>
+        <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span> <span class="n">x</span> <span class="p">):</span> <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="p">)</span> 
+        <span class="k">def</span> <span class="nf">getCount</span><span class="p">(</span> <span class="n">sentimentList</span> <span class="p">):</span> <span class="k">return</span> <span class="n">sign</span><span class="p">(</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">sentimentList</span> <span class="p">)</span> <span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span> <span class="n">sentimentList</span> <span class="p">)</span>
+        
+        <span class="n">sortedPairs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">sentimentPairs</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">assetKey</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">getCount</span><span class="p">(</span> <span class="n">sentiments</span><span class="p">(</span> <span class="n">pairList</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pairList</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span> <span class="n">sortedPairs</span><span class="p">,</span> <span class="n">assetKey</span> <span class="p">)</span> <span class="p">)</span>
+    
+<div class="viewcode-block" id="SentimentCounterBase.getCount"><a class="viewcode-back" href="../../afp.html#afp.count.SentimentCounterBase.getCount">[docs]</a>    <span class="k">def</span> <span class="nf">getCount</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">sentiments</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the aggregate sentiment calculation for all sentiments</span>
+<span class="sd">        </span>
+<span class="sd">        **MUST be implemented in base class**</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="bp">NotImplemented</span>
+    </div></div>
 <div class="viewcode-block" id="WordCounter"><a class="viewcode-back" href="../../afp.html#afp.count.WordCounter">[docs]</a><span class="k">class</span> <span class="nc">WordCounter</span><span class="p">(</span> <span class="n">WordCounterBase</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Functor that counts all keywords in keywordsToIndices map in an article.</span>
 <span class="sd">    </span>
@@ -92,21 +130,66 @@
 <span class="sd">    (0, 48)    1</span>
 <span class="sd">    (1, 7)     2</span>
 <span class="sd">    ...</span>
-<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">afp.normalize</span> <span class="kn">as</span> <span class="nn">normalize</span>
     <span class="n">_articleNormalizer</span> <span class="o">=</span> <span class="n">normalize</span><span class="o">.</span><span class="n">Article</span><span class="p">()</span>
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">keywordsToIndices</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param keywordsToIndices: Maps keywords to their index within a count matrix</span>
+<span class="sd">        :type keywordsToIndices: :py:class:`dict`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">keywordsToIndices</span> <span class="o">=</span> <span class="n">keywordsToIndices</span>
         
 <div class="viewcode-block" id="WordCounter.getCounts"><a class="viewcode-back" href="../../afp.html#afp.count.WordCounter.getCounts">[docs]</a>    <span class="k">def</span> <span class="nf">getCounts</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">article</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of 2-tuples where the first element of each tuple corresponds to the asset&#39;s index</span>
+<span class="sd">        and the second element corresponds to the assets count within the article.</span>
+<span class="sd">        </span>
+<span class="sd">        :param article: An article to count a list of asset counts for</span>
+<span class="sd">        :type article: :py:class:`str`</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: iterable of tuples with the first value corresponding to the keyword index, and the second value corresponding to the count</span>
+<span class="sd">        :rtype: generator expression</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">getKeywords</span><span class="p">():</span>
             <span class="k">return</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywordsToIndices</span><span class="p">[</span> <span class="n">keyword</span> <span class="p">]</span>
                      <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_articleNormalizer</span><span class="p">(</span> <span class="n">article</span> <span class="p">)</span>
                      <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywordsToIndices</span> <span class="p">)</span>
         <span class="k">return</span> <span class="n">Counter</span><span class="p">(</span> <span class="n">getKeywords</span><span class="p">()</span> <span class="p">)</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
     </div></div>
+<div class="viewcode-block" id="SentimentCounter"><a class="viewcode-back" href="../../afp.html#afp.count.SentimentCounter">[docs]</a><span class="k">class</span> <span class="nc">SentimentCounter</span><span class="p">(</span> <span class="n">SentimentCounterBase</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reduces a list of ( index, sentiment ) pairs to a dictionary of unique indices and aggregated sentiment</span>
+<span class="sd">    </span>
+<span class="sd">    Example usage:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import afp.count as count</span>
+<span class="sd">    &gt;&gt;&gt; sentimentPairs = ( ( \&#39;GOOG\&#39;, -1 ), ( \&#39;AAPL\&#39;, 1 ), ( \&#39;GOOG\&#39;, 1 ), ( \&#39;GOOG\&#39;, 1 ) )</span>
+<span class="sd">    &gt;&gt;&gt; count.SentimentCounter()( sentimentPairs )</span>
+<span class="sd">    {\&#39;GOOG\&#39;: -3.0, \&#39;AAPL\&#39;: -1.0}</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SentimentCounter.getCount"><a class="viewcode-back" href="../../afp.html#afp.count.SentimentCounter.getCount">[docs]</a>    <span class="k">def</span> <span class="nf">getCount</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">sentimentList</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the aggregate sentiment calculation for all sentiments</span>
+<span class="sd">        </span>
+<span class="sd">        The *sign* of the count is the same as the net sentiment. Net 0 sentiment results in a positive sign.</span>
+<span class="sd">        </span>
+<span class="sd">        The *magnitude* of the count is the number of occurrences.</span>
+<span class="sd">        </span>
+<span class="sd">        :param sentimentList: Sentiment readings from classifier</span>
+<span class="sd">        :type sentimentList: :py:func:`list`</span>
+<span class="sd">        :returns: sign( Net Sentiment ) *x* ( Number of occurrences )</span>
+<span class="sd">        :rtype: :py:class:`float` </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span> <span class="n">x</span> <span class="p">):</span> <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="p">)</span> 
+        <span class="k">return</span> <span class="n">sign</span><span class="p">(</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">sentimentList</span> <span class="p">)</span> <span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span> <span class="n">sentimentList</span> <span class="p">)</span>
+    </div></div>
+<span class="n">pairs</span> <span class="o">=</span> <span class="p">(</span> <span class="p">(</span> <span class="s">&#39;GOOG&#39;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">),</span>
+          <span class="p">(</span> <span class="s">&#39;AAPL&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">),</span>
+          <span class="p">(</span> <span class="s">&#39;GOOG&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">),</span>
+          <span class="p">(</span> <span class="s">&#39;GOOG&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">),</span>
+          <span class="p">)</span>
+<span class="k">print</span> <span class="n">SentimentCounter</span><span class="p">()(</span> <span class="n">pairs</span> <span class="p">)</span>
 </pre></div>
 
           </div>
