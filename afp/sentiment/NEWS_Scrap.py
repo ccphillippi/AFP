@@ -3,13 +3,13 @@ from os import listdir
 import string
 import csv
 
-KeyWord=["google"]
 path="/Users/Lee/Dropbox/AFPdb/Corpus/LexisNexis/"
-Mon=["january","february","march","april","may","june","july","august","september","october","november","december"]
-dic=dict(zip(Mon,range(1,13)))
+Mon=["January","February","March","April","May","June","July","August","September","October","November","December"]
+dic_str_to_num=dict(zip(Mon,range(1,13)))
+dic_num_to_str=dict(zip(range(1,13),Mon))
 
-keyword_path="/Users/Lee/Dropbox/AFPdb/Keywords/keywords.csv"
-keyword_file=csv.reader(open(keyword_path),delimiter=',')
+keyword_path="/Users/Lee/Dropbox/AFPdb/Keywords/keywords2.csv"
+keyword_file=csv.reader(open(keyword_path,'rU'), delimiter=',')
 KeyWord=[]
 for row in keyword_file:
     KeyWord.append(filter(lambda a: a != '', row))
@@ -19,12 +19,14 @@ for keyword in KeyWord[1:]:
     year=listdir(path)
     if '.DS_Store' in year: year.remove('.DS_Store')
     for y in year:
-        month=listdir(path+y)
-        if '.DS_Store' in month: month.remove('.DS_Store')
-        for m in month:
+        #month=listdir(path+y)
+        #if '.DS_Store' in month: month.remove('.DS_Store')
+        for m_num in xrange(1,13):
+            m=dic_num_to_str[m_num]
             day=listdir(path+y+"/"+m)
             if '.DS_Store' in day: day.remove('.DS_Store')
-            for d in day:
+            for d_num in sorted(map(int, day)):
+                d=str(d_num)
                 Newspaper=listdir(path+y+"/"+m+"/"+d)
                 if '.DS_Store' in Newspaper: Newspaper.remove('.DS_Store')
                 for np in Newspaper:
@@ -40,10 +42,10 @@ for keyword in KeyWord[1:]:
                             TXT[i]=TXT[i].replace("\n", "")
                             temp=nltk.sent_tokenize(TXT[i])
                             for t in temp:
-                                if any(k for k in keyword if k in t.lower()):
-                                    fw.writelines(y+"/"+str(dic[m.lower()])+"/"+d + "@" +t.lower()+"\n")
+                                #if any(k for k in keyword if k in t.lower()):
+                                if any(k for k in keyword if k in t.lower().split()):
+                                    fw.writelines(y+"/"+str(dic_str_to_num[m])+"/"+d + "@" +t.lower()+"\n")
                                                         
-    
     fw.close()
     print keyword[0]+" done"
     #print keyword+" : "+str(len(Sent))
