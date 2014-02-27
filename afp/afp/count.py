@@ -116,7 +116,7 @@ class SentimentCounter( SentimentCounterBase ):
     >>> import afp.count as count
     >>> sentimentPairs = ( ( \'GOOG\', -1 ), ( \'AAPL\', 1 ), ( \'GOOG\', -1 ), ( \'GOOG\', 1 ) )
     >>> count.SentimentCounter()( sentimentPairs )
-    {\'GOOG\': -3.0, \'AAPL\': -1.0}
+    {\'GOOG\': -3.0, \'AAPL\': 1.0}
     
     """
     def getCount( self, sentimentList ):
