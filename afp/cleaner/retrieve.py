@@ -9,6 +9,7 @@ High level API to retrieve cleaned files
 import cleaner.settings as settings
 import csv
 import os
+import os.path
 import pandas as pd
 
 def getCleanArticles( cleanStore = settings.CLEAN_STORE ):
