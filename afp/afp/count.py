@@ -20,10 +20,14 @@ class WordCounterBase( object ):
     def __call__( self, articles ):
         """Returns a sparse ( **m** x **n** ) matrix of word counts for **m** articles and **n** assets
         """
-        counts, i, j = izip( *[ ( count, i, j ) 
-                                            for i, article in enumerate( articles )
-                                            for j, count in self.getCounts( article ) ] )
-        return sparse.coo_matrix( ( counts, ( i, j ) ) ).tocsr()
+        try:
+            counts, i, j = izip( *[ ( count, i, j ) 
+                                    for i, article in enumerate( articles )
+                                    for j, count in self.getCounts( article ) ] )
+            i = list( i )
+            return sparse.coo_matrix( ( counts, ( i, j ) ), shape = ( max( i ) + 1, self.getMaxJ() ) ).tocsr()
+        except ValueError:
+            return sparse.csr_matrix( ( 1, self.getMaxJ() ) )
     
     def getCounts( self, article ):
         """Returns a list of 2-tuples where the first element of each tuple corresponds to the asset's index
@@ -33,6 +37,9 @@ class WordCounterBase( object ):
         :type article: :py:class:`str`
         
         """
+        raise NotImplemented
+    
+    def getMaxJ( self ):
         raise NotImplemented
     
 class SentimentCounterBase( object ):
@@ -91,6 +98,7 @@ class WordCounter( WordCounterBase ):
         :type keywordsToIndices: :py:class:`dict`
         """
         self.keywordsToIndices = keywordsToIndices
+        self.maxJ = max( keywordsToIndices.values() ) + 1
         
     def getCounts( self, article ):
         """Returns a list of 2-tuples where the first element of each tuple corresponds to the asset's index
@@ -107,6 +115,10 @@ class WordCounter( WordCounterBase ):
                      for keyword in self._articleNormalizer( article )
                      if keyword in self.keywordsToIndices )
         return Counter( getKeywords() ).iteritems()
+    
+    def getMaxJ( self ):
+        return self.maxJ
+    
     
 class SentimentCounter( SentimentCounterBase ):
     """Reduces a list of ( index, sentiment ) pairs to a dictionary of unique indices and aggregated sentiment
