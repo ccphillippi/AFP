@@ -11,7 +11,7 @@ from os.path import join
 from os.path import expanduser
 
 MASTER_DIR = join( join( expanduser( '~' ), 'Dropbox' ) , 'AFPdb' )
-CLEAN_STORE = join( MASTER_DIR, "Corpus" )  # avoids being saved on dropbox for now
+CLEAN_STORE = join( expanduser( '~' ), "AFPCorpus" )  # avoids being saved on dropbox for now
 UNCLEAN_STORE = join( MASTER_DIR, "Unclean" )
 EMPIRICAL_STORE = join( MASTER_DIR, 'Empirical' )
 
