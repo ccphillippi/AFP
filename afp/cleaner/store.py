@@ -6,10 +6,10 @@ High level API that stores uncleaned data into cleaned store
 .. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 
-import cleaner.helpers as helpers
-import cleaner.settings as settings
-import cleaner.filers as filers
-import cleaner.schema as schema
+import helpers
+import settings 
+import filers
+import schema
 import csv
 import multiprocessing as mp
 import os

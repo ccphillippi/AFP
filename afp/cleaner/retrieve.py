@@ -13,7 +13,14 @@ import cleaner.schema as schema
 import csv
 import datetime
 import os.path
-import pandas as pd
+    
+def _getPath( store, filename ):
+    path = os.path.abspath( store )
+    return os.path.join( path, filename )
+    
+def adjustedClosesFilepath( empiricalStore = settings.EMPIRICAL_STORE,
+                            filename = settings.ADJUSTED_CLOSE_FILENAME ):
+    return _getPath( empiricalStore, filename )
 
 def getArticles( fileList ):
     def getArticle( f ):
@@ -30,7 +37,7 @@ def getCleanArticles( cleanStore = settings.CLEAN_STORE ):
     return getArticles( getCleanFileList( cleanStore ) )
 
 def getDailyArticles( date, cleanStore = settings.CLEAN_STORE ):
-    return getArticles( getDailyFileList( cleanStore ) )
+    return getArticles( getDailyFileList( date, cleanStore ) )
 
 def getDailyFileList( date, store = settings.CLEAN_STORE, mergeWeekendsWithMonday = False ):
     
@@ -95,8 +102,7 @@ def getCleanFileList( cleanStore = settings.CLEAN_STORE ):
 def getEmpiricalTable( tickerList, 
                        fromDate, 
                        toDate, 
-                       empiricalStore = settings.EMPIRICAL_STORE, 
-                       filename = settings.ADJUSTED_CLOSE_FILENAME ):
+                       csvFile = adjustedClosesFilepath() ):
     """Returns a table in structure of structure format ( Ticker By Date )
     
     :param tickerList: A list of the tickers to be added into the table
@@ -110,7 +116,7 @@ def getEmpiricalTable( tickerList,
     """
     begin = str( fromDate )
     end = str( toDate )
-    with open( _getPath( empiricalStore, filename ), 'r' ) as csvFile:
+    with open( csvFile, 'r' ) as csvFile:
         csvReader = csv.DictReader( csvFile )
         empiricalTable = dict( ( row[ 'Date' ],
                                  dict( ( ( ticker, row[ ticker ] ) 
@@ -119,43 +125,9 @@ def getEmpiricalTable( tickerList,
                                if row[ 'Date' ] >= begin and row[ 'Date' ] <= end )
         
     return empiricalTable
-            
-def getEmpiricalDataFrame( tickerList, 
-                           fromDate, 
-                           toDate, 
-                           empiricalStore = settings.EMPIRICAL_STORE, 
-                           filename = settings.ADJUSTED_CLOSE_FILENAME ):
-    """Returns a :py:class:`pandas.DataFrame` according to selected stocks and dates
-    
-    :param tickerList: A list of the tickers to be added into the table
-    :param fromDate: Time from which to begin the table
-    :type fromDate: :py:class:`datetime.date`
-    :param toDate: TIme from which to end the table
-    :type toDate: :py:class:`datetime.date`
-    :param empiricalStore: The location of the Empirical file store
-    :param filename: The name of the file within the Empirical file store
-    
-    """ 
-    df = pd.read_csv( _getPath( empiricalStore, filename ), index_col = 0, parse_dates = True )
-    tickers = set( tickerList )
-    extraColumns = [ column for column in df.columns if column not in tickers ]
-    start = df.index.searchsorted( fromDate )
-    end = df.index.searchsorted( toDate )
-    return df[ start:end ].drop( extraColumns, 1 )
-
-def getTfIdfDataFrame( dates, tickerList ):
-    def getTfIdfMatrix( dates, tickerList ):
-        raise NotImplemented
-    return pd.DataFrame( data = getTfIdfMatrix( dates, tickerList ),
-                         index = dates,
-                         columns = tickerList )
-    
-def _getPath( empiricalStore, filename ):
-    path = os.path.abspath( empiricalStore )
-    return os.path.join( path, filename )
-    
     
 if __name__ == "__main__":
-    files = getDailyFileList( datetime.date( 2012, 1, 30 ), mergeWeekendsWithMonday = True )
+    files = getDailyFileList( datetime.date( 2012, 1, 30 ),
+                              mergeWeekendsWithMonday = True )
     for f in files:
         print f
