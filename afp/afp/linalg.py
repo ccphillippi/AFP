@@ -32,5 +32,14 @@ def corr( sparse, isSample = True ):
     invsd = 1.0 / np.sqrt( np.diag( covMat ) )
     return covMat * np.outer( invsd.T, invsd )
     
+def return_corr( price_dataframe, isSample = True): 
+    
+    diff_price = np.diff(price_dataframe, axis=0)
+    shift_price = price_dataframe[:-1]
+    return_dataframe = np.divide(diff_price, shift_price)
+    return_corr = corr(return_dataframe)
+    return return_corr
+    
+    
 if __name__ == "__main__":
     pass
