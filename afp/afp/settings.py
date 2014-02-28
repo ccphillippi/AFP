@@ -9,6 +9,7 @@ from os.path import join
 from os.path import expanduser
 
 MASTER_DIR = join( join( expanduser( '~' ), 'Dropbox' ) , 'AFPdb' )
+CACHE_DIR = join( MASTER_DIR, 'Cache' )
 RESULTS_DIR = join( MASTER_DIR, 'Results' )
 
 KEYWORDS_FILEPATH = join( join( MASTER_DIR, 'Keywords' ), 'keywords.csv' )

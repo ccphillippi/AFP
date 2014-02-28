@@ -5,16 +5,20 @@ This module contains the matrix generating functions
 
 .. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
+from __future__ import print_function
 
+from os.path import join
 import cleaner.retrieve as retrieve
-import afp.keywords as keywords
-import afp.count as count
-import afp.normalize as normalize
-import afp.settings as settings
+import cleaner.helpers as helpers
+import keywords
+import count
+import normalize
+import settings
+import cPickle
 import datetime
 import numpy as np
-import scipy.sparse as sparse
 import pandas as pd
+import scipy.sparse as sparse
    
 def tfIdf( articles, keywordsFilePath = settings.KEYWORDS_FILEPATH ):
     """Returns a sparse tf-idf Matrix
@@ -48,7 +52,20 @@ def getEmpiricalDataFrame( tickerList,
     end = df.index.searchsorted( toDate )
     return df[ start:end ].drop( extraColumns, 1 )
 
-def getCountDataFrame( tickerList, dates, aggregator = None ):
+def getCountDataFrame( tickerList, dates, aggregator = None, cache = True ):
+    try:
+        query = ( tuple( tickerList ),
+              helpers.tryexcept( lambda: tuple( dates ), dates ),
+              helpers.tryexcept( lambda: tuple( aggregator ), aggregator ) )
+        with open( join( settings.CACHE_DIR, str( query.__hash__() ) + '.pkl' ), 'rb' ) as f:
+            cachedCounts = cPickle.load( f )
+        return cachedCounts
+    except TypeError:
+        print( 'Could not hash query:', query )
+    except IOError:
+        print( 'Cache does not exist for count query:', query )
+        print( 'Calculating from filesystem...' )
+        
     wordCounter = count.WordCounter( keywords.getKeywordToIndexMap() )  # TODO: get from ticker list
     def getCountMatrix():
         def getCountRows( timestamp ):
@@ -56,15 +73,22 @@ def getCountDataFrame( tickerList, dates, aggregator = None ):
             try:
                 return aggregator( counts )
             except TypeError:
-                return counts
-                
+                return counts            
         allDates, counts = zip( *( ( date, countRow ) 
                                    for date in dates
                                    for countRow in getCountRows( date )
                                    if countRow.nnz ) )
         return ( allDates, sparse.vstack( counts ).tocsr() )
-    allDates, Counts = getCountMatrix()
-    return sparseToDataFrame( Counts, allDates, tickerList )
+    allDates, counts = getCountMatrix()
+    countDf = sparseToDataFrame( counts, allDates, tickerList )
+    if cache:
+        path = join( settings.CACHE_DIR, str( query.__hash__() ) + '.pkl' )
+        helpers.ensurePath( settings.CACHE_DIR )
+        with open( path, 'wb' ) as f:
+            print( 'Caching...', end='' )
+            cPickle.dump( countDf, f, -1 )
+            print( 'Cached' )
+    return countDf
 
 def getTfIdfDataFrame( tickerList, dates, aggregator = None ):
     return normalize.TfIdf()( getCountDataFrame( tickerList, dates, aggregator ) )
@@ -77,10 +101,9 @@ def sparseToDataFrame( sparseMat, index, columns ):
                                default_fill_value = 0 )
 if __name__ == "__main__":    
     begin = datetime.date( 2011, 1, 3 )
-    end = datetime.date( 2013, 11, 1 )
+    end = datetime.date( 2013, 11, 27 )
     tickerList = keywords.getTickerList()
     empiricalDf = getEmpiricalDataFrame( tickerList, begin, end )
-    countDf = getCountDataFrame( tickerList, empiricalDf.index )
-    print normalize.TfIdf()( countDf )
-    # corr = linalg.corr( tfIdf( retrieve.getCleanArticles() ) )
-    # np.savetxt( settings.RESULTS_DIR + '/corr2012.csv', corr, delimiter = ',' )
+    countDf = getCountDataFrame( tickerList, empiricalDf.index, aggregator = sum )
+    corr = normalize.TfIdf()( countDf ).corr().to_dense()[ tickerList ]
+    corr.to_csv( join( settings.RESULTS_DIR, 'corr2011_2013.csv' ) )
