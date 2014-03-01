@@ -57,6 +57,23 @@ def getDailyFileList( date, store = settings.CLEAN_STORE, mergeWeekendsWithMonda
 def getFilteredFileList( includes = None,
                          excludes = None,
                          store = settings.CLEAN_STORE ):
+    """Returns a list of files, based on includes and excludes filters
+    
+    :param includes: Dictionary of values to be included by schema category
+    :type includes: :py:class:`dict`
+    :param excludes: Dictionary of values to be excluded by schema category
+    :type excludes: :py:class:`dict`
+    
+    Example Usage: (Assume you want all February articles in 2011 that are not in the NYT)
+    
+    >>> import cleaner.retrieve as retrieve
+    >>> retrieve.getFilteredFileList( includes = { \'month\' : [ \'February\' ], \'year\' : [ \'2011\' ] }, excludes = { \'paper\' = [ \'New York Times\' ] } )
+    ~\\AFPCorpus\\LexisNexis\\2011\\February\\1\\New York Times\\40_UNDER_FORTY_Financial_advi.txt
+    ~\\AFPCorpus\\LexisNexis\\2011\\February\\1\\New York Times\\Walker_in_three_way_battle_for.txt
+    ~\\AFPCorpus\\LexisNexis\\2011\\February\\2\\New York Times\\Clinton_to_Grace_This_Day_Awar.txt
+    ...
+    
+    """
     def getFileListAtDepth( root, depth ):
         try:
             storeTag = schema.STORE_ORDER[ depth ]

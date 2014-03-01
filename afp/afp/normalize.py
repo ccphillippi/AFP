@@ -9,7 +9,6 @@ from matrices to articles, to an expected format.
 
 import numpy as np
 import scipy.sparse as sparse
-# import nltk
 from itertools import chain
 
 class NormalizerBase( object ):
@@ -30,18 +29,35 @@ class TfIdf( NormalizerBase ):
         """Normalizes count matrix into tf-idf matrix
         
         :param counts: Counts of words in each article. Elements *may* be negative. Sign is passed-through.
+        :type counts: numpy matrix, sparse scipy matrix, or Pandas Dataframe
         """
         n = counts.shape[ 0 ]
-        absCounts = np.abs( counts )
-        def tf():
-            return counts.sign().multiply( absCounts.log1p() )
-        def idf():
-            occurred = ( absCounts > 0 ).asfptype()
-            occurrences = sum( occurred, 0 ).todense() 
-            occurrences[ occurrences == 0 ] = 1
-            return sparse.csr_matrix( np.log( float( n ) / occurrences ) )
-        return tf().multiply( idf() )
-    
+        def normalizeScipy():
+            absCounts = np.abs( counts )
+            def tf():
+                return counts.sign().multiply( absCounts.log1p() )
+            def idf():
+                occurred = ( absCounts > 0 ).asfptype()
+                occurrences = sum( occurred, 0 ).todense() 
+                occurrences[ occurrences == 0 ] = 1
+                return sparse.csr_matrix( np.log( float( n ) / occurrences ) )
+            return tf().multiply( idf() )
+        def normalizeDf():
+            def occurred( count ): return count != 0
+            def tfidf( counts ):
+                absCounts = counts.abs()
+                def tf( counts ):
+                    return np.sign( counts ).mul( np.log1p( absCounts ) )
+                def idf():
+                    likelihood = max( 1.0, occurred( absCounts ).sum() ) / float( n )
+                    return -np.log( likelihood )
+                return tf( counts ).mul( idf() )
+            return counts.apply( tfidf )
+        try:
+            return normalizeScipy()
+        except:
+            return normalizeDf()
+            
 class Article( NormalizerBase ):
     """Functor normalizing articles to be searched for keywords
     

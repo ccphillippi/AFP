@@ -9,17 +9,18 @@ Helper functions for cleaner
 import os
 import errno
 
-def tryexcept( value, replaceWith ):
-        try:
-            return value()
-        except:
-            return replaceWith
+def tryexcept( expression, replaceWith ):
+    """Evaluate expression, if it throws an exception return replaceWith
+    """
+    try:
+        return expression()
+    except:
+        return replaceWith
 
             
 
 def ensurePath( filepath ):
-    """ype
-    Create a path if it doesn't not currently exist, else does nothing
+    """Create a path if it doesn't not currently exist, else does nothing
     """
     try:
         os.makedirs( filepath )
