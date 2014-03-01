@@ -58,7 +58,7 @@ class RepeatReplacer(object):
         self.repl = r'\1\2\3'
 
     def replace(self, word):
-        if wordnet.synsets(word):
+        if wordnet.synsets( word ):  # @UndefinedVariable
             return word
         
         repl_word = self.repeat_regexp.sub(self.repl, word)
@@ -172,7 +172,7 @@ class AntonymReplacer(object):
         """
         antonyms = set()
         
-        for syn in wordnet.synsets(word, pos=pos):
+        for syn in wordnet.synsets( word, pos = pos ):  # @UndefinedVariable
             for lemma in syn.lemmas:
                 for antonym in lemma.antonyms():
                     antonyms.add(antonym.name)

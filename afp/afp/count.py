@@ -162,7 +162,7 @@ class SentimentWordCounter( WordCounterBase ):
         self.classifer = classifier
         self.maxJ = max( keywordsToIndices.values() ) + 1
         self.sentimentFromProb = sentimentFromProb
-        
+       
     def getCounts( self, article ):
         def getKeywords():
             classifiedSentences = ( ( sentence,

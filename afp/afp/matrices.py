@@ -52,21 +52,27 @@ def getEmpiricalDataFrame( tickerList,
     end = df.index.searchsorted( toDate )
     return df[ start:end ].drop( extraColumns, 1 )
 
-def getCountDataFrame( tickerList, dates, aggregator = None, cache = True ):
-    try:
-        query = ( tuple( tickerList ),
-              helpers.tryexcept( lambda: tuple( dates ), dates ),
-              helpers.tryexcept( lambda: tuple( aggregator ), aggregator ) )
-        with open( join( settings.CACHE_DIR, str( query.__hash__() ) + '.pkl' ), 'rb' ) as f:
-            cachedCounts = cPickle.load( f )
-        return cachedCounts
-    except TypeError:
-        print( 'Could not hash query:', query )
-    except IOError:
-        print( 'Cache does not exist for count query:', query )
-        print( 'Calculating from filesystem...' )
-        
-    wordCounter = count.WordCounter( keywords.getKeywordToIndexMap() )  # TODO: get from ticker list
+def getCountDataFrame( wordCounter,
+                       dates,
+                       aggregator = None,
+                       loadCache = True,
+                       saveCache = False ):
+    if loadCache:
+        try:
+            query = ( tuple( tickerList ),
+                      helpers.tryexcept( lambda: tuple( dates ), dates ),
+                      helpers.tryexcept( lambda: tuple( aggregator ), aggregator ),
+                      type( wordCounter ) )
+            with open( join( settings.CACHE_DIR, str( query.__hash__() ) + '.pkl' ), 'rb' ) as f:
+                cachedCounts = cPickle.load( f )
+            return cachedCounts
+        except TypeError:
+            print( 'Could not hash query:', query )
+        except IOError:
+            print( 'Cache does not exist for count query:', query )
+            print( 'Calculating from filesystem...' )
+    
+       
     def getCountMatrix():
         def getCountRows( timestamp ):
             counts = wordCounter( retrieve.getDailyArticles( timestamp.date() ) )
@@ -81,7 +87,7 @@ def getCountDataFrame( tickerList, dates, aggregator = None, cache = True ):
         return ( allDates, sparse.vstack( counts ).tocsr() )
     allDates, counts = getCountMatrix()
     countDf = sparseToDataFrame( counts, allDates, tickerList )
-    if cache:
+    if saveCache or loadCache:
         path = join( settings.CACHE_DIR, str( query.__hash__() ) + '.pkl' )
         helpers.ensurePath( settings.CACHE_DIR )
         with open( path, 'wb' ) as f:
@@ -103,7 +109,8 @@ if __name__ == "__main__":
     begin = datetime.date( 2011, 1, 3 )
     end = datetime.date( 2013, 11, 27 )
     tickerList = keywords.getTickerList()
+    keywordsMap = keywords.getKeywordToIndexMap()
     empiricalDf = getEmpiricalDataFrame( tickerList, begin, end )
-    countDf = getCountDataFrame( tickerList, empiricalDf.index, aggregator = sum )
+    countDf = getCountDataFrame( keywordsMap, empiricalDf.index, aggregator = sum )
     corr = normalize.TfIdf()( countDf ).corr().to_dense()[ tickerList ]
     corr.to_csv( join( settings.RESULTS_DIR, 'corr2011_2013.csv' ) )
