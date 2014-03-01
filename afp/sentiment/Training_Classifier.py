@@ -1,7 +1,7 @@
 import re
 import nltk
 import pickle
-import Clean_Text
+import Sentiment_Classifier
 #Importing lemmatizer 
 
 
@@ -56,13 +56,13 @@ tweets = []
 
 #Create a list of words in the tweet, within a tuple.
 for (word, sentiment) in taggedtweets:
-    tweets.append((Clean_Text.lemma_Sent(word), sentiment))
+    tweets.append((Sentiment_Classifier.lemma_Sent(word), sentiment))
    
-Clean_Text.wordlist=Clean_Text.set_Wordlist(tweets)
+Sentiment_Classifier.wordlist=Sentiment_Classifier.set_Wordlist(tweets)
 
 #Creates a training set - classifier learns distribution of true/falses in the input.
 #training_set = nltk.classify.apply_features(feature_extractor, tweets)
-whole_set = nltk.classify.apply_features(Clean_Text.feature_extractor, tweets)
+whole_set = nltk.classify.apply_features(Sentiment_Classifier.feature_extractor, tweets)
 
 N_Set=len(whole_set)
 
@@ -98,8 +98,9 @@ TXT=f.readlines()
 
 for i in TXT:
     i=i.replace("\n",'')
-    i=Clean_Text.lemma_Sent(i)
-    print str(classifier.prob_classify(Clean_Text.feature_extractor(i)).prob('positive') )
+    print Sentiment_Classifier.sent_prob(classifier,i)
+    #i=Sentiment_Classifier.lemma_Sent(i)
+    #print str(classifier.prob_classify(Sentiment_Classifier.feature_extractor(i)).prob('positive') )
 
 
 

@@ -12,6 +12,7 @@ from nltk.corpus import stopwords
 import pickle
 
 wordlist=[]
+classifier=[]
 max_key=300
 customstopwords = stopwords.words('english')
 customstopwords.remove("up")
@@ -53,13 +54,16 @@ def feature_extractor(doc):
         features['contains(%s)' % i] = (i in docwords)
     return features
 
+def sent_prob(sentence):
+    temp=lemma_Sent(sentence)
+    print str(classifier.prob_classify(feature_extractor(temp)).prob('positive') )
+
 def lemma_Sent(doc):
     doc=neg_replacer.replace(doc)
     word=tokenizer.tokenize(doc)
     word_pos=nltk.pos_tag(word)
 #    replacer.replace_negations_pos(word_pos)
     dic=dict(word_pos)
-
       
     word_lemma=[]    
     for i in zip(*word_pos)[0]:
@@ -70,3 +74,13 @@ def lemma_Sent(doc):
         elif dic[i][0]=="N" or dic[i][0]=="ADJ" or dic[i][0]=="ADV":
             word_lemma.append(lemmatizer.lemmatize(i).lower()) 
     return word_lemma
+
+def load_classifier():
+    global classifier
+    global wordlist
+    f=open("Classifier.dump",'r')
+    classifier=pickle.load(f)
+    f.close()
+    f=open("WordList.txt",'r')
+    wordlist=pickle.load(f)
+    f.close()
