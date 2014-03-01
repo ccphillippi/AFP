@@ -111,6 +111,8 @@ if __name__ == "__main__":
     tickerList = keywords.getTickerList()
     keywordsMap = keywords.getKeywordToIndexMap()
     empiricalDf = getEmpiricalDataFrame( tickerList, begin, end )
-    countDf = getCountDataFrame( keywordsMap, empiricalDf.index, aggregator = sum )
+    countDf = getCountDataFrame( count.WordCounter( keywordsMap ),
+                                 empiricalDf.index,
+                                 aggregator = sum )
     corr = normalize.TfIdf()( countDf ).corr().to_dense()[ tickerList ]
     corr.to_csv( join( settings.RESULTS_DIR, 'corr2011_2013.csv' ) )
