@@ -7,7 +7,7 @@ This module contains the lower level API that handles the storing to the filesys
    
 '''
 
-import cleaner.helpers as helpers
+import helpers as helpers
              
 class BatchFiler( object ):
     '''API to retrieve data from a given download batch

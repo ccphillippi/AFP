@@ -6,8 +6,8 @@ Stores schema configurations, both for unclean and clean schemas
 .. moduleauthor:: Christopher Phillippi <c_phillippi@mfe.berkeley.edu>
 '''
 
-import cleaner.filers as filers
-import cleaner.settings as settings
+import filers as filers
+import settings as settings
 
 # Filing name constants
 SOURCE = "source"
