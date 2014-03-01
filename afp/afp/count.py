@@ -11,6 +11,7 @@ from scipy import sparse
 from itertools import izip
 from itertools import groupby
 import math
+import nltk
 
 class WordCounterBase( object ):
     """Base class for WordCounter Functors
@@ -119,7 +120,6 @@ class WordCounter( WordCounterBase ):
     def getMaxJ( self ):
         return self.maxJ
     
-    
 class SentimentCounter( SentimentCounterBase ):
     """Reduces a list of ( index, sentiment ) pairs to a dictionary of unique indices and aggregated sentiment
     
@@ -144,6 +144,35 @@ class SentimentCounter( SentimentCounterBase ):
         :rtype: :py:class:`float` 
         
         """
-        def sign( x ): return math.copysign( 1, x ) 
+        def sign( x ): 
+            return math.copysign( 1, x ) 
         return sign( sum( sentimentList ) ) * len( sentimentList )
     
+class SentimentWordCounter( WordCounterBase ):
+    """USE AT YOUR OWN RISK: Not yet fully tested
+    """
+    import afp.normalize as normalize
+    _articleNormalizer = normalize.Article()
+    _sentimentCounter = SentimentCounter()
+    
+    def __init__( self, keywordsToIndices,
+                  classifier,
+                  sentimentFromProb = lambda x: 2 * x - 1 ):
+        self.keywordsToIndices = keywordsToIndices
+        self.classifer = classifier
+        self.maxJ = max( keywordsToIndices.values() ) + 1
+        self.sentimentFromProb = sentimentFromProb
+        
+    def getCounts( self, article ):
+        def getKeywords():
+            classifiedSentences = ( ( sentence,
+                                      self.sentimentFromProb( self.classifier.sent_prob( sentence ) ) )
+                                    for sentence in nltk.sent_tokenize( article ) )
+            return ( ( self.keywordsToIndices[ keyword ], sentiment )
+                     for sentence, sentiment in classifiedSentences
+                     for keyword in self.keywordToIndices( sentence )
+                     if keyword in self.keywordToIndices )
+        return self._sentimentCounter()( getKeywords() ).iteritems()
+    
+    def getMaxJ( self ):
+        return self.maxJ
