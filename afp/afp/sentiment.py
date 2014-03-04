@@ -10,7 +10,9 @@ from replacers import AntonymReplacer
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
+from os.path import join
 import pickle
+import settings
 
 class classifier( object ):
     
@@ -35,7 +37,7 @@ class classifier( object ):
         wordlist = self.getwordfeatures( self.getwords( tweets ) )
         wordlist = [ i for i in wordlist if not i in self.customstopwords ]
         wordlist = wordlist[ :self.max_key ]
-        f = open( "WordList.txt", 'w' )
+        f = open( join( settings.KEYWORDS_DIR , "WordList.txt" ), 'w' )
         pickle.dump( wordlist, f )
         return wordlist
     
@@ -62,30 +64,32 @@ class classifier( object ):
     
     def sent_prob( self, sentence ):
         temp = self.lemma_Sent( sentence )
-        print str( classifier.prob_classify( self.feature_extractor( temp ) ).prob( 'positive' ) )
+        return self.classifier.prob_classify( self.feature_extractor( temp ) ).prob( 'positive' )
     
-    def lemma_Sent( self, doc ):
-        doc = self.neg_replacer.replace( doc )
+    def lemma_Sent( self, initialDoc ):
+        doc = self.neg_replacer.replace( initialDoc )
         word = self.tokenizer.tokenize( doc )
         word_pos = nltk.pos_tag( word )
     #    replacer.replace_negations_pos(word_pos)
         dic = dict( word_pos )
           
-        word_lemma = []    
-        for i in zip( *word_pos )[0]:
-            if dic[i] == None:
-                pass
-            elif dic[i][0] == "V":
-                word_lemma.append( self.lemmatizer.lemmatize( i, "v" ).lower() )
-            elif dic[i][0] == "N" or dic[i][0] == "ADJ" or dic[i][0] == "ADV":
-                word_lemma.append( self.lemmatizer.lemmatize( i ).lower() ) 
+        word_lemma = []
+        
+        if word_pos != []:   
+            for i in zip( *word_pos )[0]:
+                if dic[i] == None:
+                    pass
+                elif dic[i][0] == "V":
+                    word_lemma.append( self.lemmatizer.lemmatize( i, "v" ).lower() )
+                elif dic[i][0] == "N" or dic[i][0] == "ADJ" or dic[i][0] == "ADV":
+                    word_lemma.append( self.lemmatizer.lemmatize( i ).lower() ) 
         return word_lemma
     
     def load_classifier( self ):
-        f = open( "Classifier.dump", 'r' )
+        f = open( join( settings.CACHE_DIR, "Classifier.dump" ), 'rb' )
         self.classifier = pickle.load( f )
         f.close()
-        f = open( "WordList.txt", 'r' )
+        f = open( join( settings.KEYWORDS_DIR, "WordList.txt" ), 'r' )
         self.wordlist = pickle.load( f )
         f.close()
     

@@ -12,6 +12,12 @@ from itertools import izip
 from itertools import groupby
 import math
 import nltk
+import numpy as np
+
+def aggregateBySignMag( x ):
+    sign = np.sign( np.sum( x ) )
+    magnitude = np.sum( np.abs( x ) )
+    return sign * magnitude
 
 class WordCounterBase( object ):
     """Base class for WordCounter Functors
@@ -26,6 +32,7 @@ class WordCounterBase( object ):
                                     for i, article in enumerate( articles )
                                     for j, count in self.getCounts( article ) ] )
             i = list( i )
+            print "Read counts for", max( i ) + 1, 'articles.'
             return sparse.coo_matrix( ( counts, ( i, j ) ), shape = ( max( i ) + 1, self.getMaxJ() ) ).tocsr()
         except ValueError:
             return sparse.csr_matrix( ( 1, self.getMaxJ() ) )
@@ -154,25 +161,27 @@ class SentimentWordCounter( WordCounterBase ):
     import afp.normalize as normalize
     _articleNormalizer = normalize.Article()
     _sentimentCounter = SentimentCounter()
-    
-    def __init__( self, keywordsToIndices,
+    def __init__( self,
+                  keywordsToIndices,
                   classifier,
-                  sentimentFromProb = lambda x: 2 * x - 1 ):
+                  sentimentFromProb = lambda x: 2.0 * x - 1.0 ):
         self.keywordsToIndices = keywordsToIndices
-        self.classifer = classifier
+        self.classifier = classifier
         self.maxJ = max( keywordsToIndices.values() ) + 1
         self.sentimentFromProb = sentimentFromProb
-       
-    def getCounts( self, article ):
-        def getKeywords():
+        
+    
+    def getKeywords( self, article ):
             classifiedSentences = ( ( sentence,
                                       self.sentimentFromProb( self.classifier.sent_prob( sentence ) ) )
                                     for sentence in nltk.sent_tokenize( article ) )
             return ( ( self.keywordsToIndices[ keyword ], sentiment )
                      for sentence, sentiment in classifiedSentences
-                     for keyword in self.keywordToIndices( sentence )
-                     if keyword in self.keywordToIndices )
-        return self._sentimentCounter()( getKeywords() ).iteritems()
+                     for keyword in self._articleNormalizer( sentence )
+                     if keyword in self.keywordsToIndices )
+       
+    def getCounts( self, article ):
+        return self._sentimentCounter( self.getKeywords( article ) ).iteritems()
     
     def getMaxJ( self ):
         return self.maxJ

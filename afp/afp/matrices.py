@@ -14,6 +14,7 @@ import keywords
 import count
 import normalize
 import settings
+import sentiment
 import cPickle
 import datetime
 import numpy as np
@@ -52,52 +53,68 @@ def getEmpiricalDataFrame( tickerList,
     end = df.index.searchsorted( toDate )
     return df[ start:end ].drop( extraColumns, 1 )
 
-def getCountDataFrame( wordCounter,
+def getCountDataFrame( tickerList,
+                       wordCounter,
                        dates,
                        aggregator = None,
                        loadCache = True,
                        saveCache = False ):
+    def cache( countDf, hashCode ):
+        path = join( settings.CACHE_DIR, str( hashCode ) + '.pkl' )
+        helpers.ensurePath( settings.CACHE_DIR )
+        with open( path, 'wb' ) as f:
+            print( 'Caching...', end = '' )
+            cPickle.dump( countDf, f, -1 )
+            print( 'Cached' )
+            
+    query = ( tuple( tickerList ),
+              helpers.tryexcept( lambda: tuple( dates ), dates ),
+              helpers.tryexcept( lambda: aggregator.__name__, aggregator ),
+              str( type( wordCounter ) ) )
+    hashCode = query.__hash__()
     if loadCache:
         try:
-            query = ( tuple( tickerList ),
-                      helpers.tryexcept( lambda: tuple( dates ), dates ),
-                      helpers.tryexcept( lambda: tuple( aggregator ), aggregator ),
-                      type( wordCounter ) )
-            with open( join( settings.CACHE_DIR, str( query.__hash__() ) + '.pkl' ), 'rb' ) as f:
+            with open( join( settings.CACHE_DIR, str( hashCode ) + '.pkl' ), 'rb' ) as f:
                 cachedCounts = cPickle.load( f )
             return cachedCounts
         except TypeError:
             print( 'Could not hash query:', query )
         except IOError:
             print( 'Cache does not exist for count query:', query )
-            print( 'Calculating from filesystem...' )
+            if aggregator != None:
+                print( 'Checking for non-aggregated cache..' )
+                altQuery = ( tuple( tickerList ),
+                             helpers.tryexcept( lambda: tuple( dates ), dates ),
+                             None,
+                             str( type( wordCounter ) ) )
+                try:
+                    with open( join( settings.CACHE_DIR, str( altQuery.__hash__() ) + '.pkl' ), 'rb' ) as f:
+                        rawCounts = cPickle.load( f )
+                    countDf = rawCounts.to_dense().groupby( level = 0 ).apply( aggregator ).to_sparse( 0 )
+                    cache( countDf, hashCode )
+                    return countDf
+                except IOError:
+                    print( 'No non-aggregated cache' )
+                    print( 'Calculating from filesystem...' )
+                
     
-       
     def getCountMatrix():
-        def getCountRows( timestamp ):
-            counts = wordCounter( retrieve.getDailyArticles( timestamp.date() ) )
-            try:
-                return aggregator( counts )
-            except TypeError:
-                return counts            
-        allDates, counts = zip( *( ( date, countRow ) 
-                                   for date in dates
-                                   for countRow in getCountRows( date )
-                                   if countRow.nnz ) )
+        params = ( ( date, aggregator, wordCounter ) 
+                   for date in dates )
+        datesRows = ( _getCountRows( args ) for args in params )           
+        allDates, counts = zip( *( ( date, row ) 
+                                   for date, matrix in datesRows
+                                   for row in matrix
+                                   if row.nnz ) )
         return ( allDates, sparse.vstack( counts ).tocsr() )
     allDates, counts = getCountMatrix()
     countDf = sparseToDataFrame( counts, allDates, tickerList )
     if saveCache or loadCache:
-        path = join( settings.CACHE_DIR, str( query.__hash__() ) + '.pkl' )
-        helpers.ensurePath( settings.CACHE_DIR )
-        with open( path, 'wb' ) as f:
-            print( 'Caching...', end='' )
-            cPickle.dump( countDf, f, -1 )
-            print( 'Cached' )
+        cache( countDf, hashCode )
     return countDf
 
-def getTfIdfDataFrame( tickerList, dates, aggregator = None ):
-    return normalize.TfIdf()( getCountDataFrame( tickerList, dates, aggregator ) )
+def getTfIdfDataFrame( wordCounter, dates, aggregator = None ):
+    return normalize.TfIdf()( getCountDataFrame( wordCounter, dates, aggregator ) )
     
 def sparseToDataFrame( sparseMat, index, columns ):
     return pd.SparseDataFrame( [ pd.SparseSeries( sparseMat[i].toarray().ravel() ) 
@@ -105,14 +122,29 @@ def sparseToDataFrame( sparseMat, index, columns ):
                                index = index,
                                columns = columns,
                                default_fill_value = 0 )
+
+def _getCountRows( args ):
+    timestamp, aggregator, wordCounter = args
+    try:
+        date = timestamp.date()
+    except AttributeError:
+        date = timestamp
+    counts = wordCounter( retrieve.getDailyArticles( date ) )
+    try:
+        return ( date, aggregator( counts ) )
+    except TypeError:
+        return ( date, counts )
+    
 if __name__ == "__main__":    
     begin = datetime.date( 2011, 1, 3 )
     end = datetime.date( 2013, 11, 27 )
     tickerList = keywords.getTickerList()
     keywordsMap = keywords.getKeywordToIndexMap()
     empiricalDf = getEmpiricalDataFrame( tickerList, begin, end )
-    countDf = getCountDataFrame( count.WordCounter( keywordsMap ),
+    countDf = getCountDataFrame( tickerList,
+                                 count.SentimentWordCounter( keywordsMap,
+                                                             sentiment.classifier() ),
                                  empiricalDf.index,
-                                 aggregator = sum )
-    corr = normalize.TfIdf()( countDf ).corr().to_dense()[ tickerList ]
-    corr.to_csv( join( settings.RESULTS_DIR, 'corr2011_2013.csv' ) )
+                                 aggregator = np.sum )
+    corr = normalize.TfIdf()( countDf ).corr().to_dense()
+    corr.to_csv( join( settings.RESULTS_DIR, 'corrtest_withSent_all.csv' ) )
