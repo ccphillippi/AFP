@@ -53,10 +53,22 @@ class TfIdf( NormalizerBase ):
                     return -np.log( likelihood )
                 return tf( counts ).mul( idf() )
             return counts.apply( tfidf )
+        def normalizeRolling():
+            def occurred( count ): return count != 0
+            absCounts = np.abs( counts )
+            def tf():
+                return np.sign( counts ) * np.log1p( absCounts )
+            def idf():
+                likelihood = max( 1.0, sum( occurred( absCounts ) ) ) / float( n )
+                return -np.log( likelihood )
+            return tf() * idf()
         try:
             return normalizeScipy()
         except:
-            return normalizeDf()
+            try:
+                return normalizeDf()
+            except:
+                return normalizeRolling()
             
 class Article( NormalizerBase ):
     """Functor normalizing articles to be searched for keywords
