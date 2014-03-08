@@ -22,6 +22,9 @@ def adjustedClosesFilepath( empiricalStore = settings.EMPIRICAL_STORE,
                             filename = settings.ADJUSTED_CLOSE_FILENAME ):
     return _getPath( empiricalStore, filename )
 
+def benchmarkFilepath():
+    return adjustedClosesFilepath( empiricalStore = settings.EMPIRICAL_STORE,
+                                   filename = 'benchmarks.csv' )
 def getArticles( fileList ):
     def getArticle( f ):
         with open( f, 'r' ) as opened:
