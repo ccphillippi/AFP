@@ -146,5 +146,8 @@ if __name__ == "__main__":
                                                              sentiment.classifier() ),
                                  empiricalDf.index,
                                  aggregator = np.sum )
-    corr = normalize.TfIdf()( countDf ).corr().to_dense()
-    corr.to_csv( join( settings.RESULTS_DIR, 'corrtest_withSent_all.csv' ) )
+    tfidf = normalize.TfIdf()( countDf )
+    empiricalDf = empiricalDf.ix[ tfidf.index ]
+    tfidf.to_dense().to_csv( join( settings.RESULTS_DIR, 'tfidf_sentimentMatched.csv' ) )
+    empiricalDf.to_dense().to_csv( join( settings.RESULTS_DIR, 'empiricalMatched.csv' ) )
+    # corr.to_csv( join( settings.RESULTS_DIR, 'corrtest_withSent_all.csv' ) )

@@ -27,6 +27,7 @@ import settings
 class Backtest( object ):
     class Results( object ):
         _daysPerYear = 252
+        _tol = 0.000000000001
         def __init__( self,
                       returns, 
                       tradeDates,
@@ -81,13 +82,17 @@ class Backtest( object ):
         def informationRatio( self ):
             if type( self.benchmarkPrices ) == type( None ):
                 raise Exception( 'Benchmark not provided for Information Ratio.' )
-            factorReturns = self.benchmarkPrices.pct_change().ix[ self.returns.index ]
+            returns = self.returns[1:]  # ignore first day tcosts
+            factorReturns = self.benchmarkPrices.pct_change().ix[ returns.index ]
             factors = factorReturns.columns
-            beta = ols( y = self.returns[ self.name ], x = factorReturns ).beta[ factors ]
+            beta = ols( y = returns[ self.name ], x = factorReturns ).beta[ factors ]
             benchmarkReturns = ( beta * factorReturns ).sum( axis = 1 )
-            benchmarkReturn = Backtest.Results( benchmarkReturns, self.returns.index ).annualizedReturn()
-            activeRisk = Backtest.Results( self.returns - benchmarkReturns, self.returns.index ).annualizedRisk()
-            return ( self.annualizedReturn() - benchmarkReturn ) / activeRisk
+            benchmarkTest = Backtest.Results( returns - benchmarkReturns, returns.index )
+            activeReturn = benchmarkTest.annualizedReturn()
+            activeRisk = benchmarkTest.annualizedRisk()
+            if np.abs( activeReturn ) < self._tol:
+                return 0
+            return activeReturn / activeRisk
         def toDataFrame( self ):
             columns = [ 'Strategy',
                         'Risk Model',
@@ -129,7 +134,8 @@ class Backtest( object ):
                   end,
                   budget = 1,
                   rho = 1,
-                  riskFree = 0.01 ):
+                  riskFree = 0.01,
+                  tCosts = 0.001 ):
         self.dates = prices.index
         self.prices = prices
         self.riskModel = riskModel
@@ -141,15 +147,22 @@ class Backtest( object ):
         self.rho = rho
         self.riskFree = riskFree
         self.benchmarkPrices = self.strategy.getBenchmark()
-    
+        self.tCosts = tCosts
     def run( self  ):
+        def delever( weights ):
+            return weights / np.sum( np.abs( weights ) )
         yesterday = self.trainDates[ -1 ]
         ptfReturns = dict()
-        weights = dict()
+        weights = { yesterday : np.zeros( ( self.prices.shape[1], 1 ) ) }
+        yesterdaysValue = self.budget
         for date in self.tradeDates:
             cov = self.riskModel.getCovariance( yesterday, rho = self.rho )
-            weights[ date ] = self.strategy.getWeights( cov )
-            ptfReturns[ date ] = float( np.dot( self.returns.ix[ date.date() ], weights[ date ] ) )
+            weights[ date ] = delever( self.strategy.getWeights( cov ) )
+            weightChange = weights[ date ] - weights[ yesterday ]
+            transCharge = self.tCosts * yesterdaysValue * np.sum( abs( weightChange ) )
+            returns = float( np.dot( self.returns.ix[ date.date() ], weights[ date ] ) )
+            todaysValue = ( 1 + returns ) * yesterdaysValue - transCharge
+            ptfReturns[ date ] = ( todaysValue - yesterdaysValue ) / yesterdaysValue
             yesterday = date
         
         allWeights, returns = zip( *( ( weights[ date ], ptfReturns[ date ] ) 
@@ -173,9 +186,9 @@ class RiskModel( object ):
     def getVolDyad( self, date ):
         raise NotImplemented
     def getName( self ):
-        raise NotImplemented
+        return self.name
     def getDates( self ):
-        raise NotImplemented
+        return self.dates
     
 class EmpiricalCovariance( RiskModel ):
     def __init__( self, 
@@ -193,11 +206,20 @@ class EmpiricalCovariance( RiskModel ):
         return self.empCov[ date ]
     def getVolDyad( self, date ):
         return self.volDyad[ date ]
-    def getName( self ):
-        return self.name
-    def getDates( self ):
-        return self.dates
 
+class ShrunkCovarianceModel( RiskModel ):
+    def __init__( self, baseModel, name = 'Shrinkage (Constant Corr)' ):
+        self.baseModel = baseModel
+        self.name = name
+        self.dates = baseModel.getDates()
+    def getCovariance( self, date, rho ):
+        cov = self.baseModel.getCovariance( date, rho = rho )
+        constantCorr = rho*np.ones( cov.shape )
+        np.fill_diagonal( constantCorr, 1 )
+        vol = np.sqrt( np.diag( cov ) )
+        shrinkCov = np.outer( vol, vol ) * constantCorr
+        return ( 1 - rho ) * cov + shrinkCov
+        
 class NewsCovarianceModel( RiskModel ):
     def __init__( self, 
                   baseModel, 
@@ -341,34 +363,44 @@ if __name__ == '__main__':
     sentCounter = count.SentimentWordCounter( keywordsMap, sentiment.classifier() )
     mentionCounter = count.WordCounter( keywordsMap )
     empiricalDf = matrices.getEmpiricalDataFrame( tickerList, begin, end )
-    constrained = True
-    if constrained:
-        minVarBenchmark = 'minvarConstrained.csv'
-        maxDivBenchmark = 'maxDivConstrained.csv'
-    else:
-        minVarBenchmark = 'minvarAnalytical.csv'
-        maxDivBenchmark = 'maxDivAnalytical.csv'
-    minvarBenchmarkDf = matrices.getEmpiricalDataFrame( [ MinimumVariance().getName() ], begin, end, retrieve.adjustedClosesFilepath( filename = minVarBenchmark ) )  
-    maxDivBenchmarkDf = matrices.getEmpiricalDataFrame( [ MaximumDiversification().getName() ], begin, end, retrieve.adjustedClosesFilepath( filename = maxDivBenchmark ) )
+    constrained = False
+    minVarBenchmark = { True : 'minvarConstrained.csv', False : 'minvarAnalytical.csv' }
+    maxDivBenchmark = { True : 'maxDivConstrained.csv', False : 'maxDivAnalytical.csv' }
+    minvarBenchmarkDf = matrices.getEmpiricalDataFrame( [ MinimumVariance().getName() ], begin, end, retrieve.adjustedClosesFilepath( filename = minVarBenchmark[ constrained ] ) )  
+    maxDivBenchmarkDf = matrices.getEmpiricalDataFrame( [ MaximumDiversification().getName() ], begin, end, retrieve.adjustedClosesFilepath( filename = maxDivBenchmark[ constrained ] ) )
     riskParityDf = matrices.getEmpiricalDataFrame( [ RiskParity().getName() ], begin, end, retrieve.adjustedClosesFilepath( filename = 'riskParity.csv' ) )   
-    # benchmarkDf = matrices.getEmpiricalDataFrame( [ 'OEF', 'SPY' ], begin, end, retrieve.benchmarkFilepath() )
+    benchmarkDf = matrices.getEmpiricalDataFrame( [ 'OEF', 'SPY' ], begin, end, retrieve.benchmarkFilepath() )
     summedSentDf = matrices.getCountDataFrame( tickerList, sentCounter, empiricalDf.index, aggregator = np.sum )
     articleSentDf = matrices.getCountDataFrame( tickerList, sentCounter, empiricalDf.index )
     summedMentionDf = matrices.getCountDataFrame( tickerList, mentionCounter, empiricalDf.index, aggregator = np.sum )
     articleMentionDf = matrices.getCountDataFrame( tickerList, mentionCounter, empiricalDf.index )
     empiricalDf = empiricalDf.ix[:, summedMentionDf.columns ]
-    
     empiricalCov = EmpiricalCovariance( empiricalDf )
+    
+    saveBenchmarks = False
+    if saveBenchmarks:
+        beginBench = begin + datetime.timedelta( 20 ) 
+        for constrained in [ True, False ]:
+            minvar = Backtest( empiricalDf, empiricalCov, MinimumVariance( constrained = constrained ), beginBench, end ).run().portfolioValues()
+            minvar.to_csv( os.path.join( settings.RESULTS_DIR, minVarBenchmark[ constrained ] ) )
+            maxdiv = Backtest( empiricalDf, empiricalCov, MaximumDiversification( constrained = constrained ), beginBench, end ).run().portfolioValues()
+            maxdiv.to_csv( os.path.join( settings.RESULTS_DIR, maxDivBenchmark[ constrained ] ) )
+        riskpar = Backtest( empiricalDf, empiricalCov, RiskParity(), beginBench, end ).run().portfolioValues()
+        riskpar.to_csv( os.path.join( settings.RESULTS_DIR, 'riskParity.csv' ) )
+        print 'Benchmarks Cached'    
+    
     riskModels = [ 
                    NewsCovarianceModel( empiricalCov, summedSentDf, name = 'Daily Summed Sentiment' ),
                    NewsCovarianceModel( empiricalCov, articleSentDf, name = 'Article Sentiment' ),
                    NewsCovarianceModel( empiricalCov, summedMentionDf, name = 'Daily Summed Mention' ),
-                   NewsCovarianceModel( empiricalCov, articleMentionDf, name = 'Article Mention' )
+                   NewsCovarianceModel( empiricalCov, articleMentionDf, name = 'Article Mention' ),
+                   ShrunkCovarianceModel( empiricalCov )
                  ]
                    
     strategies = [ MinimumVariance( benchmark = minvarBenchmarkDf, constrained = constrained ),
                    MaximumDiversification( benchmark = maxDivBenchmarkDf, constrained = constrained ),
-                   RiskParity( benchmark = riskParityDf ) ]
+                   RiskParity( benchmark = riskParityDf ) 
+                 ]
     rhos = np.linspace( 0, 1, 21 )
     beginDates = [ datetime.date( 2011, 11, 5 ), datetime.date( 2012, 11, 6 ) ]
     endDates = [ beginDates[ 1 ] - datetime.timedelta( 1 ), end ]
@@ -377,5 +409,5 @@ if __name__ == '__main__':
     resultsDf = pd.concat( ( result.toDataFrame() for result in allResults ) )
     portfoliosDf = pd.concat( portfolios )
     print resultsDf
-    resultsDf.to_csv( os.path.join( settings.RESULTS_DIR , 'strategiesResults_constrained.csv' ) )
-    portfoliosDf.to_csv( os.path.join( settings.RESULTS_DIR , 'strategiesPortfolios_constrained.csv' ) )
+    resultsDf.to_csv( os.path.join( settings.RESULTS_DIR , 'strategiesResults_conservative.csv' ) )
+    portfoliosDf.to_csv( os.path.join( settings.RESULTS_DIR , 'strategiesPortfolios_conservative.csv' ) )
