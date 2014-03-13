@@ -63,21 +63,25 @@ def adjustedClose( tickerList,
     {'GOOG': {'2012-01-13': '624.99', '2012-01-12': '629.64', '2012-01-11': '625.96', ...
     
     """
+    minDate = str( fromDate )
+    maxDate = str( toDate )
     def getPath():
         path = os.path.abspath( empiricalStore )
         helpers.ensurePath( path )
         return os.path.join( path, filename )
     def adjustedCloseFor( ticker ):
         print 'Retrieving for: ', ticker
-        csvFile = ystockquote.get_historical_prices( ticker, str( fromDate ), str( toDate ) )
+        csvFile = ystockquote.get_historical_prices( ticker, minDate, maxDate )
         return dict( ( ( date, row[ 'Adj Close' ] ) 
                        for i, ( date, row ) in enumerate( csvFile.iteritems() )
                        if i != 0 ) )
     adjustedCloses = [ adjustedCloseFor( ticker )  for ticker in tickerList ]
-    minDate = max( [ min( adjClose.keys() ) for adjClose in adjustedCloses ] )
-    maxDate = min( [ max( adjClose.keys() ) for adjClose in adjustedCloses ] )
-    dates = [ date for date in sorted( adjustedCloses[ 0 ].keys() ) 
-              if date >= minDate and date <= maxDate ]
+    
+    dateSet = set( date 
+                    for adjClose in adjustedCloses
+                    for date in adjClose.keys()
+                    if date >= minDate and date <= maxDate )
+    dates = list( sorted( dateSet ) )
     adjCloseByDate = dict( ( ( date,
                                map( lambda close: helpers.tryexcept( lambda: close[ date ], 'NA' ),
                                     adjustedCloses ) )  
@@ -100,4 +104,3 @@ def _cleanFile( args ):
 
 if __name__ == '__main__':
     cleanSources()
-    
