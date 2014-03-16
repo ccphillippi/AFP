@@ -46,7 +46,7 @@ def getEmpiricalDataFrame( tickerList,
     :param csvPath: The name of the file within the Empirical file store
     
     """ 
-    df = pd.read_csv( csvPath, index_col = 0, parse_dates = True )
+    df = pd.read_csv( csvPath, index_col = 0, parse_dates = True, na_values = 'NA' )
     tickers = set( tickerList )
     extraColumns = [ column for column in df.columns if column not in tickers ]
     start = df.index.searchsorted( fromDate )
@@ -108,7 +108,7 @@ def getCountDataFrame( tickerList,
                                    if row.nnz ) )
         return ( allDates, sparse.vstack( counts ).tocsr() )
     allDates, counts = getCountMatrix()
-    countDf = sparseToDataFrame( counts, allDates, tickerList )
+    countDf = pd.DataFrame( counts.todense(), index = allDates, columns = tickerList )
     if saveCache or loadCache:
         cache( countDf, hashCode )
     return countDf
@@ -138,16 +138,15 @@ def _getCountRows( args ):
 if __name__ == "__main__":    
     begin = datetime.date( 2011, 1, 3 )
     end = datetime.date( 2013, 11, 27 )
-    tickerList = keywords.getTickerList()
-    keywordsMap = keywords.getKeywordToIndexMap()
-    empiricalDf = getEmpiricalDataFrame( tickerList, begin, end )
+    keywordsFile = join( settings.KEYWORDS_DIR, 'splist.csv' )
+    tickerList = keywords.getTickerList( keywordsFile )
+    keywordsMap = keywords.getKeywordToIndexMap( keywordsFile )
+    empiricalDf = getEmpiricalDataFrame( tickerList, begin, end, retrieve.adjustedClosesFilepath( filename = 'cleanSP.csv' ) )
     countDf = getCountDataFrame( tickerList,
-                                 count.SentimentWordCounter( keywordsMap,
-                                                             sentiment.classifier() ),
-                                 empiricalDf.index,
-                                 aggregator = np.sum )
+                                 count.WordCounter( keywordsMap ),
+                                 empiricalDf.index )
     tfidf = normalize.TfIdf()( countDf )
     empiricalDf = empiricalDf.ix[ tfidf.index ]
-    tfidf.to_dense().to_csv( join( settings.RESULTS_DIR, 'tfidf_sentimentMatched.csv' ) )
-    empiricalDf.to_dense().to_csv( join( settings.RESULTS_DIR, 'empiricalMatched.csv' ) )
+    tfidf.corr().to_csv( join( settings.RESULTS_DIR, 'hft_CountCorr.csv' ) )
+    empiricalDf.corr().to_csv( join( settings.RESULTS_DIR, 'hft_EmpCorr.csv' ) )
     # corr.to_csv( join( settings.RESULTS_DIR, 'corrtest_withSent_all.csv' ) )
