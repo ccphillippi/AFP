@@ -13,16 +13,13 @@ import normalize
 import numpy as np
 import numpy.linalg as nplinalg
 import pandas as pd
-import os
-import matplotlib.pyplot as plt
 import scipy.optimize as optimize
 
-import cleaner.retrieve as retrieve
-import matrices
-import keywords
-import count
-import sentiment
-import settings
+def accumulate( f, iterable, f0 ):
+    prev = f0
+    for item in iterable:
+        prev = f( prev, item )
+        yield prev
 
 class Backtest( object ):
     class Results( object ):
@@ -39,6 +36,14 @@ class Backtest( object ):
                       weights = None,
                       riskFree = 0.001, 
                       benchmarkPrices = None ):
+            def extractDate( date ):
+                try:
+                    return date.date()
+                except AttributeError:
+                    try:
+                        return datetime.datetime.strptime( date, '%Y-%m-%d %H:%M:%S' )
+                    except TypeError:
+                        return date
             self.name = name
             self.riskModelName = riskModelName
             self.rho = rho
@@ -52,18 +57,18 @@ class Backtest( object ):
             self.returns = pd.DataFrame( np.array( returns ),
                                          index = tradeDates,
                                          columns = [ name ] )
-            try:
-                self.begin = tradeDates[ 0 ].date()
-            except AttributeError:
-                self.begin = tradeDates[ 0 ]
-            try:
-                self.end = tradeDates[ -1 ].date()
-            except AttributeError:
-                self.end = tradeDates[ -1 ]
+
+            self.begin = extractDate( tradeDates[ 0 ] )
+            self.end = extractDate( tradeDates[ -1 ] )
             self.riskFree = riskFree
             self.benchmarkPrices = benchmarkPrices
         def timeSpan( self, freq = 'years' ):
+            if freq == 'seconds':
+                return float( ( self.end - self.begin ).seconds )
             if freq == 'days':
+                days = ( self.end - self.begin ).days
+                if days == 0:
+                    return self.timeSpan( freq = 'seconds' ) / ( 60.0 * 60.0 * 8 )
                 return ( self.end - self.begin ).days
             if freq == 'years':
                 return float( self.timeSpan( freq = 'days' ) ) / 365.0
@@ -135,7 +140,7 @@ class Backtest( object ):
                   budget = 1,
                   rho = 1,
                   riskFree = 0.01,
-                  tCosts = 0.001 ):
+                  tCosts = 0.0005 ):
         self.dates = prices.index
         self.prices = prices
         self.riskModel = riskModel
@@ -177,7 +182,62 @@ class Backtest( object ):
                                    stocks = self.prices.columns,
                                    riskFree = self.riskFree,
                                    benchmarkPrices = self.benchmarkPrices ) )
-
+class PairsBacktest( Backtest ):
+    def __init__( self,
+                  prices,
+                  divergence,
+                  threshold,
+                  endOfDay,
+                  targetDailyRisk = 0.1/np.sqrt( 252 ),
+                  periodsToExit = 1,
+                  budget = 1,
+                  riskFree = 0.01,
+                  tCosts = 0.0005 ):
+        n = prices.shape[ 0 ]
+        self.targetRisk = targetDailyRisk / np.sqrt( n )
+        self.dates = prices.index
+        self.prices = prices
+        self.divergence = divergence
+        self.threshold = threshold
+        self.endOfDay = endOfDay
+        self.returns = prices.pct_change().fillna( 0 )
+        self.budget = budget
+        self.riskFree = riskFree / ( 252 * n )
+        self.tCosts = tCosts
+        self.periodsToExit = periodsToExit
+        self.first, self.second = prices.columns
+        self.name = self.first + '|' + self.second
+        
+    def run( self ):
+        def strategy( args, date ):
+            daysActive, weights, cash = args
+            divergence = float( self.divergence.ix[ date ] )
+            threshold = float( self.threshold.ix[ date ] )
+            isEndOfDay = int( self.endOfDay.ix[ date ] ) == 1
+            if daysActive >= self.periodsToExit or isEndOfDay or np.abs( divergence ) < threshold:
+                return( 0,
+                        np.zeros( weights.shape ),
+                        ( cash + float( np.dot( weights.T, self.prices.ix[ date ] ) ) ) * ( 1 + self.riskFree ) )
+            if daysActive == 0 and np.abs( divergence ) > threshold:
+                priceA = float( self.prices.ix[ date, self.first ] )
+                w = -float( priceA / self.prices.ix[ date, self.second ] )
+                rawWeights = -np.sign( divergence ) * np.array( [ [ 1 ], [ w ] ] )
+                newWeights = ( cash / priceA ) * rawWeights
+                return ( 1,
+                         newWeights,
+                         cash * ( 1 + self.riskFree ) )
+            return( daysActive + 1,
+                    weights,
+                    cash * ( 1 + self.riskFree ) )
+        initial = ( 0, np.zeros( ( 2, 1 ) ), self.budget )
+        _, weights, cash = zip( *list( accumulate( strategy, self.dates, initial ) ) )
+        cashSeries = pd.DataFrame( { ( '|'.join( self.prices.columns ) ) : cash }, index = self.dates )
+        return Backtest.Results( cashSeries.pct_change().fillna( 0 ).as_matrix(),
+                                 self.dates,
+                                 name = self.name,
+                                 budget = self.budget,
+                                 weights = weights,
+                                 stocks = self.prices.columns )
 class RiskModel( object ):
     def dyad( self, x ):
         return np.outer( x, x )
@@ -355,59 +415,6 @@ def testStrategies( empiricalDf, riskModels, strategies, dateRanges, rhos, budge
                    for riskModel in riskModels ]
     portfolios = [ getPortfolio( result ) for result in results ] 
     return ( results, portfolios )
-# if __name__ == '__main__':
-#     begin = datetime.date( 2011, 1, 3 )
-#     end = datetime.date( 2013, 11, 27 )
-#     tickerList = keywords.getTickerList()
-#     keywordsMap = keywords.getKeywordToIndexMap()
-#     sentCounter = count.SentimentWordCounter( keywordsMap, sentiment.classifier() )
-#     mentionCounter = count.WordCounter( keywordsMap )
-#     empiricalDf = matrices.getEmpiricalDataFrame( tickerList, begin, end )
-#     constrained = False
-#     minVarBenchmark = { True : 'minvarConstrained.csv', False : 'minvarAnalytical.csv' }
-#     maxDivBenchmark = { True : 'maxDivConstrained.csv', False : 'maxDivAnalytical.csv' }
-#     minvarBenchmarkDf = matrices.getEmpiricalDataFrame( [ MinimumVariance().getName() ], begin, end, retrieve.adjustedClosesFilepath( filename = minVarBenchmark[ constrained ] ) )  
-#     maxDivBenchmarkDf = matrices.getEmpiricalDataFrame( [ MaximumDiversification().getName() ], begin, end, retrieve.adjustedClosesFilepath( filename = maxDivBenchmark[ constrained ] ) )
-#     riskParityDf = matrices.getEmpiricalDataFrame( [ RiskParity().getName() ], begin, end, retrieve.adjustedClosesFilepath( filename = 'riskParity.csv' ) )   
-#     benchmarkDf = matrices.getEmpiricalDataFrame( [ 'OEF', 'SPY' ], begin, end, retrieve.benchmarkFilepath() )
-#     summedSentDf = matrices.getCountDataFrame( tickerList, sentCounter, empiricalDf.index, aggregator = np.sum )
-#     articleSentDf = matrices.getCountDataFrame( tickerList, sentCounter, empiricalDf.index )
-#     summedMentionDf = matrices.getCountDataFrame( tickerList, mentionCounter, empiricalDf.index, aggregator = np.sum )
-#     articleMentionDf = matrices.getCountDataFrame( tickerList, mentionCounter, empiricalDf.index )
-#     empiricalDf = empiricalDf.ix[:, summedMentionDf.columns ]
-#     empiricalCov = EmpiricalCovariance( empiricalDf )
-#     
-#     saveBenchmarks = False
-#     if saveBenchmarks:
-#         beginBench = begin + datetime.timedelta( 20 ) 
-#         for constrained in [ True, False ]:
-#             minvar = Backtest( empiricalDf, empiricalCov, MinimumVariance( constrained = constrained ), beginBench, end ).run().portfolioValues()
-#             minvar.to_csv( os.path.join( settings.RESULTS_DIR, minVarBenchmark[ constrained ] ) )
-#             maxdiv = Backtest( empiricalDf, empiricalCov, MaximumDiversification( constrained = constrained ), beginBench, end ).run().portfolioValues()
-#             maxdiv.to_csv( os.path.join( settings.RESULTS_DIR, maxDivBenchmark[ constrained ] ) )
-#         riskpar = Backtest( empiricalDf, empiricalCov, RiskParity(), beginBench, end ).run().portfolioValues()
-#         riskpar.to_csv( os.path.join( settings.RESULTS_DIR, 'riskParity.csv' ) )
-#         print 'Benchmarks Cached'    
-#     
-#     riskModels = [ 
-#                    NewsCovarianceModel( empiricalCov, summedSentDf, name = 'Daily Summed Sentiment' ),
-#                    NewsCovarianceModel( empiricalCov, articleSentDf, name = 'Article Sentiment' ),
-#                    NewsCovarianceModel( empiricalCov, summedMentionDf, name = 'Daily Summed Mention' ),
-#                    NewsCovarianceModel( empiricalCov, articleMentionDf, name = 'Article Mention' ),
-#                    ShrunkCovarianceModel( empiricalCov )
-#                  ]
-#                    
-#     strategies = [ MinimumVariance( benchmark = minvarBenchmarkDf, constrained = constrained ),
-#                    MaximumDiversification( benchmark = maxDivBenchmarkDf, constrained = constrained ),
-#                    RiskParity( benchmark = riskParityDf ) 
-#                  ]
-#     rhos = np.linspace( 0, 1, 21 )
-#     beginDates = [ datetime.date( 2011, 11, 5 ), datetime.date( 2012, 11, 6 ) ]
-#     endDates = [ beginDates[ 1 ] - datetime.timedelta( 1 ), end ]
-#     
-#     allResults, portfolios = testStrategies( empiricalDf, riskModels, strategies, zip( beginDates, endDates ), rhos )
-#     resultsDf = pd.concat( ( result.toDataFrame() for result in allResults ) )
-#     portfoliosDf = pd.concat( portfolios )
-#     print resultsDf
-#     resultsDf.to_csv( os.path.join( settings.RESULTS_DIR , 'strategiesResults_conservative.csv' ) )
-#     portfoliosDf.to_csv( os.path.join( settings.RESULTS_DIR , 'strategiesPortfolios_conservative.csv' ) )
+
+if __name__ == '__main__':
+    pass
