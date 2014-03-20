@@ -24,7 +24,7 @@ def testStrategies( allPairs ):
         dataDirectory = os.path.join( os.path.expanduser( '~' ), 'Dropbox/MFE-Spring 2014/230X - HFT/Project/Data/Data' )
         retriever = PairRetreiver( dataDirectory )
         df = retriever.get_data( tickerA, tickerB )
-        df.set_index( 'Times', inplace = True )
+        df.index = pd.to_datetime( df.ix[ :, 'Times'] )
         prices = df.ix[ :, [ tickerA, tickerB ] ]
         divergence = df.ix[ :, [ 'Divergence' ] ]
         threshold = df.ix[ :, [ 'Threshold' ] ]
@@ -33,11 +33,10 @@ def testStrategies( allPairs ):
                                      divergence,
                                      threshold,
                                      endOfDay,
-                                     targetDailyRisk = 0.1 / np.sqrt( 252 ),
-                                     periodsToExit = 1,
+                                     periodsToExit = retriever.getPeriodsToExit( divergence, 0.5 ),
                                      budget = 1,
                                      riskFree = 0.01,
-                                     tCosts = 0.0005 ).run()
+                                     tCosts = 0.001 ).run()
     def getStatsAndPortfolio( pairType, results ):
         numPairs = len( results )
         def valueWithStrategy():
@@ -91,7 +90,7 @@ precisionPairs = [ [ 'KMB' , 'WEC'  ],
                    [ 'KMB' , 'NI'   ],
                    [ 'ADP' , 'BTU'  ] ]
 
-pairs = { 'Least Squares' : lsPairs }#, 'News' : newsPairs, 'Precision' : precisionPairs }
+pairs = { 'Least Squares' : lsPairs, 'News' : newsPairs, 'Precision' : precisionPairs }
 stats, values = testStrategies( pairs )
 stats.to_csv( os.path.join( settings.RESULTS_DIR, 'HFT/stats.csv' ) )
 values.to_csv( os.path.join( settings.RESULTS_DIR, 'HFT/values.csv' ) )

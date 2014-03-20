@@ -188,13 +188,11 @@ class PairsBacktest( Backtest ):
                   divergence,
                   threshold,
                   endOfDay,
-                  targetDailyRisk = 0.1/np.sqrt( 252 ),
                   periodsToExit = 1,
                   budget = 1,
                   riskFree = 0.01,
-                  tCosts = 0.0005 ):
+                  tCosts = 0.0003 ):
         n = prices.shape[ 0 ]
-        self.targetRisk = targetDailyRisk / np.sqrt( n )
         self.dates = prices.index
         self.prices = prices
         self.divergence = divergence
@@ -215,17 +213,22 @@ class PairsBacktest( Backtest ):
             threshold = float( self.threshold.ix[ date ] )
             isEndOfDay = int( self.endOfDay.ix[ date ] ) == 1
             if daysActive >= self.periodsToExit or isEndOfDay or np.abs( divergence ) < threshold:
+                dCash = float( np.dot( weights.T, self.prices.ix[ date ] ) )
+                dAbs = float( np.dot( abs( weights.T ), self.prices.ix[ date ] ) )
+                tCosts = dAbs * self.tCosts
                 return( 0,
                         np.zeros( weights.shape ),
-                        ( cash + float( np.dot( weights.T, self.prices.ix[ date ] ) ) ) * ( 1 + self.riskFree ) )
+                        cash * ( 1 + self.riskFree ) + dCash - tCosts )
             if daysActive == 0 and np.abs( divergence ) > threshold:
                 priceA = float( self.prices.ix[ date, self.first ] )
                 w = -float( priceA / self.prices.ix[ date, self.second ] )
                 rawWeights = -np.sign( divergence ) * np.array( [ [ 1 ], [ w ] ] )
                 newWeights = ( cash / priceA ) * rawWeights
+                dAbs = float( np.dot( abs( newWeights.T ), self.prices.ix[ date ] ) )
+                tCosts = dAbs * self.tCosts
                 return ( 1,
                          newWeights,
-                         cash * ( 1 + self.riskFree ) )
+                         cash * ( 1 + self.riskFree ) - tCosts )
             return( daysActive + 1,
                     weights,
                     cash * ( 1 + self.riskFree ) )
