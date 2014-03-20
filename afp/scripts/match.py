@@ -3,6 +3,9 @@ Created on Mar 16, 2014
 
 @author: curly
 '''
+
+import afp.matrices as matrices
+import cleaner.retrieve as retrieve
 import csv
 from datetime import datetime
 from datetime import timedelta
@@ -11,7 +14,6 @@ import statsmodels.api as sm
 import math
 import numpy
 import os
-import ystockquote
 
 class PairRetreiver(object):
     def __init__(self, dataDirectory ):
@@ -47,21 +49,29 @@ class PairRetreiver(object):
         print 'Periods to exit:', math.log( threshold ) / math.log( phi )
         return math.log( threshold ) / math.log( phi )
     def get_vol( self, com1, com2, date1, date2 ):
-        d1 = datetime.strptime( date1, '%y-%m-%d' )
-        d2 = datetime.strptime( date2, '%y-%m-%d' )
-        p1 = ystockquote.get_historical_prices( com1, '20' + date1, '20' + date2 )
-        p2 = ystockquote.get_historical_prices( com2, '20' + date1, '20' + date2 )
-        dif = []
-        for i in range( 0, ( d2 - d1 ).days + 1 ):
-            if ( '20' + ( d1 + timedelta( days = i ) ).strftime( '%y-%m-%d' ) ) in p1:
-                dif.append( float( p1['20' + ( d1 + timedelta( days = i ) ).strftime( '%y-%m-%d' )]['Close'] ) / float( p1['20' + date1]['Close'] ) - float( p2['20' + ( d1 + timedelta( days = i ) ).strftime( '%y-%m-%d' )]['Close'] ) / float( p2['20' + date1]['Close'] ) )
-        return numpy.std( dif, axis = 0 )  
+        begin = datetime.strptime( date1, '%Y-%m-%d' )
+        end = datetime.strptime( date2, '%Y-%m-%d' )
+        filepath = retrieve.adjustedClosesFilepath( filename = 'cleanSP.csv' )
+        dailyPrices = matrices.getEmpiricalDataFrame( [ com1, com2 ], begin, end, csvPath = filepath )
+        
+        p1 = dailyPrices[ com1 ]  # ystockquote.get_historical_prices( [com1], '20' + date1, '20' + date2 )
+        p2 = dailyPrices[ com2 ]  # ystockquote.get_historical_prices( [com2], '20' + date1, '20' + date2 )
+        n1 = p1 / p1.iat[ 0 ]
+        n2 = p2 / p2.iat[ 0 ]
+        diff = n1 - n2
+        return numpy.std( diff, axis = 0 )
+
+        # dif = []
+        # for i in range( 0, ( d2 - d1 ).days + 1 ):
+        #    if ( '20' + ( d1 + timedelta( days = i ) ).strftime( '%y-%m-%d' ) ) in p1:
+        #        dif.append( float( p1['20' + ( d1 + timedelta( days = i ) ).strftime( '%y-%m-%d' )]['Close'] ) / float( p1['20' + date1]['Close'] ) - float( p2['20' + ( d1 + timedelta( days = i ) ).strftime( '%y-%m-%d' )]['Close'] ) / float( p2['20' + date1]['Close'] ) )
+        # return numpy.std( dif, axis = 0 )  
     
     def get_data( self, com1, com2 ):
         octday = [1, 2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 28, 29, 30, 31]
         d = pandas.DataFrame( columns = ['Times', 'Divergence', com1, com2, 'End_Of_Day', 'Threshold'] )
         print "Calculating Threshold ..."
-        threshold = self.get_vol( com1, com2, '10-01-04', '12-12-31' ) / math.sqrt( 252 * 6.5 * 60 * 60 ) * 2
+        threshold = self.get_vol( com1, com2, '2011-01-04', '2012-12-31' ) / math.sqrt( 252 * 6.5 * 60 * 60 ) * 2
         print "The threshold would be " + str( threshold )
         
         for i in octday:

@@ -28,7 +28,7 @@ def testStrategies( allPairs ):
                                      endOfDay,
                                      periodsToExit = 10000,
                                      budget = 1,
-                                     riskFree = 0.01,
+                                     riskFree = 0,
                                      tCosts = 0.000 ).run()
         backtest.portfolioValues().to_csv( os.path.join( settings.RESULTS_DIR, 'HFT/%s.csv' % ( tickerA + '_' + tickerB ) ) )
         return backtest
@@ -85,7 +85,7 @@ precisionPairs = [ [ 'KMB' , 'WEC'  ],
                    [ 'KMB' , 'NI'   ],
                    [ 'ADP' , 'BTU'  ] ]
 
-pairs = { 'Least Squares' : lsPairs }  # , 'News' : newsPairs, 'Precision' : precisionPairs }
+pairs = { 'Least Squares' : lsPairs, 'News' : newsPairs, 'Precision' : precisionPairs }
 stats, values = testStrategies( pairs )
 stats.to_csv( os.path.join( settings.RESULTS_DIR, 'HFT/stats.csv' ) )
 values.to_csv( os.path.join( settings.RESULTS_DIR, 'HFT/values.csv' ) )
