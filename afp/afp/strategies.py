@@ -98,6 +98,18 @@ class Backtest( object ):
             if np.abs( activeReturn ) < self._tol:
                 return 0
             return activeReturn / activeRisk
+        def winningRatio( self ):
+            return float((self.returns>0).sum() / self.returns.shape[ 0 ])
+
+        def losingRatio( self ):
+            return float((self.returns<0).sum() / self.returns.shape[ 0 ])
+
+        def profitPerWinningTrade( self ):
+            return float(self.returns[self.returns > 0].mean())
+
+        def lossPerLosingTrade( self ):
+            return float( self.returns[self.returns < 0].mean() )
+                         
         def toDataFrame( self ):
             columns = [ 'Strategy',
                         'Risk Model',
@@ -110,7 +122,11 @@ class Backtest( object ):
                         'Total Return',
                         'Annualized Return',
                         'Annualized Risk',
-                        'Sharpe Ratio' ]
+                        'Sharpe Ratio',
+                        'Winning Ratio',
+                        'Losing Ratio',
+                        'Profit per Winning Trade',
+                        'Loss per Losing Trade' ]
             values = [  self.name,
                         self.riskModelName,
                         self.rho,
@@ -122,7 +138,11 @@ class Backtest( object ):
                         self.totalReturn(),
                         self.annualizedReturn(),
                         self.annualizedRisk(),
-                        self.sharpeRatio() ] 
+                        self.sharpeRatio(),
+                        self.winningRatio(),
+                        self.losingRatio(),
+                        self.profitPerWinningTrade(),
+                        self.lossPerLosingTrade() ] 
             try:
                 values.append( self.informationRatio() )
                 columns.append( 'Information Ratio' )
