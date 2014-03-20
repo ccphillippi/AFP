@@ -4,17 +4,10 @@ Created on Mar 16, 2014
 @author: curly
 '''
 from match import PairRetreiver
-import afp.keywords as keywords
-import afp.count as count
-import afp.matrices as matrices
-import afp.sentiment as sentiment
 import afp.settings as settings
 import afp.strategies as strats
-import cleaner.retrieve as retrieve
 import itertools
-import numpy as np
 import pandas as pd
-import datetime
 import os
 
 def testStrategies( allPairs ):
@@ -29,14 +22,16 @@ def testStrategies( allPairs ):
         divergence = df.ix[ :, [ 'Divergence' ] ]
         threshold = df.ix[ :, [ 'Threshold' ] ]
         endOfDay = df.ix[ :, [ 'End_Of_Day' ] ]
-        return strats.PairsBacktest( prices,
+        backtest = strats.PairsBacktest( prices,
                                      divergence,
                                      threshold,
                                      endOfDay,
-                                     periodsToExit = retriever.getPeriodsToExit( divergence, 0.5 ),
+                                     periodsToExit = 10000,
                                      budget = 1,
                                      riskFree = 0.01,
-                                     tCosts = 0.001 ).run()
+                                     tCosts = 0.000 ).run()
+        backtest.portfolioValues().to_csv( os.path.join( settings.RESULTS_DIR, 'HFT/%s.csv' % ( tickerA + '_' + tickerB ) ) )
+        return backtest
     def getStatsAndPortfolio( pairType, results ):
         numPairs = len( results )
         def valueWithStrategy():
@@ -90,7 +85,7 @@ precisionPairs = [ [ 'KMB' , 'WEC'  ],
                    [ 'KMB' , 'NI'   ],
                    [ 'ADP' , 'BTU'  ] ]
 
-pairs = { 'Least Squares' : lsPairs, 'News' : newsPairs, 'Precision' : precisionPairs }
+pairs = { 'Least Squares' : lsPairs }  # , 'News' : newsPairs, 'Precision' : precisionPairs }
 stats, values = testStrategies( pairs )
 stats.to_csv( os.path.join( settings.RESULTS_DIR, 'HFT/stats.csv' ) )
 values.to_csv( os.path.join( settings.RESULTS_DIR, 'HFT/values.csv' ) )

@@ -212,7 +212,7 @@ class PairsBacktest( Backtest ):
             divergence = float( self.divergence.ix[ date ] )
             threshold = float( self.threshold.ix[ date ] )
             isEndOfDay = int( self.endOfDay.ix[ date ] ) == 1
-            if daysActive >= self.periodsToExit or isEndOfDay or np.abs( divergence ) < threshold:
+            if daysActive >= self.periodsToExit or isEndOfDay or np.abs( divergence ) < threshold / 4:
                 dCash = float( np.dot( weights.T, self.prices.ix[ date ] ) )
                 dAbs = float( np.dot( abs( weights.T ), self.prices.ix[ date ] ) )
                 tCosts = dAbs * self.tCosts

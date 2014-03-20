@@ -41,7 +41,7 @@ class PairRetreiver(object):
                     hl_df[first + '|' + second] = [math.log( threshold ) / math.log( phi )]
         return hl_df.T
     def getPeriodsToExit( self, divergence, threshold = 0.5 ):
-        ar_model = sm.tsa.AR( divergence )
+        ar_model = sm.tsa.AR( divergence.fillna( method = 'ffill' ) )
         fit = ar_model.fit( maxlag = 1, method = 'mle' )
         phi = fit.params[1]
         print 'Periods to exit:', math.log( threshold ) / math.log( phi )
@@ -75,7 +75,7 @@ class PairRetreiver(object):
         dx = [a - b for a, b in zip( logx[:l - 1], logx[1 - l:] )]
         l = len( dx )
         r = numpy.corrcoef( dx[:l - 1], dx[1 - l:] )[0][1]
-        theta = -1 / ( 2 * r ) * ( 1 - math.sqrt( 1 - 4 * r * r ) )
+        theta = -1 / ( 2 * r ) * ( 1 - math.sqrt( numpy.max( 0.001, 1 - 4 * r * r ) ) )
         return max( 0, theta )
         
     def get_divergence( self, d, com1, com2, threshold ):
