@@ -38,7 +38,7 @@ def cleanSources( uncleanStore = settings.UNCLEAN_STORE, numWorkers = settings.M
         uncleaned = ( ( filer, sourceDir, uncleaned ) for uncleaned in os.listdir( sourceDir ) )
         return pool.map( _cleanFile, uncleaned )
     results = helpers.flatten( [ clean( source ) for source in os.listdir( uncleanStore ) ] )
-    added = [ result for result in results if result.added  ]
+    added = [ result for result in results if result.added ]
     notAdded = [ result for result in results if not result.added ]
     return { "Added" : added, "Unable To Add" : notAdded }
 

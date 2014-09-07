@@ -24,10 +24,31 @@ class BatchFiler( object ):
         :param filename: Filename of batch to read from.
         '''
         with open( filename, 'r' ) as f:
-            articleFiler = self._sourceSchema.getArticleFiler()
             articles = f.read().split( self._sourceSchema.getArticleDelimiter() )
-            return [ articleFiler.write( article ) for article in articles ]
+            return self.writeAll( articles )  # [ articleFiler.write( article ) for article in articles ]
         raise Exception( "Unable to open file for read: <%s>." % filename )
+    
+    def writeAll( self, articles ):
+        articleFiler = self._sourceSchema.getArticleFiler()
+        return [ articleFiler.write( article ) for article in articles ]
+
+class CouchDBFiler( BatchFiler ):
+    def __init__( self, dbName = 'articles', server = 'http://localhost:5984', *args, **kwargs ):
+        self.dbName = dbName
+        self.server = server
+        print 'Unused Args: %s' % args
+        print 'Unused Keywords: %s' % kwargs
+        
+    def writeAll( self, articles ):
+        import couchdb
+        db = couchdb.Server( self.server )
+        try:
+            db.update( articles, all_or_nothing = True )
+        except:
+            return[ FilerResult( added = False, article = article ) for article in articles ]
+        else:
+            return [ FilerResult( added = True, filename = self.dbName, filepath = self.server ) for _ in articles ]
+        
                 
 class ArticleFilerBase( object ):
     '''Base API to store an article according to regex members. Use this as a base for custom schema. See :class:`cleaner.schema.LexisNexisSchema` as an example.
@@ -52,9 +73,8 @@ class ArticleFilerBase( object ):
         :param title: Article title to be incorporated in filename.
         """
         return self.removeFromTitleRegex.sub( "", title.strip() ).replace( " ", "_" ) + ".txt"
-        
-    def write( self, article ):
-        from cleaner import schema
+    
+    def parse( self, article ):
         def getArticleOnly():
             sections = article.split( self.sectionDelimiter )
             lengths = [ len( section ) for section in sections ]
@@ -68,13 +88,32 @@ class ArticleFilerBase( object ):
         articleOnly = getArticleOnly()
         articleReplaced = self.removeFromArticleRegex.sub( lambda match : match.group().replace( "\n", " " ), articleOnly )
         month, day, year = self.dateRegex.search( date ).groups()
-        filepath = schema.getFilePath( self.schemaName, paper.strip(), month, day, year )
+        
+        return dict( 
+            date = dict( 
+                month = month,
+                day = day,
+                year = year,
+            ),
+            body = article.replace( articleOnly, articleReplaced ),
+            title = title.strip(),
+            paper = paper.strip(),
+        )
+            
+        
+    def write( self, article ):
+        from cleaner import schema
+        parsed = self.parse( article )
+        date, title = map( parsed.get, [ 'date', 'title' ] )
+        month, day, year = map( date.get, [ 'month', 'date', 'year' ] )
+        filepath = schema.getFilePath( self.schemaName, parsed[ 'paper' ], month, day, year )
         helpers.ensurePath( filepath )
         filename = self.getFileName( title )
         with open( filepath + "\\" + filename, 'w' ) as toFile:
-            toFile.write( article.replace( articleOnly, articleReplaced ) )
+            toFile.write( parsed[ 'body' ] )
             return FilerResult( added = True, fileName = filename, filePath = filepath )
         return FilerResult()
+        
     
 class FilerResult( object ):
     """Result of an attempted article filing

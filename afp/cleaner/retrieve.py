@@ -119,9 +119,9 @@ def getCleanFileList( cleanStore = settings.CLEAN_STORE ):
             for subFile in getCleanFileList( f ):
                 yield subFile
 
-def getEmpiricalTable( tickerList, 
-                       fromDate, 
-                       toDate, 
+def getEmpiricalTable( tickerList,
+                       fromDate,
+                       toDate,
                        csvFile = adjustedClosesFilepath() ):
     """Returns a table in structure of structure format ( Ticker By Date )
     
